@@ -1,0 +1,39 @@
+services:
+  saloony-api:
+    build: .
+    volumes:
+      - .:/app
+      - /app/node_modules
+    container_name: saloony-api
+    ports:
+      - "${PORT}:3000"
+    env_file:
+      - .env
+    depends_on:
+      - saloony-db
+    networks:
+      - saloony
+
+  saloony-db:
+    image: postgres:15
+    container_name: saloony-db
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - saloony
+
+volumes:
+  pgdata:
+
+networks:
+  saloony:
+    driver: bridge
