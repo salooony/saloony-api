@@ -1,11 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
 import appConfig from './config/app.config';
 import databaseConfig, { DatabaseConfig } from './config/database.config';
+import { CustomerModule } from '@infrastructure/modules/customer.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -36,8 +34,7 @@ const ENV = process.env.NODE_ENV;
         };
       },
     }),
+    CustomerModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
