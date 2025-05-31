@@ -1,7 +1,7 @@
 export abstract class Person {
-  public id: String;
-  public firstname: String;
-  public lastname: String;
-  public birthdate: String;
-  public imageURL: String;
+  public id: string;
+  public firstname: string;
+  public lastname: string;
+  public birthdate: Date;
+  public imageURL: string;
 }

@@ -1,18 +1,36 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { PersonResponseDto } from './person.response';
 
 export abstract class UserResponseDto extends PersonResponseDto {
-  public email: String;
-  public mobileNumber: String;
+  @ApiProperty({
+    description: 'The email address',
+    type: String,
+    example: 'example@email.com',
+  })
+  public email: string;
+
+  @ApiProperty({
+    description: 'The mobile number',
+    type: String,
+    example: '+2105495626',
+  })
+  public mobileNumber: string;
+
+  @ApiProperty({
+    description: 'The date at which the account was created',
+    type: Date,
+    example: '4/3/2026',
+  })
   public joinDate: Date;
 
   constructor(
-    id: String,
-    firstname: String,
-    lastname: String,
-    birthdate: String,
-    imageURL: String,
-    email: String,
-    mobileNumber: String,
+    id: string,
+    firstname: string,
+    lastname: string,
+    birthdate: Date,
+    imageURL: string,
+    email: string,
+    mobileNumber: string,
     joinDate: Date,
   ) {
     super(id, firstname, lastname, birthdate, imageURL);

@@ -1,4 +1,4 @@
-import { Customer } from '@domain/entities/person/users/customer.etitiy';
+import { Customer } from '@domain/entities/person/users/customer.entitiy';
 import { Owner } from '@domain/entities/person/users/owner.entity';
 import { Roles } from '@domain/enums/roles.enum';
 

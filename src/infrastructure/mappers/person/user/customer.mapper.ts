@@ -1,5 +1,5 @@
 import { UserMapper } from './user.mapper';
-import { Customer } from '@domain/entities/person/users/customer.etitiy';
+import { Customer } from '@domain/entities/person/users/customer.entitiy';
 
 export class CustomerMapper extends UserMapper {
   private static customerMapper: CustomerMapper;

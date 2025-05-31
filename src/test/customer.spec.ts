@@ -1,7 +1,7 @@
 import { CustomerRequestDto } from '@application/person/dtos/requests/customer.request';
 import { CustomerTransformer } from '@application/person/transformers/customer.transformer';
 import { CreateCustomerUsecase } from '@application/person/user/customer/usecases/create.usecase';
-import { Customer } from '@domain/entities/person/users/customer.etitiy';
+import { Customer } from '@domain/entities/person/users/customer.entitiy';
 import { CustomerController } from '@infrastructure/controllers/customer.controller';
 import { CustomerRepository } from '@infrastructure/repositories/customer.repository';
 import { Test, TestingModule } from '@nestjs/testing';

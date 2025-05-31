@@ -1,6 +1,6 @@
 import { CustomerRequestDto } from '../dtos/requests/customer.request';
 import { UserTransformer } from './user.transformer';
-import { Customer } from '@domain/entities/person/users/customer.etitiy';
+import { Customer } from '@domain/entities/person/users/customer.entitiy';
 import { Location } from '@domain/entities/location.entity';
 
 export class CustomerTransformer extends UserTransformer {
@@ -8,7 +8,8 @@ export class CustomerTransformer extends UserTransformer {
     const customer = new Customer();
 
     customer.calendarURL = '';
-    customer.location = new Location();
+    // customer.location = new Location();
+    customer.location = '';
 
     return customer;
   }

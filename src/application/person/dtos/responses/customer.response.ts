@@ -1,18 +1,30 @@
-import { Customer } from '@domain/entities/person/users/customer.etitiy';
+import { Customer } from '@domain/entities/person/users/customer.entitiy';
 import { UserResponseDto } from './user.response';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CustomerResponseDto extends UserResponseDto {
-  public calendarURL: String;
-  public location: String;
+  @ApiProperty({
+    description: 'The URL of the calendar',
+    type: String,
+    example: '',
+  })
+  public calendarURL: string;
+
+  @ApiProperty({
+    description: 'The location of the customer',
+    type: String,
+    example: '',
+  })
+  public location: string;
 
   private constructor(
-    id: String,
-    firstname: String,
-    lastname: String,
-    birthdate: String,
-    imageURL: String,
-    email: String,
-    mobileNumber: String,
+    id: string,
+    firstname: string,
+    lastname: string,
+    birthdate: Date,
+    imageURL: string,
+    email: string,
+    mobileNumber: string,
     joinDate: Date,
   ) {
     super(

@@ -3,8 +3,9 @@ import { User } from './user.entity';
 import { Location } from '@domain/entities/location.entity';
 
 export class Customer extends User {
-  public calendarURL: String;
-  public location: Location;
+  public calendarURL: string;
+  // public location: Location;
+  public location: string;
 
   public getRole() {
     return Roles.CUSTOMER;
