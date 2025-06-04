@@ -8,8 +8,11 @@ export class CustomerTransformer extends UserTransformer {
     const customer = new Customer();
 
     customer.calendarURL = '';
-    // customer.location = new Location();
-    customer.location = '';
+
+    // Note: add location transformer
+    customer.location = new Location();
+    customer.location.latitude = customerRequest.location.latitude;
+    customer.location.longitude = customerRequest.location.longitude;
 
     return customer;
   }

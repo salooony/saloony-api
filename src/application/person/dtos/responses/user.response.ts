@@ -23,6 +23,14 @@ export abstract class UserResponseDto extends PersonResponseDto {
   })
   public joinDate: Date;
 
+  @ApiProperty({
+    description: 'The language the user prefers to use the application',
+    type: String,
+    required: true,
+    example: 'French',
+  })
+  public language: string;
+
   constructor(
     id: string,
     firstname: string,
@@ -32,10 +40,12 @@ export abstract class UserResponseDto extends PersonResponseDto {
     email: string,
     mobileNumber: string,
     joinDate: Date,
+    language: string,
   ) {
     super(id, firstname, lastname, birthdate, imageURL);
     this.email = email;
     this.mobileNumber = mobileNumber;
     this.joinDate = joinDate;
+    this.language = language;
   }
 }

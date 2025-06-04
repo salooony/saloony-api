@@ -6,6 +6,7 @@ export abstract class User extends Person {
   public mobileNumber: string;
   public password?: string;
   public joinDate: Date;
+  public language: string; // create enum ?
 
   public abstract getRole(): Roles;
 }

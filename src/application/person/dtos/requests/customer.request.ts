@@ -1,16 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserRequestDto } from './user.request';
-// import { IsNotEmpty, IsString } from 'class-validator';
+import { LocationRequestDto } from '@application/location/dtos/requests/location.request.dto';
+import { IsNotEmpty, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CustomerRequestDto extends UserRequestDto {
   @ApiProperty({
     description: 'The location of the customer',
-    type: String,
-    example: '',
+    type: LocationRequestDto,
   })
-  // @IsNotEmpty()
-  // @IsString()
-  public location: string; // fix location
+  @IsNotEmpty()
+  @ValidateNested()
+  @Type(() => LocationRequestDto)
+  public location: LocationRequestDto;
 
   constructor(
     firstname: string,
@@ -19,9 +21,10 @@ export class CustomerRequestDto extends UserRequestDto {
     email: string,
     mobileNumber: string,
     password: string,
-    locatoin: string,
+    location: LocationRequestDto,
+    language: string,
   ) {
-    super(firstname, lastname, birthdate, email, mobileNumber, password);
-    this.location = locatoin;
+    super(firstname, lastname, birthdate, email, mobileNumber, password, language);
+    this.location = location;
   }
 }

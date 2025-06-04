@@ -3,12 +3,13 @@ import { CreateCustomerUsecase } from '@application/person/user/customer/usecase
 import { CustomerController } from '@infrastructure/controllers/customer.controller';
 import { BcryptHashingProvider } from '@infrastructure/providers/bcrypt.hashing.provider';
 import { CustomersRepository } from '@infrastructure/repositories/customer.repository';
-import { CustomerSchema } from '@infrastructure/schemas/customer.schema';
+import { Customer } from '@infrastructure/schemas/user/customer.schema';
+import { Location } from '@infrastructure/schemas/location.schema';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CustomerSchema])],
+  imports: [TypeOrmModule.forFeature([Customer, Location])],
   controllers: [CustomerController],
   providers: [
     CreateCustomerUsecase,

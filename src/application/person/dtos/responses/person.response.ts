@@ -4,7 +4,7 @@ export abstract class PersonResponseDto {
   @ApiProperty({
     description: 'The id stored in the database',
     type: String,
-    example: '',
+    example: '70',
   })
   public id: string;
 
@@ -32,17 +32,11 @@ export abstract class PersonResponseDto {
   @ApiProperty({
     description: 'The URL of the profile image',
     type: String,
-    example: '',
+    example: 'https://saloony.ts/images/3135153',
   })
   public imageURL: string;
 
-  constructor(
-    id: string,
-    firstname: string,
-    lastname: string,
-    birthdate: Date,
-    imageURL: string,
-  ) {
+  constructor(id: string, firstname: string, lastname: string, birthdate: Date, imageURL: string) {
     this.id = id;
     this.firstname = firstname;
     this.lastname = lastname;

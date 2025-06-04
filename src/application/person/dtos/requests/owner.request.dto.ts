@@ -8,7 +8,8 @@ export class OwnerRequestDto extends UserRequestDto {
     email: string,
     mobileNumber: string,
     password: string,
+    language: string,
   ) {
-    super(firstname, lastname, birthdate, email, mobileNumber, password);
+    super(firstname, lastname, birthdate, email, mobileNumber, password, language);
   }
 }

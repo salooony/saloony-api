@@ -1,5 +1,7 @@
+import { IsAgeAtLeast } from '@application/decorators/is-age-at-lease.decorator';
 import { ApiProperty } from '@nestjs/swagger';
-// import { IsNotEmpty, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsDate, IsNotEmpty, IsString } from 'class-validator';
 
 export abstract class PersonRequestDto {
   @ApiProperty({
@@ -8,8 +10,8 @@ export abstract class PersonRequestDto {
     required: true,
     example: 'John',
   })
-  // @IsNotEmpty()
-  // @IsString()
+  @IsNotEmpty()
+  @IsString()
   public firstname: string;
 
   @ApiProperty({
@@ -18,8 +20,8 @@ export abstract class PersonRequestDto {
     required: true,
     example: 'Doe',
   })
-  // @IsNotEmpty()
-  // @IsString()
+  @IsNotEmpty()
+  @IsString()
   public lastname: string;
 
   @ApiProperty({
@@ -28,8 +30,10 @@ export abstract class PersonRequestDto {
     required: true,
     example: '4/3/2005',
   })
-  // @IsNotEmpty()
-  // @IsString()
+  @IsNotEmpty()
+  @Type(() => Date)
+  @IsDate()
+  @IsAgeAtLeast(16) // validate the age
   public birthdate: Date;
 
   constructor(firstname: string, lastname: string, birthdate: Date) {

@@ -10,6 +10,7 @@ export abstract class UserTransformer extends PersonTransformer {
     user.mobileNumber = userRequest.mobileNumber;
     user.password = userRequest.password;
     user.joinDate = new Date();
+    user.language = userRequest.language;
 
     return user;
   }

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import appConfig from './config/app.config';
@@ -7,6 +7,7 @@ import { CustomerModule } from '@infrastructure/modules/customer.module';
 
 const ENV = process.env.NODE_ENV;
 
+@Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
