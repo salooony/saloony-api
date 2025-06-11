@@ -1,8 +1,8 @@
-import { Customer } from '@domain/entities/person/users/customer.entitiy';
+import { Customer } from '@domain/entities/person/users/customer.entity';
 import { ICustomerRepository } from '@domain/ports/customerRepository.interface';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Customer as CustomerEntity } from '@infrastructure/schemas/user/customer.schema';
 import { HashingProviderInterface } from '@application/providers/hashing.provider.interface';
 

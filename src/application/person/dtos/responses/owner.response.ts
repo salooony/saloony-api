@@ -1,6 +1,6 @@
 import { Owner } from '@domain/entities/person/users/owner.entity';
 import { UserResponseDto } from './user.response';
-import { ShopsResponseDto } from '@application/shop/dtos/response/shop.reponse.dto';
+import { ShopsResponseDto } from '@application/shop/dtos/response/shop.response.dto';
 
 export class OwnerResponseDto extends UserResponseDto {
   public shops: Array<ShopsResponseDto>;

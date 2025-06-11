@@ -2,8 +2,7 @@ import { CustomerRequestDto } from '@application/person/dtos/requests/customer.r
 import { CustomerResponseDto } from '@application/person/dtos/responses/customer.response';
 import { CustomerTransformer } from '@application/person/transformers/customer.transformer';
 import { CreateCustomerUsecase } from '@application/person/user/customer/usecases/create.usecase';
-import { Location } from '@domain/entities/location.entity';
-import { Customer } from '@domain/entities/person/users/customer.entitiy';
+import { Customer } from '@domain/entities/person/users/customer.entity';
 import { CustomerController } from '@infrastructure/controllers/customer.controller';
 import { MockCustomersReporitory } from '@infrastructure/mock-repositories/customer.mock.repository';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -33,10 +32,6 @@ describe('CustomerController', () => {
       mobileNumber: '00000',
       password: 'P@ssw0rd',
       language: 'French',
-      location: {
-        latitude: 50,
-        longitude: 50,
-      },
     };
   });
 
@@ -47,9 +42,6 @@ describe('CustomerController', () => {
     customer.birthdate = new Date('4/3/2005');
     customer.email = 'example@email.com';
     customer.mobileNumber = '00000';
-    customer.location = new Location();
-    customer.location.latitude = 50;
-    customer.location.longitude = 50;
     customer.imageURL = '';
     customer.password = 'p@ssword';
     customer.calendarURL = '';
@@ -250,95 +242,6 @@ describe('CustomerController', () => {
       expect(errors[0].property).toEqual('language');
       expect(errors[0].constraints).toHaveProperty('isNotEmpty');
       expect(errors[0].constraints).toHaveProperty('isString');
-    });
-
-    it('Should fail for missing location', async () => {
-      request.location = null;
-
-      const dto = plainToInstance(CustomerRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0].property).toEqual('location');
-      expect(errors[0].constraints).toHaveProperty('isNotEmpty');
-    });
-
-    it('Should fail for invalid location (missing latitude)', async () => {
-      request.location.latitude = null;
-
-      const dto = plainToInstance(CustomerRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0].property).toEqual('location');
-      expect(errors[0].children[0].property).toEqual('latitude');
-      expect(errors[0].children[0].constraints).toHaveProperty('isNotEmpty');
-      expect(errors[0].children[0].constraints).toHaveProperty('isNumber');
-      expect(errors[0].children[0].constraints).toHaveProperty('max');
-      expect(errors[0].children[0].constraints).toHaveProperty('min');
-    });
-
-    it('Should fail for invalid location (latitude is too large)', async () => {
-      request.location.latitude = 100;
-
-      const dto = plainToInstance(CustomerRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0].property).toEqual('location');
-      expect(errors[0].children[0].property).toEqual('latitude');
-      expect(errors[0].children[0].constraints).toHaveProperty('max');
-    });
-
-    it('Should fail for invalid location (latitude is too small)', async () => {
-      request.location.latitude = -100;
-
-      const dto = plainToInstance(CustomerRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0].property).toEqual('location');
-      expect(errors[0].children[0].property).toEqual('latitude');
-      expect(errors[0].children[0].constraints).toHaveProperty('min');
-    });
-
-    it('Should fail for invalid location (missing longitude)', async () => {
-      request.location.longitude = null;
-
-      const dto = plainToInstance(CustomerRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0].property).toEqual('location');
-      expect(errors[0].children[0].property).toEqual('longitude');
-      expect(errors[0].children[0].constraints).toHaveProperty('isNotEmpty');
-      expect(errors[0].children[0].constraints).toHaveProperty('isNumber');
-      expect(errors[0].children[0].constraints).toHaveProperty('max');
-      expect(errors[0].children[0].constraints).toHaveProperty('min');
-    });
-
-    it('Should fail for invalid location (longitude is too large)', async () => {
-      request.location.longitude = 200;
-
-      const dto = plainToInstance(CustomerRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0].property).toEqual('location');
-      expect(errors[0].children[0].property).toEqual('longitude');
-      expect(errors[0].children[0].constraints).toHaveProperty('max');
-    });
-
-    it('Should fail for invalid location (longitude is too small)', async () => {
-      request.location.longitude = -200;
-
-      const dto = plainToInstance(CustomerRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0].property).toEqual('location');
-      expect(errors[0].children[0].property).toEqual('longitude');
-      expect(errors[0].children[0].constraints).toHaveProperty('min');
     });
   });
 });

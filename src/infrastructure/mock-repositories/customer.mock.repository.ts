@@ -1,4 +1,4 @@
-import { Customer } from '@domain/entities/person/users/customer.entitiy';
+import { Customer } from '@domain/entities/person/users/customer.entity';
 import { ICustomerRepository } from '@domain/ports/customerRepository.interface';
 import { Injectable } from '@nestjs/common';
 

@@ -1,4 +1,4 @@
-import { IsAgeAtLeast } from '@application/decorators/is-age-at-lease.decorator';
+import { IsAgeAtLeast } from '@application/decorators/is-age-at-least.decorator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsDate, IsNotEmpty, IsString } from 'class-validator';

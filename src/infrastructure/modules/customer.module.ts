@@ -4,12 +4,11 @@ import { CustomerController } from '@infrastructure/controllers/customer.control
 import { BcryptHashingProvider } from '@infrastructure/providers/bcrypt.hashing.provider';
 import { CustomersRepository } from '@infrastructure/repositories/customer.repository';
 import { Customer } from '@infrastructure/schemas/user/customer.schema';
-import { Location } from '@infrastructure/schemas/location.schema';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Customer, Location])],
+  imports: [TypeOrmModule.forFeature([Customer])],
   controllers: [CustomerController],
   providers: [
     CreateCustomerUsecase,

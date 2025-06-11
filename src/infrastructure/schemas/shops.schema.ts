@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Owner } from './user/owner.shcema';
+import { Owner } from './user/owner.schema';
 
 @Entity({ name: 'Shop' })
 export class Shop {

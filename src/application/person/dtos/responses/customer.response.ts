@@ -1,21 +1,14 @@
-import { Customer } from '@domain/entities/person/users/customer.entitiy';
+import { Customer } from '@domain/entities/person/users/customer.entity';
 import { UserResponseDto } from './user.response';
 import { ApiProperty } from '@nestjs/swagger';
-import { LocationResponseDto } from '@application/location/dtos/response/location.response.dto';
 
 export class CustomerResponseDto extends UserResponseDto {
   @ApiProperty({
     description: 'The URL of the calendar',
     type: String,
-    example: 'https/saloony.ts/images/31553',
+    example: 'https://saloony.tn/images/31553',
   })
   public calendarURL: string;
-
-  @ApiProperty({
-    description: 'The stored location',
-    type: LocationResponseDto,
-  })
-  public location: LocationResponseDto;
 
   private constructor(
     id: string,
@@ -45,7 +38,6 @@ export class CustomerResponseDto extends UserResponseDto {
     );
 
     customerResponse.calendarURL = customer.calendarURL;
-    customerResponse.location = LocationResponseDto.createFromEntity(customer.location);
 
     return customerResponse;
   }
