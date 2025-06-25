@@ -12,6 +12,8 @@ export function IsAgeAtLeast(minAge: number, validationOptions?: ValidationOptio
         validate(value: any, args: ValidationArguments) {
           if (!value) return false;
           const birthdate = new Date(value);
+          if (isNaN(birthdate.getTime())) return false;
+
           const today = new Date();
 
           const age = today.getFullYear() - birthdate.getFullYear();
