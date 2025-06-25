@@ -1,4 +1,4 @@
-export class Shop {
+export class Saloon {
   id: string;
   name: string;
   joinDate: Date;

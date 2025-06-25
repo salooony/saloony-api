@@ -1,5 +1,5 @@
 import { User } from '@domain/entities/person/users/user.entity';
-import { UserRequestDto } from '../dtos/requests/user.request';
+import { UserRequestDto } from '../dtos/requests/user.request.dto';
 import { PersonTransformer } from './person.transformer';
 
 export abstract class UserTransformer extends PersonTransformer {

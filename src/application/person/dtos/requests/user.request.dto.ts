@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { PersonRequestDto } from './person.request';
 import { IsNotEmpty, IsString, IsEmail, IsMobilePhone, IsStrongPassword } from 'class-validator';
 
-export abstract class UserRequestDto extends PersonRequestDto {
+export class UserRequestDto extends PersonRequestDto {
   @ApiProperty({
     description: 'The email address',
     type: String,

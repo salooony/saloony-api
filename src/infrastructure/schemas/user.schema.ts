@@ -1,23 +1,25 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Roles } from '@domain/enums/roles.enum';
+import { User_Saloon } from './user-saloon.schema';
 
 @Entity({ name: 'User' })
 export class User {
   @PrimaryGeneratedColumn() // param?
-  id: String;
+  id: number;
 
   @Column({
     type: 'varchar',
     length: 50,
     nullable: false,
   })
-  public firstname: String;
+  public firstname: string;
 
   @Column({
     type: 'varchar',
     length: 50,
     nullable: false,
   })
-  public lastname: String;
+  public lastname: string;
 
   @Column({
     type: 'date',
@@ -28,30 +30,32 @@ export class User {
   @Column({
     type: 'varchar',
     length: 100,
-    nullable: false,
+    // nullable: false,
   })
-  public imageURL: String;
+  public imageURL: string;
 
   @Column({
     type: 'varchar',
     length: 50,
     nullable: false,
+    unique: true,
   })
-  public email: String;
+  public email: string;
 
   @Column({
     type: 'varchar',
     length: 15,
     nullable: false,
+    unique: true,
   })
-  public mobileNumber: String;
+  public mobileNumber: string;
 
   @Column({
     type: 'varchar',
     length: 100,
     nullable: false,
   })
-  public password: String;
+  public password: string;
 
   @Column({
     type: 'date',
@@ -61,15 +65,18 @@ export class User {
 
   @Column({
     type: 'varchar',
-    length: 100,
-    nullable: false,
-  })
-  public calendarURL: String;
-
-  @Column({
-    type: 'varchar',
     length: 50,
     nullable: false,
   })
-  public language: String;
+  public language: string;
+
+  @Column({
+    type: 'enum',
+    enum: Roles,
+    nullable: false,
+  })
+  public role: Roles;
+
+  @OneToMany(() => User_Saloon, (user_saloon) => user_saloon.user)
+  saloons: User_Saloon[];
 }
