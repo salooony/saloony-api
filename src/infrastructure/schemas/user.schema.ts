@@ -4,7 +4,7 @@ import { User_Saloon } from './user-saloon.schema';
 
 @Entity({ name: 'User' })
 export class User {
-  @PrimaryGeneratedColumn() // param?
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({

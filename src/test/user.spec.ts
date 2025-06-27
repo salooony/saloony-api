@@ -1,15 +1,14 @@
-import { UserRequestDto } from '@application/person/dtos/requests/user.request.dto';
-import { CustomerResponseDto } from '@application/person/dtos/responses/customer.response.dto';
-import { SaloonUserResponseDto } from '@application/person/dtos/responses/saloon-user.response.dto';
-import { CustomerTransformer } from '@application/person/transformers/customer.transformer';
-import { SaloonUserTransformer } from '@application/person/transformers/saloon-user.transformer';
-import { CreateCustomerUsecase } from '@application/person/user/customer/usecases/create.usecase';
-import { CreateSaloonUserUsecase } from '@application/person/user/saloon-user/usecases/create.usecase';
-import { Customer } from '@domain/entities/person/users/customer.entity';
-import { SaloonUser } from '@domain/entities/person/users/saloon-user.entity';
+import { UserRequestDto } from '@application/user/dtos/requests/user.request.dto';
+import { UserResponseDto } from '@application/user/dtos/responses/user.response';
+import { UserTransformer } from '@application/user/transformers/user.transformer';
+import { CreateUserUsecase } from '@application/user/usecases/create.usecase';
+import { Client } from '@domain/entities/users/client.entity';
+import { SaloonUser } from '@domain/entities/users/saloon-user.entity';
+import { Roles } from '@domain/enums/roles.enum';
 import { UserController } from '@infrastructure/controllers/user.controller';
 import { MockUsersReporitory } from '@infrastructure/mock-repositories/user.mock.repository';
 import { BcryptHashingProvider } from '@infrastructure/providers/bcrypt.hashing.provider';
+import { ConflictException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { plainToInstance } from 'class-transformer';
 import { validate, ValidationError } from 'class-validator';
@@ -21,14 +20,11 @@ describe('UserController', () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
       providers: [
-        CreateCustomerUsecase,
-        CustomerTransformer,
-        CreateSaloonUserUsecase,
-        SaloonUserTransformer,
+        CreateUserUsecase,
+        UserTransformer,
         { provide: 'UsersRepository', useClass: MockUsersReporitory },
         { provide: 'HashingProvider', useClass: BcryptHashingProvider },
       ],
-      // imports: [CustomerModule, SaloonUserModule],
     }).compile();
 
     userController = app.get<UserController>(UserController);
@@ -37,6 +33,7 @@ describe('UserController', () => {
       firstname: 'John',
       lastname: 'Doe',
       birthdate: new Date('4/3/2005'),
+      role: Roles.CLIENT,
       email: 'user1@email.com',
       mobileNumber: '00000',
       password: 'P@ssw0rd',
@@ -49,20 +46,19 @@ describe('UserController', () => {
       const dto = plainToInstance(UserRequestDto, request);
       const errors = await validate(dto);
 
-      const customer = new Customer();
-      customer.id = '1';
+      const customer = new Client();
+      customer.id = 1;
       customer.firstname = 'John';
       customer.lastname = 'Doe';
       customer.birthdate = new Date('4/3/2005');
       customer.email = 'user1@email.com';
       customer.mobileNumber = '00000';
-      customer.imageURL = '';
       customer.password = 'p@ssword';
       customer.joinDate = new Date();
       customer.language = 'French';
 
-      const response = await userController.createCustomer(request);
-      const expectedResponse = CustomerResponseDto.createFromEntity(customer);
+      const response = await userController.create(request);
+      const expectedResponse = UserResponseDto.createFromEntity(customer);
 
       expect(errors).toHaveLength(0);
 
@@ -77,24 +73,26 @@ describe('UserController', () => {
     });
 
     it('Should create a saloon user peacefully', async () => {
+      request.email = 'user2@email.com';
+      request.role = Roles.SALOON_USER;
+
       const dto = plainToInstance(UserRequestDto, request);
       const errors = await validate(dto);
 
       const saloonUser = new SaloonUser();
-      saloonUser.id = '1';
+      saloonUser.id = 2;
       saloonUser.firstname = 'John';
       saloonUser.lastname = 'Doe';
       saloonUser.birthdate = new Date('4/3/2005');
-      saloonUser.email = 'user1@email.com';
+      saloonUser.email = 'user2@email.com';
       saloonUser.mobileNumber = '00000';
-      saloonUser.imageURL = '';
       saloonUser.password = 'p@ssword';
       saloonUser.joinDate = new Date();
       saloonUser.language = 'French';
       saloonUser.saloons = [];
 
-      const response = await userController.createSaloonUser(request);
-      const expectedResponse = SaloonUserResponseDto.createFromEntity(saloonUser);
+      const response = await userController.create(request);
+      const expectedResponse = UserResponseDto.createFromEntity(saloonUser);
 
       expect(errors).toHaveLength(0);
 
@@ -147,21 +145,43 @@ describe('UserController', () => {
       expect(errors[0].property).toEqual('birthdate');
       expect(errors[0].constraints).toHaveProperty('isNotEmpty');
       expect(errors[0].constraints).toHaveProperty('isDate');
-      expect(errors[0].constraints).toHaveProperty('isAgeAtLeast');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(3);
+      expect(Object.keys(errors[0].constraints)).toHaveLength(2);
     });
 
-    it('Should fail for invalid birthdate (user is too young)', async () => {
-      const today = new Date();
-      request.birthdate = new Date(today.getFullYear() - 15, today.getMonth(), today.getDate());
+    it('Should fail for missing role', async () => {
+      request.role = null;
 
       const dto = plainToInstance(UserRequestDto, request);
       const errors = await validate(dto);
 
       expect(errors).toHaveLength(1);
       expect(errors[0]).toBeInstanceOf(ValidationError);
-      expect(errors[0].property).toEqual('birthdate');
-      expect(errors[0].constraints).toHaveProperty('isAgeAtLeast');
+      expect(errors[0].property).toEqual('role');
+      expect(errors[0].constraints).toHaveProperty('isNotEmpty');
+      expect(errors[0].constraints).toHaveProperty('isString');
+      expect(errors[0].constraints).toHaveProperty('isEnum');
+      expect(Object.keys(errors[0].constraints)).toHaveLength(3);
+    });
+
+    it('Should fail for invalid client role', async () => {
+      const dto = plainToInstance(UserRequestDto, { ...request, role: 'client' });
+      const errors = await validate(dto);
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toBeInstanceOf(ValidationError);
+      expect(errors[0].property).toEqual('role');
+      expect(errors[0].constraints).toHaveProperty('isEnum');
+      expect(Object.keys(errors[0].constraints)).toHaveLength(1);
+    });
+
+    it('Should fail for invalid saloon user role', async () => {
+      const dto = plainToInstance(UserRequestDto, { ...request, role: 'saloon user' });
+      const errors = await validate(dto);
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toBeInstanceOf(ValidationError);
+      expect(errors[0].property).toEqual('role');
+      expect(errors[0].constraints).toHaveProperty('isEnum');
       expect(Object.keys(errors[0].constraints)).toHaveLength(1);
     });
 
@@ -192,21 +212,13 @@ describe('UserController', () => {
       expect(errors[0].constraints).toHaveProperty('isEmail');
       expect(Object.keys(errors[0].constraints)).toHaveLength(1);
     });
-    /*
-    it('Should fail for invalid email (duplicated email)', async () => {
-      const dto = plainToInstance(UserRequestDto, request);
-      const errors = await validate(dto);
 
-      const response = await userController.createCustomer(request);
-
-      expect(errors).toHaveLength(0);
-      // console.log(response);
-      // expect(errors[0]).toBeInstanceOf(ValidationError);
-      // expect(errors[0].property).toEqual('email');
-      // expect(errors[0].constraints).toHaveProperty('isEmail');
-      // expect(Object.keys(errors[0].constraints)).toHaveLength(1);
+    it('Should fail for invalid email (duplicated email)', () => {
+      expect(async () => await userController.create(request)).rejects.toEqual(
+        new ConflictException('A user with the same email and/or mobileNumber already exists.'),
+      );
     });
-*/
+
     it('Should fail for missing mobile number', async () => {
       request.mobileNumber = null;
 

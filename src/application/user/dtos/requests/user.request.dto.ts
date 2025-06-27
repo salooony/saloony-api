@@ -1,8 +1,59 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PersonRequestDto } from './person.request';
-import { IsNotEmpty, IsString, IsEmail, IsMobilePhone, IsStrongPassword } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsEmail,
+  IsMobilePhone,
+  IsStrongPassword,
+  IsDate,
+  IsEnum,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import { Roles } from '@domain/enums/roles.enum';
 
-export class UserRequestDto extends PersonRequestDto {
+export class UserRequestDto {
+  @ApiProperty({
+    description: 'The first name',
+    type: String,
+    required: true,
+    example: 'John',
+  })
+  @IsNotEmpty()
+  @IsString()
+  public firstname: string;
+
+  @ApiProperty({
+    description: 'The last name',
+    type: String,
+    required: true,
+    example: 'Doe',
+  })
+  @IsNotEmpty()
+  @IsString()
+  public lastname: string;
+
+  @ApiProperty({
+    description: 'The date of birth',
+    type: String,
+    required: true,
+    example: '4/3/2005',
+  })
+  @IsNotEmpty()
+  @Type(() => Date)
+  @IsDate()
+  public birthdate: Date;
+
+  @ApiProperty({
+    description: 'The role of the user (could be for a client or saloon user)',
+    type: String,
+    required: true,
+    example: 'Client',
+  })
+  @IsNotEmpty()
+  @IsString()
+  @IsEnum(Roles)
+  public role: Roles;
+
   @ApiProperty({
     description: 'The email address',
     type: String,
@@ -56,12 +107,16 @@ export class UserRequestDto extends PersonRequestDto {
     firstname: string,
     lastname: string,
     birthdate: Date,
+    role: Roles,
     email: string,
     mobileNumber: string,
     password: string,
     language: string,
   ) {
-    super(firstname, lastname, birthdate);
+    this.firstname = firstname;
+    this.lastname = lastname;
+    this.birthdate = birthdate;
+    this.role = role;
     this.email = email;
     this.mobileNumber = mobileNumber;
     this.password = password;

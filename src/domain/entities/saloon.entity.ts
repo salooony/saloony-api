@@ -1,5 +1,5 @@
 export class Saloon {
-  id: string;
+  id: number;
   name: string;
   joinDate: Date;
   description: string;

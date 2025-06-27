@@ -1,10 +1,8 @@
 import { Roles } from '@domain/enums/roles.enum';
 import { User } from './user.entity';
 
-export class Customer extends User {
-  public calendarURL: string;
-
+export class Client extends User {
   public getRole() {
-    return Roles.CUSTOMER;
+    return Roles.CLIENT;
   }
 }
