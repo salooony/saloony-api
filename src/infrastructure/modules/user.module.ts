@@ -3,14 +3,14 @@ import { CreateUserUsecase } from '@application/user/usecases/create.usecase';
 import { UserController } from '@infrastructure/controllers/user.controller';
 import { BcryptHashingProvider } from '@infrastructure/providers/bcrypt.hashing.provider';
 import { UsersRepository } from '@infrastructure/repositories/user.repository';
-import { Saloon } from '@infrastructure/schemas/saloon.schema';
-import { User_Saloon } from '@infrastructure/schemas/user-saloon.schema';
-import { User } from '@infrastructure/schemas/user.schema';
+import { Saloon } from '@infrastructure/schemas/saloon.entity';
+import { UserSaloon } from '@infrastructure/schemas/user-saloon.entity';
+import { User } from '@infrastructure/schemas/user.entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, User_Saloon, Saloon])],
+  imports: [TypeOrmModule.forFeature([User, UserSaloon, Saloon])],
   controllers: [UserController],
   providers: [
     CreateUserUsecase,

@@ -3,8 +3,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import appConfig from './config/app.config';
 import databaseConfig, { DatabaseConfig } from './config/database.config';
-import { CustomerModule } from '@infrastructure/modules/customer.module';
-import { SaloonUserModule } from '@infrastructure/modules/saloon-user.module';
 import { UserModule } from '@infrastructure/modules/user.module';
 
 const ENV = process.env.NODE_ENV;
@@ -36,8 +34,6 @@ const ENV = process.env.NODE_ENV;
       },
     }),
     UserModule,
-    CustomerModule,
-    SaloonUserModule,
   ],
 })
 export class AppModule {}

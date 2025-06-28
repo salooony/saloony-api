@@ -13,7 +13,7 @@ import { Roles } from '@domain/enums/roles.enum';
 
 export class UserRequestDto {
   @ApiProperty({
-    description: 'The first name',
+    description: 'The first name.',
     type: String,
     required: true,
     example: 'John',
@@ -23,7 +23,7 @@ export class UserRequestDto {
   public firstname: string;
 
   @ApiProperty({
-    description: 'The last name',
+    description: 'The last name.',
     type: String,
     required: true,
     example: 'Doe',
@@ -33,7 +33,7 @@ export class UserRequestDto {
   public lastname: string;
 
   @ApiProperty({
-    description: 'The date of birth',
+    description: 'The date of birth.',
     type: String,
     required: true,
     example: '4/3/2005',
@@ -44,7 +44,7 @@ export class UserRequestDto {
   public birthdate: Date;
 
   @ApiProperty({
-    description: 'The role of the user (could be for a client or saloon user)',
+    description: 'The role of the user (could be for a client or saloon user).',
     type: String,
     required: true,
     example: 'Client',
@@ -55,7 +55,7 @@ export class UserRequestDto {
   public role: Roles;
 
   @ApiProperty({
-    description: 'The email address',
+    description: 'The email address.',
     type: String,
     required: true,
     example: 'example@email.com',
@@ -66,7 +66,7 @@ export class UserRequestDto {
   public email: string;
 
   @ApiProperty({
-    description: 'The mobile number',
+    description: 'The mobile number.',
     type: String,
     required: true,
     example: '002105495626',
@@ -77,7 +77,7 @@ export class UserRequestDto {
   public mobileNumber: string;
 
   @ApiProperty({
-    description: 'The password for the account',
+    description: 'The password for the account.',
     type: String,
     required: true,
     example: 'P@ssw0rd',
@@ -94,7 +94,7 @@ export class UserRequestDto {
   public password: string;
 
   @ApiProperty({
-    description: 'The language the user chose to use the application',
+    description: 'The language the user chose to use the application.',
     type: String,
     required: true,
     example: 'French',

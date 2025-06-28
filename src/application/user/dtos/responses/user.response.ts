@@ -1,39 +1,40 @@
-import { User } from '@domain/entities/users/user.entity';
+import { User } from '@domain/entities/user';
 import { Roles } from '@domain/enums/roles.enum';
 import { SaloonRoles } from '@domain/enums/saloon-roles.enum';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserSaloonsResponseDto } from './user-saloons.response';
 
 export class UserResponseDto {
   @ApiProperty({
-    description: 'The id stored in the database',
+    description: 'The id stored in the database.',
     type: Number,
     example: 70,
   })
   public id: number;
 
   @ApiProperty({
-    description: 'The first name',
+    description: 'The first name.',
     type: String,
     example: 'John',
   })
   public firstname: string;
 
   @ApiProperty({
-    description: 'The last name',
+    description: 'The last name.',
     type: String,
     example: 'Doe',
   })
   public lastname: string;
 
   @ApiProperty({
-    description: 'The date of birth',
+    description: 'The date of birth.',
     type: Date,
     example: '4/3/2005',
   })
   public birthdate: Date;
 
   @ApiProperty({
-    description: 'The role of the user (could be client or saloon user)',
+    description: 'The role of the user (could be client or saloon user).',
     type: String,
     required: true,
     example: 'Client',
@@ -41,28 +42,35 @@ export class UserResponseDto {
   public role: Roles;
 
   @ApiProperty({
-    description: 'The email address',
+    description: 'The email address.',
     type: String,
     example: 'example@email.com',
   })
   public email: string;
 
   @ApiProperty({
-    description: 'The mobile number',
+    description: 'The mobile number.',
     type: String,
     example: '002105495626',
   })
   public mobileNumber: string;
 
   @ApiProperty({
-    description: 'The date at which the account was created',
+    description: 'The date at which the account was created.',
     type: Date,
     example: '4/3/2026',
   })
-  public joinDate: Date;
+  public createdAt: Date;
 
   @ApiProperty({
-    description: 'The language the user prefers to use the application',
+    description: 'The date at which the account was updated.',
+    type: Date,
+    example: '4/3/2026',
+  })
+  public updatedAt: Date;
+
+  @ApiProperty({
+    description: 'The language the user prefers to use the application.',
     type: String,
     required: true,
     example: 'French',
@@ -70,15 +78,11 @@ export class UserResponseDto {
   public language: string;
 
   @ApiProperty({
-    description: 'The saloons the user has owned',
-    type: Array<{ saloonId: Number; role: SaloonRoles }>,
-    required: true,
-    example: [
-      { saloonId: 1, role: SaloonRoles.OWNER },
-      { saloonId: 2, role: SaloonRoles.OWNER },
-    ],
+    description: 'The saloons the user has interacted with.',
+    type: UserSaloonsResponseDto,
+    required: false,
   })
-  public saloons: Array<{ saloonId: number; role: SaloonRoles }>;
+  public user_saloons: Array<UserSaloonsResponseDto>;
 
   private constructor() {}
 
@@ -92,13 +96,13 @@ export class UserResponseDto {
     userResponse.role = user.getRole();
     userResponse.email = user.email;
     userResponse.mobileNumber = user.mobileNumber;
-    userResponse.joinDate = user.joinDate;
+    userResponse.createdAt = user.createdAt;
+    userResponse.updatedAt = user.updatedAt;
     userResponse.language = user.language;
 
-    userResponse.saloons = user.saloons.map((saloonObject) => ({
-      saloonId: saloonObject.saloon.id,
-      role: saloonObject.role,
-    }));
+    userResponse.user_saloons = user.saloons.map((saloon) =>
+      UserSaloonsResponseDto.createFromEntity(saloon),
+    );
 
     return userResponse;
   }

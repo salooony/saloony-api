@@ -1,25 +1,21 @@
-import { IUserRepository } from '@domain/ports/userRepository.interface';
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { IUserRepository } from '@domain/ports/iuser.repository';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User as UserEntity } from '@infrastructure/schemas/user.schema';
-import { HashingProviderInterface } from '@application/providers/hashing.provider.interface';
-import { User } from '@domain/entities/users/user.entity';
+import { User as UserEntity } from '@infrastructure/schemas/user.entity';
+import { User } from '@domain/entities/user';
+import { UserMapper } from '@infrastructure/mappers/user.mapper';
 
 @Injectable()
 export class UsersRepository implements IUserRepository {
-  constructor(
-    @InjectRepository(UserEntity) private repository: Repository<UserEntity>,
-    @Inject('HashingProvider') private hashingProvider: HashingProviderInterface,
-  ) {}
+  constructor(@InjectRepository(UserEntity) private repository: Repository<UserEntity>) {}
 
   async save(user: User): Promise<User> {
-    user.password = await this.hashingProvider.hash(user.password);
-    const userDoc = await this.repository.save({
+    const savedUser = await this.repository.save({
       ...(user as unknown as UserEntity),
       role: user.getRole(),
     });
 
-    return userDoc as unknown as User;
+    return UserMapper.map(savedUser);
   }
 }

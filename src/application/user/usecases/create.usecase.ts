@@ -1,30 +1,33 @@
 import { UserRequestDto } from '@application/user/dtos/requests/user.request.dto';
-import { IUserRepository } from '@domain/ports/userRepository.interface';
-import { ConflictException, Inject } from '@nestjs/common';
+import { IUserRepository } from '@domain/ports/iuser.repository';
+import { ConflictException, Inject, InternalServerErrorException } from '@nestjs/common';
 import { UserTransformer } from '../transformers/user.transformer';
 import { UserResponseDto } from '../dtos/responses/user.response';
+import { HashingProviderInterface } from '@application/providers/hashing.provider.interface';
 
 export class CreateUserUsecase {
   constructor(
     private readonly transformer: UserTransformer,
+    @Inject('HashingProvider') private hashingProvider: HashingProviderInterface,
     @Inject('UsersRepository') private readonly userRepository: IUserRepository,
   ) {}
 
   async execute(userRequestDto: UserRequestDto): Promise<UserResponseDto> {
     const user = this.transformer.toEntity(userRequestDto);
-
-    let databaseResponse;
+    user.password = await this.hashingProvider.hash(user.password);
 
     try {
-      databaseResponse = await this.userRepository.save(user);
+      const createdUser = await this.userRepository.save(user);
+
+      return UserResponseDto.createFromEntity(createdUser);
     } catch (error) {
-      if (error.message.includes('duplicate key')) {
+      if (error instanceof Error && error.message.includes('duplicate key')) {
         throw new ConflictException(
           'A user with the same email and/or mobileNumber already exists.',
         );
-      } else console.log(error.message);
+      }
     }
 
-    return UserResponseDto.createFromEntity(databaseResponse);
+    throw new InternalServerErrorException('Failed to create user.');
   }
 }

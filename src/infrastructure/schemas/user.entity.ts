@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Roles } from '@domain/enums/roles.enum';
-import { User_Saloon } from './user-saloon.schema';
+import { UserSaloon } from './user-saloon.entity';
 
 @Entity({ name: 'User' })
 export class User {
@@ -77,6 +77,6 @@ export class User {
   })
   public role: Roles;
 
-  @OneToMany(() => User_Saloon, (user_saloon) => user_saloon.user)
-  saloons: User_Saloon[];
+  @OneToMany(() => UserSaloon, (user_saloon) => user_saloon.user)
+  saloons: UserSaloon[];
 }
