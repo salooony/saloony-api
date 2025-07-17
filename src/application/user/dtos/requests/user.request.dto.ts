@@ -50,7 +50,6 @@ export class UserRequestDto {
     example: 'Client',
   })
   @IsNotEmpty()
-  @IsString()
   @IsEnum(Roles)
   public role: Roles;
 
@@ -61,7 +60,6 @@ export class UserRequestDto {
     example: 'example@email.com',
   })
   @IsNotEmpty()
-  @IsString()
   @IsEmail()
   public email: string;
 
@@ -72,7 +70,6 @@ export class UserRequestDto {
     example: '002105495626',
   })
   @IsNotEmpty()
-  @IsString()
   @IsMobilePhone()
   public mobileNumber: string;
 
@@ -83,7 +80,6 @@ export class UserRequestDto {
     example: 'P@ssw0rd',
   })
   @IsNotEmpty()
-  @IsString()
   @IsStrongPassword({
     minLength: 7,
     minLowercase: 1,

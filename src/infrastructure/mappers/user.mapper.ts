@@ -1,15 +1,15 @@
 import { User } from '@domain/entities/user';
 import { User as UserEntity } from '@infrastructure/schemas/user.entity';
+import { UserSaloonMapper } from './user-saloon.mapper';
 
 export class UserMapper {
-  private constructor() {}
-
   static map(createdUser: UserEntity): User {
     const user = new User();
 
     user.id = createdUser.id;
     user.firstname = createdUser.firstname;
     user.lastname = createdUser.lastname;
+    user.avatar = createdUser.avatar;
     user.birthdate = createdUser.birthdate;
     user.role = createdUser.role;
     user.email = createdUser.email;
@@ -18,8 +18,25 @@ export class UserMapper {
     user.createdAt = createdUser.createdAt;
     user.updatedAt = createdUser.updatedAt;
     user.language = createdUser.language;
-    //   public saloons: Array<{ saloon: Saloon; role: SaloonRoles }> = [];
+    user.saloons = createdUser.saloons.map((userSaloon) => UserSaloonMapper.map(userSaloon));
 
     return user;
+  }
+
+  static toEntity(user: User): UserEntity {
+    const entity = new UserEntity();
+
+    entity.firstname = user.firstname;
+    entity.lastname = user.lastname;
+    entity.avatar = user.avatar;
+    entity.birthdate = user.birthdate;
+    entity.role = user.role;
+    entity.email = user.email;
+    entity.mobileNumber = user.mobileNumber;
+    entity.password = user.password;
+    entity.language = user.language;
+    entity.saloons = user.saloons.map((saloon) => UserSaloonMapper.toEntity(saloon));
+
+    return entity;
   }
 }

@@ -7,12 +7,11 @@ export class UserTransformer {
 
     user.firstname = userRequest.firstname;
     user.lastname = userRequest.lastname;
+    user.role = userRequest.role;
     user.birthdate = userRequest.birthdate;
     user.email = userRequest.email;
     user.mobileNumber = userRequest.mobileNumber;
     user.password = userRequest.password;
-    user.createdAt = new Date();
-    user.updatedAt = user.createdAt;
     user.language = userRequest.language;
 
     user.saloons = [];

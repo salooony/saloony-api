@@ -1,8 +1,7 @@
 import { User } from '@domain/entities/user';
 import { Roles } from '@domain/enums/roles.enum';
-import { SaloonRoles } from '@domain/enums/saloon-roles.enum';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserSaloonsResponseDto } from './user-saloons.response';
+import { UserSaloonsResponseDto } from './user-saloons.response.dto';
 
 export class UserResponseDto {
   @ApiProperty({
@@ -82,7 +81,7 @@ export class UserResponseDto {
     type: UserSaloonsResponseDto,
     required: false,
   })
-  public user_saloons: Array<UserSaloonsResponseDto>;
+  public saloons: UserSaloonsResponseDto[];
 
   private constructor() {}
 
@@ -93,14 +92,14 @@ export class UserResponseDto {
     userResponse.firstname = user.firstname;
     userResponse.lastname = user.lastname;
     userResponse.birthdate = user.birthdate;
-    userResponse.role = user.getRole();
+    userResponse.role = user.role;
     userResponse.email = user.email;
     userResponse.mobileNumber = user.mobileNumber;
     userResponse.createdAt = user.createdAt;
     userResponse.updatedAt = user.updatedAt;
     userResponse.language = user.language;
 
-    userResponse.user_saloons = user.saloons.map((saloon) =>
+    userResponse.saloons = user.saloons.map((saloon) =>
       UserSaloonsResponseDto.createFromEntity(saloon),
     );
 

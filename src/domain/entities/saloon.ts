@@ -1,5 +1,5 @@
 export class Saloon {
-  public readonly id: number;
+  public id: number;
   public name: string;
   public createdAt: Date;
   public updatedAt: Date;

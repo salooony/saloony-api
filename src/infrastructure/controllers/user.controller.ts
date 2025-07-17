@@ -1,5 +1,5 @@
 import { UserRequestDto } from '@application/user/dtos/requests/user.request.dto';
-import { UserResponseDto } from '@application/user/dtos/responses/user.response';
+import { UserResponseDto } from '@application/user/dtos/responses/user.response.dto';
 import { CreateUserUsecase } from '@application/user/usecases/create.usecase';
 import { Body, Controller, Header, HttpStatus, Post, ValidationPipe } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -7,7 +7,7 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
-  constructor(private readonly createUseCase: CreateUserUsecase) {}
+  constructor(private readonly createUsecase: CreateUserUsecase) {}
 
   @ApiOperation({ summary: 'Register a new user' })
   @ApiBody({ type: UserRequestDto })
@@ -27,6 +27,6 @@ export class UserController {
   @Post()
   @Header('Content-Type', 'application/json')
   async create(@Body(new ValidationPipe()) userRequest: UserRequestDto): Promise<UserResponseDto> {
-    return await this.createUseCase.execute(userRequest);
+    return await this.createUsecase.execute(userRequest);
   }
 }

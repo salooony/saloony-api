@@ -1,4 +1,4 @@
-import { UserSaloons } from '@domain/entities/user_saloons';
+import { UserSaloon } from '@domain/entities/user-saloon';
 import { SaloonRoles } from '@domain/enums/saloon-roles.enum';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -9,7 +9,7 @@ export class UserSaloonsResponseDto {
     required: true,
     example: 1,
   })
-  public saloon_id: number;
+  public saloonId: number;
 
   @ApiProperty({
     description: 'The role of the user in this saloon.',
@@ -21,11 +21,11 @@ export class UserSaloonsResponseDto {
 
   private constructor() {}
 
-  public static createFromEntity(userSloons: UserSaloons): UserSaloonsResponseDto {
+  public static createFromEntity(userSloon: UserSaloon): UserSaloonsResponseDto {
     const response = new UserSaloonsResponseDto();
 
-    response.saloon_id = userSloons.saloon_id;
-    response.role = userSloons.role;
+    response.saloonId = userSloon.saloon.id;
+    response.role = userSloon.role;
 
     return response;
   }

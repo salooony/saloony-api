@@ -1,5 +1,5 @@
 import { UserRequestDto } from '@application/user/dtos/requests/user.request.dto';
-import { UserResponseDto } from '@application/user/dtos/responses/user.response';
+import { UserResponseDto } from '@application/user/dtos/responses/user.response.dto';
 import { UserTransformer } from '@application/user/transformers/user.transformer';
 import { CreateUserUsecase } from '@application/user/usecases/create.usecase';
 import { Client } from '@domain/entities/users/client.entity';

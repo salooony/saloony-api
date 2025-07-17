@@ -1,8 +1,8 @@
 import { UserRequestDto } from '@application/user/dtos/requests/user.request.dto';
 import { IUserRepository } from '@domain/ports/iuser.repository';
 import { ConflictException, Inject, InternalServerErrorException } from '@nestjs/common';
-import { UserTransformer } from '../transformers/user.transformer';
-import { UserResponseDto } from '../dtos/responses/user.response';
+import { UserTransformer } from '@application/user/transformers/user.transformer';
+import { UserResponseDto } from '@application/user/dtos/responses/user.response.dto';
 import { HashingProviderInterface } from '@application/providers/hashing.provider.interface';
 
 export class CreateUserUsecase {
@@ -15,7 +15,6 @@ export class CreateUserUsecase {
   async execute(userRequestDto: UserRequestDto): Promise<UserResponseDto> {
     const user = this.transformer.toEntity(userRequestDto);
     user.password = await this.hashingProvider.hash(user.password);
-
     try {
       const createdUser = await this.userRepository.save(user);
 
@@ -26,8 +25,8 @@ export class CreateUserUsecase {
           'A user with the same email and/or mobileNumber already exists.',
         );
       }
-    }
 
-    throw new InternalServerErrorException('Failed to create user.');
+      throw new InternalServerErrorException('Failed to create user.');
+    }
   }
 }

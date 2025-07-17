@@ -1,82 +1,52 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Roles } from '@domain/enums/roles.enum';
 import { UserSaloon } from './user-saloon.entity';
 
-@Entity({ name: 'User' })
+@Entity({ name: 'user' })
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({
-    type: 'varchar',
-    length: 50,
-    nullable: false,
-  })
-  public firstname: string;
+  @Column({ type: 'varchar', length: 50 })
+  firstname: string;
 
-  @Column({
-    type: 'varchar',
-    length: 50,
-    nullable: false,
-  })
-  public lastname: string;
+  @Column({ type: 'varchar', length: 50 })
+  lastname: string;
 
-  @Column({
-    type: 'date',
-    nullable: false,
-  })
-  public birthdate: Date;
+  @Column({ type: 'date' })
+  birthdate: Date;
 
-  @Column({
-    type: 'varchar',
-    length: 100,
-    // nullable: false,
-  })
-  public imageURL: string;
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  avatar: string;
 
-  @Column({
-    type: 'varchar',
-    length: 50,
-    nullable: false,
-    unique: true,
-  })
-  public email: string;
+  @Column({ type: 'varchar', length: 50, unique: true })
+  email: string;
 
-  @Column({
-    type: 'varchar',
-    length: 15,
-    nullable: false,
-    unique: true,
-  })
-  public mobileNumber: string;
+  @Column({ type: 'varchar', name: 'mobile_number', length: 15, unique: true })
+  mobileNumber: string;
 
-  @Column({
-    type: 'varchar',
-    length: 100,
-    nullable: false,
-  })
-  public password: string;
+  @Column({ type: 'varchar', length: 100 })
+  password: string;
 
-  @Column({
-    type: 'date',
-    nullable: false,
-  })
-  public joinDate: Date;
+  @Column({ type: 'varchar', length: 50 })
+  language: string;
 
-  @Column({
-    type: 'varchar',
-    length: 50,
-    nullable: false,
-  })
-  public language: string;
+  @Column({ type: 'enum', enum: Roles })
+  role: Roles;
 
-  @Column({
-    type: 'enum',
-    enum: Roles,
-    nullable: false,
-  })
-  public role: Roles;
+  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
+  createdAt: Date;
 
-  @OneToMany(() => UserSaloon, (user_saloon) => user_saloon.user)
+  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
+  updatedAt: Date;
+
+  @OneToMany(() => UserSaloon, (userSaloon) => userSaloon.user)
   saloons: UserSaloon[];
 }

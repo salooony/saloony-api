@@ -1,6 +1,6 @@
 import { HashingProviderInterface } from '@application/providers/hashing.provider.interface';
-import { User } from '@domain/entities/users/user.entity';
-import { IUserRepository } from '@domain/ports/userRepository.interface';
+import { User } from '@domain/entities/user';
+import { IUserRepository } from '@domain/ports/iuser.repository';
 import { Inject, Injectable } from '@nestjs/common';
 
 @Injectable()

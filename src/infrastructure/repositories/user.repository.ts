@@ -11,10 +11,7 @@ export class UsersRepository implements IUserRepository {
   constructor(@InjectRepository(UserEntity) private repository: Repository<UserEntity>) {}
 
   async save(user: User): Promise<User> {
-    const savedUser = await this.repository.save({
-      ...(user as unknown as UserEntity),
-      role: user.getRole(),
-    });
+    const savedUser = await this.repository.save(UserMapper.toEntity(user));
 
     return UserMapper.map(savedUser);
   }

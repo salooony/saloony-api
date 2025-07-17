@@ -1,25 +1,35 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { User } from './user.entity';
 import { Saloon } from './saloon.entity';
 import { SaloonRoles } from '@domain/enums/saloon-roles.enum';
 
-@Entity({ name: 'UserSaloon' })
+@Entity({ name: 'user_saloon' })
 export class UserSaloon {
   @PrimaryGeneratedColumn()
   id: number;
 
   @ManyToOne(() => User, (user) => user.saloons)
-  @JoinColumn({ name: 'user_d' }) // Specify the foreign key column
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToOne(() => Saloon, (saloon) => saloon.user_saloon)
-  @JoinColumn({ name: 'saloon_id' }) // Specify the foreign key column
+  @ManyToOne(() => Saloon, (saloon) => saloon.userSaloons)
+  @JoinColumn({ name: 'saloon_id' })
   saloon: Saloon;
 
-  @Column({
-    type: 'enum',
-    enum: SaloonRoles,
-    nullable: false,
-  })
+  @Column({ type: 'enum', enum: SaloonRoles, nullable: false })
   role: SaloonRoles;
+
+  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
+  updatedAt: Date;
 }

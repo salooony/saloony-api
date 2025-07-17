@@ -19,7 +19,7 @@ const ENV = process.env.NODE_ENV;
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const db = configService.get<DatabaseConfig>('database') as DatabaseConfig;
+        const db = configService.get<DatabaseConfig>('database');
 
         return {
           type: 'postgres',
@@ -29,7 +29,7 @@ const ENV = process.env.NODE_ENV;
           password: db.password,
           database: db.database,
           autoLoadEntities: true,
-          synchronize: db.synchronize,
+          synchronize: false,
         };
       },
     }),
