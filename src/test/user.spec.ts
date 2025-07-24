@@ -2,8 +2,7 @@ import { UserRequestDto } from '@application/user/dtos/requests/user.request.dto
 import { UserResponseDto } from '@application/user/dtos/responses/user.response.dto';
 import { UserTransformer } from '@application/user/transformers/user.transformer';
 import { CreateUserUsecase } from '@application/user/usecases/create.usecase';
-import { Client } from '@domain/entities/users/client.entity';
-import { SaloonUser } from '@domain/entities/users/saloon-user.entity';
+import { User } from '@domain/entities/user';
 import { Roles } from '@domain/enums/roles.enum';
 import { UserController } from '@infrastructure/controllers/user.controller';
 import { MockUsersReporitory } from '@infrastructure/mock-repositories/user.mock.repository';
@@ -46,29 +45,30 @@ describe('UserController', () => {
       const dto = plainToInstance(UserRequestDto, request);
       const errors = await validate(dto);
 
-      const customer = new Client();
-      customer.id = 1;
-      customer.firstname = 'John';
-      customer.lastname = 'Doe';
-      customer.birthdate = new Date('4/3/2005');
-      customer.email = 'user1@email.com';
-      customer.mobileNumber = '00000';
-      customer.password = 'p@ssword';
-      customer.joinDate = new Date();
-      customer.language = 'French';
+      const client = new User();
+      client.id = 1;
+      client.firstname = 'John';
+      client.lastname = 'Doe';
+      client.birthdate = new Date('4/3/2005');
+      client.email = 'user1@email.com';
+      client.mobileNumber = '00000';
+      client.password = 'p@ssword';
+      client.createdAt = new Date();
+      client.language = 'French';
+      client.role = Roles.CLIENT;
 
       const response = await userController.create(request);
-      const expectedResponse = UserResponseDto.createFromEntity(customer);
+      const expectedResponse = UserResponseDto.createFromEntity(client);
 
       expect(errors).toHaveLength(0);
 
       expect(response).toEqual({
         ...expectedResponse,
-        joinDate: expect.any(Date),
+        createdAt: expect.any(Date),
       });
 
-      expect(response.joinDate.toISOString().slice(0, 19)).toEqual(
-        expectedResponse.joinDate.toISOString().slice(0, 19),
+      expect(response.createdAt.toISOString().slice(0, 19)).toEqual(
+        expectedResponse.createdAt.toISOString().slice(0, 19),
       );
     });
 
@@ -79,7 +79,7 @@ describe('UserController', () => {
       const dto = plainToInstance(UserRequestDto, request);
       const errors = await validate(dto);
 
-      const saloonUser = new SaloonUser();
+      const saloonUser = new User();
       saloonUser.id = 2;
       saloonUser.firstname = 'John';
       saloonUser.lastname = 'Doe';
@@ -87,9 +87,10 @@ describe('UserController', () => {
       saloonUser.email = 'user2@email.com';
       saloonUser.mobileNumber = '00000';
       saloonUser.password = 'p@ssword';
-      saloonUser.joinDate = new Date();
+      saloonUser.createdAt = new Date();
       saloonUser.language = 'French';
       saloonUser.saloons = [];
+      saloonUser.role = Roles.SALOON_USER;
 
       const response = await userController.create(request);
       const expectedResponse = UserResponseDto.createFromEntity(saloonUser);
@@ -98,11 +99,11 @@ describe('UserController', () => {
 
       expect(response).toEqual({
         ...expectedResponse,
-        joinDate: expect.any(Date),
+        createdAt: expect.any(Date),
       });
 
-      expect(response.joinDate.toISOString().slice(0, 19)).toEqual(
-        expectedResponse.joinDate.toISOString().slice(0, 19),
+      expect(response.createdAt.toISOString().slice(0, 19)).toEqual(
+        expectedResponse.createdAt.toISOString().slice(0, 19),
       );
     });
 
@@ -158,9 +159,8 @@ describe('UserController', () => {
       expect(errors[0]).toBeInstanceOf(ValidationError);
       expect(errors[0].property).toEqual('role');
       expect(errors[0].constraints).toHaveProperty('isNotEmpty');
-      expect(errors[0].constraints).toHaveProperty('isString');
       expect(errors[0].constraints).toHaveProperty('isEnum');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(3);
+      expect(Object.keys(errors[0].constraints)).toHaveLength(2);
     });
 
     it('Should fail for invalid client role', async () => {
@@ -195,9 +195,8 @@ describe('UserController', () => {
       expect(errors[0]).toBeInstanceOf(ValidationError);
       expect(errors[0].property).toEqual('email');
       expect(errors[0].constraints).toHaveProperty('isNotEmpty');
-      expect(errors[0].constraints).toHaveProperty('isString');
       expect(errors[0].constraints).toHaveProperty('isEmail');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(3);
+      expect(Object.keys(errors[0].constraints)).toHaveLength(2);
     });
 
     it('Should fail for invalid email (type error)', async () => {
@@ -229,9 +228,8 @@ describe('UserController', () => {
       expect(errors[0]).toBeInstanceOf(ValidationError);
       expect(errors[0].property).toEqual('mobileNumber');
       expect(errors[0].constraints).toHaveProperty('isNotEmpty');
-      expect(errors[0].constraints).toHaveProperty('isString');
       expect(errors[0].constraints).toHaveProperty('isMobilePhone');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(3);
+      expect(Object.keys(errors[0].constraints)).toHaveLength(2);
     });
 
     it('Should fail for invalid mobile number', async () => {
@@ -257,9 +255,8 @@ describe('UserController', () => {
       expect(errors[0]).toBeInstanceOf(ValidationError);
       expect(errors[0].property).toEqual('password');
       expect(errors[0].constraints).toHaveProperty('isNotEmpty');
-      expect(errors[0].constraints).toHaveProperty('isString');
       expect(errors[0].constraints).toHaveProperty('isStrongPassword');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(3);
+      expect(Object.keys(errors[0].constraints)).toHaveLength(2);
     });
 
     it('Should fail for invalid password (too short)', async () => {

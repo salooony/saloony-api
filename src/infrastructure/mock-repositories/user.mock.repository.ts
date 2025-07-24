@@ -1,12 +1,9 @@
-import { HashingProviderInterface } from '@application/providers/hashing.provider.interface';
 import { User } from '@domain/entities/user';
 import { IUserRepository } from '@domain/ports/iuser.repository';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class MockUsersReporitory implements IUserRepository {
-  constructor(@Inject('HashingProvider') private hashingProvider: HashingProviderInterface) {}
-
   public static users = new Array<User>();
 
   async save(user: User): Promise<User> {
@@ -16,8 +13,8 @@ export class MockUsersReporitory implements IUserRepository {
       }
     });
 
-    user.password = await this.hashingProvider.hash(user.password);
     user.id = MockUsersReporitory.users.length + 1;
+    user.createdAt = new Date();
 
     MockUsersReporitory.users.push(user);
 
