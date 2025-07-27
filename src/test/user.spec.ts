@@ -1,12 +1,12 @@
-import { UserRequestDto } from '@application/user/dtos/requests/user.request.dto';
-import { UserResponseDto } from '@application/user/dtos/responses/user.response.dto';
-import { UserTransformer } from '@application/user/transformers/user.transformer';
-import { CreateUserUsecase } from '@application/user/usecases/create.usecase';
-import { User } from '@domain/entities/user';
-import { Roles } from '@domain/enums/roles.enum';
-import { UserController } from '@infrastructure/controllers/user.controller';
-import { MockUsersReporitory } from '@infrastructure/mock-repositories/user.mock.repository';
-import { BcryptHashingProvider } from '@infrastructure/providers/bcrypt.hashing.provider';
+import { UserRequestDto } from '@app/user/application/dtos/requests/user.request.dto';
+import { UserResponseDto } from '@app/user/application/dtos/responses/user.response.dto';
+import { UserTransformer } from '@app/user/application/transformers/user.transformer';
+import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase';
+import { User } from '@app/user/domain/entities/user';
+import { Roles } from '@app/user/domain/enums/roles.enum';
+import { UserController } from '@app/user/infrastructure/controllers/user.controller';
+import { MockUsersReporitory } from '@app/user/infrastructure/mock-repositories/user.mock.repository';
+import { BcryptHashingProvider } from '@app/user/infrastructure/providers/bcrypt.hashing.provider';
 import { ConflictException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { plainToInstance } from 'class-transformer';
@@ -89,7 +89,6 @@ describe('UserController', () => {
       saloonUser.password = 'p@ssword';
       saloonUser.createdAt = new Date();
       saloonUser.language = 'French';
-      saloonUser.saloons = [];
       saloonUser.role = Roles.SALOON_USER;
 
       const response = await userController.create(request);
@@ -213,7 +212,7 @@ describe('UserController', () => {
     });
 
     it('Should fail for invalid email (duplicated email)', () => {
-      expect(async () => await userController.create(request)).rejects.toEqual(
+      expect(() => userController.create(request)).rejects.toEqual(
         new ConflictException('A user with the same email and/or mobileNumber already exists.'),
       );
     });

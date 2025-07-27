@@ -12,15 +12,14 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
-      "@application/*": ["src/application/*"],
-      "@domain/*": ["src/domain/*"],
-      "@infrastructure/*": ["src/infrastructure/*"],
+      "@app/*": ["src/app/*"],
+      "@test/*": ["src/test/*"],
       "@config/*": ["src/config/*"]
     },
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": false, //
-    "forceConsistentCasingInFileNames": false, //
+    "strictNullChecks": false,
+    "forceConsistentCasingInFileNames": false,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false

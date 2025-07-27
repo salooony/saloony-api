@@ -74,9 +74,8 @@
     ],
     "rootDir": "src",
     "moduleNameMapper": {
-      "^@application/(.*)$": "<rootDir>/application/$1",
-      "^@domain/(.*)$": "<rootDir>/domain/$1",
-      "^@infrastructure/(.*)$": "<rootDir>/infrastructure/$1",
+      "^@app/(.*)$": "<rootDir>/app/$1",
+      "^@test/(.*)$": "<rootDir>/test/$1",
       "^@config/(.*)$": "<rootDir>/config/$1"
     },
     "testRegex": ".*\\.spec\\.ts$",
