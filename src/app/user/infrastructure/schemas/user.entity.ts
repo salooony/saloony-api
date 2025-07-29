@@ -1,4 +1,3 @@
-import { Roles } from '@app/user/domain/enums/roles.enum';
 import {
   Column,
   CreateDateColumn,
@@ -36,8 +35,8 @@ export class User {
   @Column({ type: 'varchar', length: 50 })
   language: string;
 
-  @Column({ type: 'enum', enum: Roles })
-  role: Roles;
+  @Column({ type: 'varchar', length: 50 })
+  role: string;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;

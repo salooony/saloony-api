@@ -1,12 +1,10 @@
-import { Roles } from '../enums/roles.enum';
-
 export class User {
   public id: string;
   public firstname: string;
   public lastname: string;
   public avatar: string;
   public birthdate: Date;
-  public role: Roles;
+  public role: string;
   public email: string;
   public mobileNumber: string;
   public password: string;

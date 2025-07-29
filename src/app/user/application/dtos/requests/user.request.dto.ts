@@ -9,7 +9,6 @@ import {
   IsEnum,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Roles } from '@app/user/domain/enums/roles.enum';
 
 export class UserRequestDto {
   @ApiProperty({
@@ -50,8 +49,8 @@ export class UserRequestDto {
     example: 'Client',
   })
   @IsNotEmpty()
-  @IsEnum(Roles)
-  public role: Roles;
+  @IsString()
+  public role: string;
 
   @ApiProperty({
     description: 'The email address.',
@@ -103,7 +102,7 @@ export class UserRequestDto {
     firstname: string,
     lastname: string,
     birthdate: Date,
-    role: Roles,
+    role: string,
     email: string,
     mobileNumber: string,
     password: string,

@@ -1,4 +1,3 @@
-import { Roles } from '@app/user/domain/enums/roles.enum';
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class InitialSchema1753612215016 implements MigrationInterface {
@@ -59,7 +58,7 @@ export class InitialSchema1753612215016 implements MigrationInterface {
           {
             name: 'role',
             type: 'varchar',
-            enum: [...Object.values(Roles)],
+            length: '50',
           },
           {
             name: 'created_at',
