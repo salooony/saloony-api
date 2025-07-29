@@ -8,7 +8,7 @@ export class UserResponseDto {
     type: Number,
     example: 70,
   })
-  public id: number;
+  public id: string;
 
   @ApiProperty({
     description: 'The first name.',
@@ -76,7 +76,10 @@ export class UserResponseDto {
   @ApiProperty({
     description: 'The saloons the user has access to.',
     type: Array<String>,
-    example: '', //add example
+    example: [
+      'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11-Owner',
+      'a0eebc95-9c0b-4ef8-bb6d-6bb9bd380a11-Owner',
+    ],
   })
   public saloons: string[];
 

@@ -13,7 +13,7 @@ export class MockUsersReporitory implements IUserRepository {
       }
     });
 
-    user.id = MockUsersReporitory.users.length + 1;
+    user.id = (MockUsersReporitory.users.length + 1).toString();
     user.createdAt = new Date();
 
     MockUsersReporitory.users.push(user);

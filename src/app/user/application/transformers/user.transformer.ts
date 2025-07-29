@@ -7,6 +7,7 @@ export class UserTransformer {
 
     user.firstname = userRequest.firstname;
     user.lastname = userRequest.lastname;
+    user.avatar = '';
     user.role = userRequest.role;
     user.birthdate = userRequest.birthdate;
     user.email = userRequest.email;

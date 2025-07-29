@@ -46,7 +46,6 @@ describe('UserController', () => {
       const errors = await validate(dto);
 
       const client = new User();
-      client.id = 1;
       client.firstname = 'John';
       client.lastname = 'Doe';
       client.birthdate = new Date('4/3/2005');
@@ -64,6 +63,7 @@ describe('UserController', () => {
 
       expect(response).toEqual({
         ...expectedResponse,
+        id: expect.any(String),
         createdAt: expect.any(Date),
       });
 
@@ -80,7 +80,6 @@ describe('UserController', () => {
       const errors = await validate(dto);
 
       const saloonUser = new User();
-      saloonUser.id = 2;
       saloonUser.firstname = 'John';
       saloonUser.lastname = 'Doe';
       saloonUser.birthdate = new Date('4/3/2005');
@@ -98,6 +97,7 @@ describe('UserController', () => {
 
       expect(response).toEqual({
         ...expectedResponse,
+        id: expect.any(String),
         createdAt: expect.any(Date),
       });
 

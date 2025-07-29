@@ -9,8 +9,8 @@ import {
 
 @Entity({ name: 'user' })
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid') // discuss this
+  id: string;
 
   @Column({ type: 'varchar', length: 50 })
   firstname: string;
@@ -30,7 +30,7 @@ export class User {
   @Column({ type: 'varchar', name: 'mobile_number', length: 15, unique: true })
   mobileNumber: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'varchar', length: 512 })
   password: string;
 
   @Column({ type: 'varchar', length: 50 })
@@ -45,6 +45,6 @@ export class User {
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
 
-  @Column({ type: 'varchar' }) // fix type
+  @Column({ type: 'varchar', array: true })
   acl: string[];
 }
