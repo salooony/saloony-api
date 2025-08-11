@@ -1,14 +1,13 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
 import appConfig from './config/app.config';
 import databaseConfig, { DatabaseConfig } from './config/database.config';
+import { UserModule } from '@app/user/infrastructure/modules/user.module';
 
 const ENV = process.env.NODE_ENV;
 
+@Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -20,9 +19,7 @@ const ENV = process.env.NODE_ENV;
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const db = configService.get<DatabaseConfig>(
-          'database',
-        ) as DatabaseConfig;
+        const db = configService.get<DatabaseConfig>('database');
 
         return {
           type: 'postgres',
@@ -32,12 +29,12 @@ const ENV = process.env.NODE_ENV;
           password: db.password,
           database: db.database,
           autoLoadEntities: true,
-          synchronize: db.synchronize,
+          synchronize: false,
         };
       },
     }),
+
+    UserModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
