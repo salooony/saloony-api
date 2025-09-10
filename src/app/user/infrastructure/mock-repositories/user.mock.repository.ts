@@ -20,4 +20,12 @@ export class MockUsersReporitory implements IUserRepository {
 
     return user;
   }
+
+  async findOneByEmail(email: string): Promise<User | null> {
+    const user = MockUsersReporitory.users.find((user) => user.email === email);
+
+    if (!user) return null;
+
+    return user;
+  }
 }

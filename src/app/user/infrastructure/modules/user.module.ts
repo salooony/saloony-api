@@ -6,15 +6,36 @@ import { BcryptHashingProvider } from '../providers/bcrypt.hashing.provider';
 import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase';
 import { UserTransformer } from '@app/user/application/transformers/user.transformer';
 import { User } from '../schemas/user.entity';
+import { LoginUsecase } from '@app/user/application/usecases/login.usecase';
+import { TokenGenerator } from '../providers/token-generator.provider';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import jwtConfig from '@config/jwt.config';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthController } from '../controllers/auth.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
-  controllers: [UserController],
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    ConfigModule.forFeature(jwtConfig),
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      global: true,
+      useFactory: (configService: ConfigService) => {
+        return {
+          secret: configService.get('jwt.secret'),
+          signOptions: configService.get('jwt.signOptions'),
+        };
+      },
+    }),
+  ],
+  controllers: [UserController, AuthController],
   providers: [
     CreateUserUsecase,
+    LoginUsecase,
     UserTransformer,
     { provide: 'UsersRepository', useClass: UsersRepository },
     { provide: 'HashingProvider', useClass: BcryptHashingProvider },
+    { provide: 'TokenGenerator', useClass: TokenGenerator },
   ],
   exports: [{ provide: 'UsersRepository', useClass: UsersRepository }],
 })

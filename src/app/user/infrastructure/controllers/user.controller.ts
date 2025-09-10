@@ -24,6 +24,10 @@ export class UserController {
     status: HttpStatus.CONFLICT,
     description: 'A user with the same email and/or mobileNumber already exists.',
   })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Something went wrong, try again.',
+  })
   @Post()
   @Header('Content-Type', 'application/json')
   async create(@Body(new ValidationPipe()) userRequest: UserRequestDto): Promise<UserResponseDto> {
