@@ -1,38 +1,62 @@
+import { LoginRequestDto } from '@app/user/application/dtos/requests/login.request.dto';
 import { UserRequestDto } from '@app/user/application/dtos/requests/user.request.dto';
 import { UserResponseDto } from '@app/user/application/dtos/responses/user.response.dto';
 import { UserTransformer } from '@app/user/application/transformers/user.transformer';
 import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase';
+import { LoginUsecase } from '@app/user/application/usecases/login.usecase';
 import { User } from '@app/user/domain/entities/user';
-import { Roles } from '@app/user/domain/enums/roles.enum';
+import { AuthController } from '@app/user/infrastructure/controllers/auth.controller';
 import { UserController } from '@app/user/infrastructure/controllers/user.controller';
 import { MockUsersReporitory } from '@app/user/infrastructure/mock-repositories/user.mock.repository';
 import { BcryptHashingProvider } from '@app/user/infrastructure/providers/bcrypt.hashing.provider';
-import { ConflictException } from '@nestjs/common';
+import { TokenGenerator } from '@app/user/infrastructure/providers/token-generator.provider';
+import jwtConfig from '@config/jwt.config';
+import { BadRequestException, ConflictException, UnauthorizedException } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { plainToInstance } from 'class-transformer';
 import { validate, ValidationError } from 'class-validator';
 
 describe('UserController', () => {
-  let userController: UserController, request: UserRequestDto;
+  let userController: UserController, request: UserRequestDto, authController: AuthController;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      controllers: [UserController],
+      imports: [
+        ConfigModule.forRoot({
+          load: [jwtConfig],
+        }),
+        JwtModule.registerAsync({
+          imports: [ConfigModule],
+          inject: [ConfigService],
+          useFactory: (configService: ConfigService) => {
+            return {
+              secret: configService.get('jwt.secret'),
+              signOptions: configService.get('jwt.signOptions'),
+            };
+          },
+        }),
+      ],
+      controllers: [UserController, AuthController],
       providers: [
         CreateUserUsecase,
+        LoginUsecase,
         UserTransformer,
         { provide: 'UsersRepository', useClass: MockUsersReporitory },
         { provide: 'HashingProvider', useClass: BcryptHashingProvider },
+        { provide: 'TokenGenerator', useClass: TokenGenerator },
       ],
     }).compile();
 
     userController = app.get<UserController>(UserController);
+    authController = app.get<AuthController>(AuthController);
 
     request = {
       firstname: 'John',
       lastname: 'Doe',
       birthdate: new Date('4/3/2005'),
-      role: Roles.CLIENT,
+      role: 'CLIENT',
       email: 'user1@email.com',
       mobileNumber: '00000',
       password: 'P@ssw0rd',
@@ -54,7 +78,7 @@ describe('UserController', () => {
       client.password = 'p@ssword';
       client.createdAt = new Date();
       client.language = 'French';
-      client.role = Roles.CLIENT;
+      client.role = 'CLIENT';
 
       const response = await userController.create(request);
       const expectedResponse = UserResponseDto.createFromEntity(client);
@@ -74,7 +98,7 @@ describe('UserController', () => {
 
     it('Should create a saloon user peacefully', async () => {
       request.email = 'user2@email.com';
-      request.role = Roles.SALOON_USER;
+      request.role = 'SALOON_USER';
 
       const dto = plainToInstance(UserRequestDto, request);
       const errors = await validate(dto);
@@ -88,7 +112,7 @@ describe('UserController', () => {
       saloonUser.password = 'p@ssword';
       saloonUser.createdAt = new Date();
       saloonUser.language = 'French';
-      saloonUser.role = Roles.SALOON_USER;
+      saloonUser.role = 'SALOON_USER';
 
       const response = await userController.create(request);
       const expectedResponse = UserResponseDto.createFromEntity(saloonUser);
@@ -158,30 +182,8 @@ describe('UserController', () => {
       expect(errors[0]).toBeInstanceOf(ValidationError);
       expect(errors[0].property).toEqual('role');
       expect(errors[0].constraints).toHaveProperty('isNotEmpty');
-      expect(errors[0].constraints).toHaveProperty('isEnum');
+      expect(errors[0].constraints).toHaveProperty('isString');
       expect(Object.keys(errors[0].constraints)).toHaveLength(2);
-    });
-
-    it('Should fail for invalid client role', async () => {
-      const dto = plainToInstance(UserRequestDto, { ...request, role: 'client' });
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0]).toBeInstanceOf(ValidationError);
-      expect(errors[0].property).toEqual('role');
-      expect(errors[0].constraints).toHaveProperty('isEnum');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(1);
-    });
-
-    it('Should fail for invalid saloon user role', async () => {
-      const dto = plainToInstance(UserRequestDto, { ...request, role: 'saloon user' });
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0]).toBeInstanceOf(ValidationError);
-      expect(errors[0].property).toEqual('role');
-      expect(errors[0].constraints).toHaveProperty('isEnum');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(1);
     });
 
     it('Should fail for missing email', async () => {
@@ -335,6 +337,82 @@ describe('UserController', () => {
       expect(errors[0].constraints).toHaveProperty('isNotEmpty');
       expect(errors[0].constraints).toHaveProperty('isString');
       expect(Object.keys(errors[0].constraints)).toHaveLength(2);
+    });
+  });
+
+  describe('Login a new user', () => {
+    it('Should login user peacefully', async () => {
+      const loginRequest = { email: request.email, password: request.password };
+      const dto = plainToInstance(LoginRequestDto, loginRequest);
+      const errors = await validate(dto);
+
+      expect(errors).toHaveLength(0);
+
+      const response = await authController.login(loginRequest);
+
+      expect(response).toEqual({
+        accessToken: expect.any(String),
+        refreshToken: expect.any(String),
+      });
+    });
+
+    it('Should respond with bad request for missing email', async () => {
+      const loginRequest = { email: null, password: request.password };
+      const dto = plainToInstance(LoginRequestDto, loginRequest);
+      const errors = await validate(dto);
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toEqual('email');
+      expect(Object.keys(errors[0].constraints)).toHaveLength(2);
+      expect(errors[0].constraints).toHaveProperty('isNotEmpty');
+      expect(errors[0].constraints).toHaveProperty('isEmail');
+    });
+
+    it('Should respond with bad request for invalid email', async () => {
+      const loginRequest = { email: 'email', password: request.password };
+      const dto = plainToInstance(LoginRequestDto, loginRequest);
+      const errors = await validate(dto);
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toEqual('email');
+      expect(Object.keys(errors[0].constraints)).toHaveLength(1);
+      expect(errors[0].constraints).toHaveProperty('isEmail');
+    });
+
+    it('Should respond with bad request for missing password', async () => {
+      const loginRequest = { email: request.email, password: null };
+      const dto = plainToInstance(LoginRequestDto, loginRequest);
+      const errors = await validate(dto);
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toEqual('password');
+      expect(Object.keys(errors[0].constraints)).toHaveLength(2);
+      expect(errors[0].constraints).toHaveProperty('isNotEmpty');
+      expect(errors[0].constraints).toHaveProperty('isString');
+    });
+
+    it('Should respond with bad request for unstored email', async () => {
+      const loginRequest = { email: 'example@email.com', password: request.password };
+      const dto = plainToInstance(LoginRequestDto, loginRequest);
+      const errors = await validate(dto);
+
+      expect(errors).toHaveLength(0);
+
+      expect(async () => authController.login(loginRequest)).rejects.toEqual(
+        new BadRequestException("A user with this email address doesn't exist."),
+      );
+    });
+
+    it('Should respond with unauthorized for unstored wrong password', async () => {
+      const loginRequest = { email: request.email, password: 'hello_world!' };
+      const dto = plainToInstance(LoginRequestDto, loginRequest);
+      const errors = await validate(dto);
+
+      expect(errors).toHaveLength(0);
+
+      expect(async () => authController.login(loginRequest)).rejects.toEqual(
+        new UnauthorizedException('Invalid credentials.'),
+      );
     });
   });
 });

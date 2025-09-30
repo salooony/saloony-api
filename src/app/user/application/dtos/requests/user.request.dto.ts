@@ -6,7 +6,6 @@ import {
   IsMobilePhone,
   IsStrongPassword,
   IsDate,
-  IsEnum,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
