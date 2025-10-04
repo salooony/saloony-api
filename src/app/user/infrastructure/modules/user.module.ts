@@ -12,6 +12,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import jwtConfig from '@config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from '../controllers/auth.controller';
+import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { AuthController } from '../controllers/auth.controller';
   providers: [
     CreateUserUsecase,
     LoginUsecase,
+    GetUserInfoUsecase,
     UserTransformer,
     { provide: 'UsersRepository', useClass: UsersRepository },
     { provide: 'HashingProvider', useClass: BcryptHashingProvider },

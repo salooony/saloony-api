@@ -1,3 +1,4 @@
+import { Public } from '@app/user/application/decorators/public.decorator';
 import { LoginRequestDto } from '@app/user/application/dtos/requests/login.request.dto';
 import { LoginResponseDto } from '@app/user/application/dtos/responses/login.response.dto';
 import { LoginUsecase } from '@app/user/application/usecases/login.usecase';
@@ -28,6 +29,7 @@ export class AuthController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Something went wrong, try again.',
   })
+  @Public()
   @Post('login')
   async login(@Body() loginRequest: LoginRequestDto): Promise<LoginResponseDto> {
     return await this.loginUsecase.execute(loginRequest);
