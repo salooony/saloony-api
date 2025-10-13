@@ -16,6 +16,14 @@ export class UsersRepository implements IUserRepository {
     return UserMapper.map(savedUser);
   }
 
+  async findOneById(id: string): Promise<User | null> {
+    const user = await this.repository.findOne({ where: { id } });
+
+    if (!user) return null;
+
+    return UserMapper.map(user);
+  }
+
   // Get user by email
   async findOneByEmail(email: string): Promise<User | null> {
     const user = await this.repository.findOne({ where: { email } });
