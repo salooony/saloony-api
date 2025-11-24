@@ -40,4 +40,42 @@ export class MockUsersReporitory implements IUserRepository {
 
     return Promise.resolve(user);
   }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async findOneById(id: string): Promise<User | null> {
+    const user = MockUsersReporitory.users.find((user) => user.id === id);
+
+    if (!user) return null;
+
+    return Promise.resolve(user);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async findOneByEmail(email: string): Promise<User | null> {
+    const user = MockUsersReporitory.users.find((user) => user.email === email);
+
+    if (!user) return null;
+
+    return Promise.resolve(user);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async update(user: User): Promise<User> {
+    const index = MockUsersReporitory.users.findIndex((u) => u.id === user.id);
+    if (index === -1) {
+      throw new Error('User not found');
+    }
+
+    const current = MockUsersReporitory.users[index];
+
+    const updated: User = {
+      ...current,
+      ...user,
+      updatedAt: new Date(),
+    };
+
+    MockUsersReporitory.users[index] = updated;
+
+    return Promise.resolve(updated);
+  }
 }

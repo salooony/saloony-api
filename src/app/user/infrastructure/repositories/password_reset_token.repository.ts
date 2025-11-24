@@ -22,6 +22,21 @@ export class PasswordResetTokenRepository implements IPasswordResetTokenReposito
     return token ?? null;
   }
 
+  async findByTokenHash(tokenHash: string): Promise<PasswordResetToken | null> {
+    const entity = await this.repository.findOne({ where: { tokenHash } });
+    if (!entity) return null;
+
+    return new PasswordResetToken({
+      id: entity.id,
+      userId: entity.userId,
+      tokenHash: entity.tokenHash,
+      expiresAt: entity.expiresAt,
+      usedAt: entity.usedAt,
+      createdAt: entity.createdAt,
+      type: entity.type,
+    });
+  }
+
   async invalidate(tokenId: string): Promise<void> {
     await this.repository.update(tokenId, { usedAt: new Date() });
   }

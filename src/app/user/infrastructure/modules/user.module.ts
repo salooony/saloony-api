@@ -18,6 +18,7 @@ import { SmtpEmailSender } from '../../infrastructure/email/smtpEmail.sender';
 import { ForgotPasswordUseCase } from '../../application/usecases/forgot-password.usecase';
 import { PasswordResetTokenRepository } from '../../infrastructure/repositories/password_reset_token.repository';
 import { PasswordResetTokenEntity } from '../../infrastructure/schemas/password-reset-token.entity';
+import { ResetPasswordUseCase } from '../../application/usecases/reset-password.usecase';
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { PasswordResetTokenEntity } from '../../infrastructure/schemas/password-
     LoginUsecase,
     GetUserInfoUsecase,
     ForgotPasswordUseCase,
+    ResetPasswordUseCase,
 
     //  helpers
     UserTransformer,
@@ -73,6 +75,7 @@ import { PasswordResetTokenEntity } from '../../infrastructure/schemas/password-
     { provide: 'PasswordResetTokenRepository', useClass: PasswordResetTokenRepository },
 
     { provide: 'IEmailSender', useClass: SmtpEmailSender },
+    { provide: 'IUserRepository', useClass: UsersRepository },
   ],
 
   exports: [{ provide: 'UsersRepository', useClass: UsersRepository }],

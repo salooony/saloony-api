@@ -5,4 +5,5 @@ export interface IPasswordResetTokenRepository {
   findByUserIdAndTokenHash(userId: string, tokenHash: string): Promise<PasswordResetToken | null>;
   invalidate(tokenId: string): Promise<void>;
   deleteExpired(): Promise<void>;
+  findByTokenHash(tokenHash: string): Promise<PasswordResetToken | null>;
 }
