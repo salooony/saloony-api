@@ -2,8 +2,8 @@ import { Public } from '@user/application/decorators/public.decorator';
 import { LoginRequestDto } from '@user/application/dtos/requests/login.request.dto';
 import { LoginResponseDto } from '@user/application/dtos/responses/login.response.dto';
 import { LoginUsecase } from '@user/application/usecases/login.usecase';
-import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, HttpStatus, Post, Query } from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ForgotPasswordRequestDto } from '@user/application/dtos/requests/forgot-password.request.dto';
 import { ForgotPasswordUseCase } from '@user/application/usecases/forgot-password.usecase';
 import { ResetPasswordRequestDTO } from '@user/application/dtos/requests/reset-password.request.dto';
@@ -61,9 +61,9 @@ export class AuthController {
   @Public()
   @Post('reset-password')
   @ApiOperation({ summary: 'Reset password using a valid reset token.' })
+  @ApiQuery({ name: 'token', required: true, description: 'Reset token from email link' })
   @ApiBody({ type: ResetPasswordRequestDTO })
-  async resetPassword(@Body() body: ResetPasswordRequestDTO) {
-    await this.resetPasswordUseCase.execute(body);
-    return { message: 'Password has been reset successfully.' };
+  async resetPassword(@Query('token') token: string, @Body() body: ResetPasswordRequestDTO): Promise<void> {
+    await this.resetPasswordUseCase.execute({ token, newPassword: body.newPassword });
   }
 }

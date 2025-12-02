@@ -32,13 +32,11 @@ export class UsersRepository implements IUserRepository {
 
     return UserMapper.map(user);
   }
-<<<<<<< HEAD
-=======
+
   async update(user: User): Promise<User> {
     const entity = UserMapper.toEntity(user);
     const saved = await this.repository.save(entity);
 
     return UserMapper.map(saved);
   }
->>>>>>> 44de750 (feat(auth): add reset-password flow)
 }

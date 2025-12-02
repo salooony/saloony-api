@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository, LessThan } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PasswordResetTokenEntity } from '../schemas/password-reset-token.entity';
 import { PasswordResetToken } from '../../domain/entities/password-reset-token';
@@ -37,11 +37,7 @@ export class PasswordResetTokenRepository implements IPasswordResetTokenReposito
     });
   }
 
-  async invalidate(tokenId: string): Promise<void> {
-    await this.repository.update(tokenId, { usedAt: new Date() });
-  }
-
-  async deleteExpired(): Promise<void> {
-    await this.repository.delete({ expiresAt: LessThan(new Date()) });
+  async deleteById(tokenId: string): Promise<void> {
+    await this.repository.delete(tokenId);
   }
 }

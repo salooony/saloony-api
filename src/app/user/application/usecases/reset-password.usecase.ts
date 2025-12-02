@@ -1,9 +1,10 @@
 import { Injectable, Inject, BadRequestException } from '@nestjs/common';
 import * as crypto from 'crypto';
 import * as bcrypt from 'bcryptjs';
-import { ResetPasswordRequestDTO } from '../dtos/requests/reset-password.request.dto';
 import { IPasswordResetTokenRepository } from '../../domain/ports/ipassword-reset-token.repository';
 import { IUserRepository } from '../../domain/ports/iuser.repository';
+// import { User } from '../../domain/entities/user';
+type ResetPasswordCommand = { token: string; newPassword: string };
 
 @Injectable()
 export class ResetPasswordUseCase {
@@ -15,9 +16,7 @@ export class ResetPasswordUseCase {
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async execute(request: ResetPasswordRequestDTO): Promise<void> {
-    const { token, newPassword } = request;
-
+  async execute({ token, newPassword }: ResetPasswordCommand): Promise<void> {
     // 1. hash the token (because DB stores hash)
     const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
 
@@ -36,11 +35,13 @@ export class ResetPasswordUseCase {
 
     // 5. update password
     user.password = await bcrypt.hash(newPassword, 10);
+    user.updatedAt = new Date();
 
     // 6. save user
+
     await this.userRepository.update(user);
 
     // 7. invalidate token
-    await this.tokenRepository.invalidate(tokenRecord.id);
+    await this.tokenRepository.deleteById(tokenRecord.id);
   }
 }
