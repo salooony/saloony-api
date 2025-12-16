@@ -4,12 +4,17 @@ import { LoginResponseDto } from '@app/user/application/dtos/responses/login.res
 import { LoginUsecase } from '@app/user/application/usecases/login.usecase';
 import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ForgotPasswordRequestDto } from '../../application/dtos/requests/forgot-password.request.dto';
+import { ForgotPasswordUseCase } from '../../application/usecases/forgot-password.usecase';
 
 @ApiTags('Users')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly loginUsecase: LoginUsecase) {}
-
+  constructor(
+    private readonly loginUsecase: LoginUsecase,
+    private readonly forgotPasswordUseCase: ForgotPasswordUseCase,
+  ) {}
+  //Login Endpoint
   @ApiOperation({ summary: 'Login the user and recieve access & refresh tokens.' })
   @ApiBody({ type: LoginRequestDto })
   @ApiResponse({
@@ -33,5 +38,19 @@ export class AuthController {
   @Post('login')
   async login(@Body() loginRequest: LoginRequestDto): Promise<LoginResponseDto> {
     return await this.loginUsecase.execute(loginRequest);
+  }
+
+  // Forgot Password Endpoint
+  @Public()
+  @Post('forgot-password')
+  @ApiOperation({ summary: 'Initiate the forgot password process for a user.' })
+  @ApiBody({ type: ForgotPasswordRequestDto })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Forgot password process initiated successfully.',
+  })
+  async forgotPassword(@Body() forgotPasswordRequestDto: ForgotPasswordRequestDto) {
+    await this.forgotPasswordUseCase.execute(forgotPasswordRequestDto);
+    return { message: 'If your email exists, a password reset link has been sent.' };
   }
 }

@@ -4,16 +4,7 @@ import { UserResponseDto } from '@app/user/application/dtos/responses/user.respo
 import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase';
 import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
 import { User } from '@app/user/domain/entities/user';
-import {
-  Body,
-  Controller,
-  Get,
-  Header,
-  HttpStatus,
-  Post,
-  Req,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Get, Header, HttpStatus, Post, ValidationPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Users')
