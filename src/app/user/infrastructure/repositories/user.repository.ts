@@ -8,7 +8,7 @@ import { UserMapper } from '../mappers/user.mapper';
 
 @Injectable()
 export class UsersRepository implements IUserRepository {
-  constructor(@InjectRepository(UserEntity) private repository: Repository<UserEntity>) {}
+  constructor(@InjectRepository(UserEntity) private repository: Repository<UserEntity>) { }
 
   async save(user: User): Promise<User> {
     const savedUser = await this.repository.save(UserMapper.toEntity(user));
@@ -31,5 +31,9 @@ export class UsersRepository implements IUserRepository {
     if (!user) return null;
 
     return UserMapper.map(user);
+  }
+
+  async delete(userId: string): Promise<void> {
+    await this.repository.softDelete(userId);
   }
 }

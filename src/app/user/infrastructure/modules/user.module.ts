@@ -13,6 +13,7 @@ import jwtConfig from '@config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from '../controllers/auth.controller';
 import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
+import { DeleteUserAccountUseCase } from '@app/user/application/usecases/delete-user-account.usecase';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info
     CreateUserUsecase,
     LoginUsecase,
     GetUserInfoUsecase,
+    DeleteUserAccountUseCase,
     UserTransformer,
     { provide: 'UsersRepository', useClass: UsersRepository },
     { provide: 'HashingProvider', useClass: BcryptHashingProvider },
@@ -41,4 +43,4 @@ import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info
   ],
   exports: [{ provide: 'UsersRepository', useClass: UsersRepository }],
 })
-export class UserModule {}
+export class UserModule { }

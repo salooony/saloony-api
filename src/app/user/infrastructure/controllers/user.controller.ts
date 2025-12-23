@@ -1,7 +1,9 @@
 import { CurrentUser } from '@app/user/application/decorators/current-user.decorator';
+import { Public } from '@app/user/application/decorators/public.decorator';
 import { UserRequestDto } from '@app/user/application/dtos/requests/user.request.dto';
 import { UserResponseDto } from '@app/user/application/dtos/responses/user.response.dto';
 import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase';
+import { DeleteUserAccountUseCase } from '@app/user/application/usecases/delete-user-account.usecase';
 import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
 import { User } from '@app/user/domain/entities/user';
 import {
@@ -13,6 +15,7 @@ import {
   Post,
   Req,
   ValidationPipe,
+  Put, HttpCode, Delete,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -22,7 +25,8 @@ export class UserController {
   constructor(
     private readonly createUsecase: CreateUserUsecase,
     private readonly getUserInfoUsecase: GetUserInfoUsecase,
-  ) {}
+    private readonly deleteUserUseCase: DeleteUserAccountUseCase
+  ) { }
 
   @ApiOperation({ summary: 'Register a new user' })
   @ApiBody({ type: UserRequestDto })
@@ -43,6 +47,7 @@ export class UserController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Something went wrong, try again.',
   })
+  @Public()
   @Post()
   @Header('Content-Type', 'application/json')
   async create(@Body(new ValidationPipe()) userRequest: UserRequestDto): Promise<UserResponseDto> {
@@ -68,5 +73,25 @@ export class UserController {
   @Header('Content-Type', 'application/json')
   async getPeronalInfo(@CurrentUser() user: User): Promise<UserResponseDto> {
     return await this.getUserInfoUsecase.execute(user);
+  }
+
+  @ApiOperation({ summary: 'Delete user account.' })
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'Account deleted successfully.',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'User should be logged in.',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Something went wrong, try again.',
+  })
+  @Delete('/account')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteUser(@CurrentUser() user: User): Promise<void> {
+    await this.deleteUserUseCase.execute(user);
   }
 }

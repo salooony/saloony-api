@@ -36,4 +36,11 @@ export class MockUsersReporitory implements IUserRepository {
 
     return user;
   }
+
+  async delete(userId: string): Promise<void> {
+    const user = MockUsersReporitory.users.find((user) => user.id === userId);
+    if (user) {
+      user.deletedAt = new Date();
+    }
+  }
 }

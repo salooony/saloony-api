@@ -17,7 +17,7 @@ export class LoginUsecase {
     @Inject('HashingProvider') private hashingProvider: HashingProviderInterface,
     @Inject('UsersRepository') private readonly userRepository: IUserRepository,
     @Inject('TokenGenerator') private tokenGenerator: ITokenGenerator,
-  ) {}
+  ) { }
 
   async execute(loginRequest: LoginRequestDto): Promise<LoginResponseDto> {
     // get the user from database
