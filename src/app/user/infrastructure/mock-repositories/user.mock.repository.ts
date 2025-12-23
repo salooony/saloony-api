@@ -36,4 +36,21 @@ export class MockUsersReporitory implements IUserRepository {
 
     return user;
   }
+
+  async deactivate(userId: string): Promise<void> {
+    const user = MockUsersReporitory.users.find((user) => user.id === userId);
+    if (user) {
+      user.isActive = false;
+      user.deletedAt = new Date();
+    }
+  }
+
+  async activate(userId: string): Promise<void> {
+    const user = MockUsersReporitory.users.find((user) => user.id === userId);
+    if (user) {
+      user.isActive = true;
+      user.deletedAt = null;
+    }
+  }
+
 }

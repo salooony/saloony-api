@@ -1,4 +1,5 @@
 import { CurrentUser } from '@app/user/application/decorators/current-user.decorator';
+import { Public } from '@app/user/application/decorators/public.decorator';
 import { UserRequestDto } from '@app/user/application/dtos/requests/user.request.dto';
 import { UserResponseDto } from '@app/user/application/dtos/responses/user.response.dto';
 import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase';
@@ -43,6 +44,7 @@ export class UserController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Something went wrong, try again.',
   })
+  @Public()
   @Post()
   @Header('Content-Type', 'application/json')
   async create(@Body(new ValidationPipe()) userRequest: UserRequestDto): Promise<UserResponseDto> {

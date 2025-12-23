@@ -24,6 +24,11 @@ export class LoginUsecase {
     const user = await this.userRepository.findOneByEmail(loginRequest.email);
 
     if (!user) throw new BadRequestException("A user with this email address doesn't exist.");
+    
+    // Check if user account is active
+    if (!user.isActive) {
+      throw new UnauthorizedException('Account is not active.');
+    }
 
     // validate the password in the request
     const validCredentials = await this.hashingProvider.compare(

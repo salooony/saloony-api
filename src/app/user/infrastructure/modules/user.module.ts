@@ -1,5 +1,6 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserController } from '../controllers/user.controller';
+import { UserAccountController } from '../controllers/user-account.controller';
 import { Module } from '@nestjs/common';
 import { UsersRepository } from '../repositories/user.repository';
 import { BcryptHashingProvider } from '../providers/bcrypt.hashing.provider';
@@ -13,6 +14,7 @@ import jwtConfig from '@config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from '../controllers/auth.controller';
 import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
+import { DeleteUserAccountUseCase } from '@app/user/application/usecases/delete-user-account.use-case';
 
 @Module({
   imports: [
@@ -29,11 +31,12 @@ import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info
       },
     }),
   ],
-  controllers: [UserController, AuthController],
+  controllers: [UserController, AuthController, UserAccountController],
   providers: [
     CreateUserUsecase,
     LoginUsecase,
     GetUserInfoUsecase,
+    DeleteUserAccountUseCase,
     UserTransformer,
     { provide: 'UsersRepository', useClass: UsersRepository },
     { provide: 'HashingProvider', useClass: BcryptHashingProvider },

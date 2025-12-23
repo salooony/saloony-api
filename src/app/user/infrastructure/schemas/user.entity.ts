@@ -4,6 +4,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  DeleteDateColumn
 } from 'typeorm';
 
 @Entity({ name: 'user' })
@@ -46,4 +47,15 @@ export class User {
 
   @Column({ type: 'varchar', array: true })
   acl: string[];
+
+  @DeleteDateColumn({
+  name: 'deleted_at',
+  type: 'timestamp',
+  nullable: true,
+})
+deletedAt: Date;
+
+  @Column({ name: 'is_active', default: true })
+  isActive: boolean;
+
 }

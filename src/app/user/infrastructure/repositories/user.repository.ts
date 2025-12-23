@@ -32,4 +32,19 @@ export class UsersRepository implements IUserRepository {
 
     return UserMapper.map(user);
   }
+
+  async deactivate(userId: string): Promise<void> {
+    await this.repository.update(userId, {
+      isActive: false,
+      deletedAt: new Date(),
+    });
+  }
+
+  async activate(userId: string): Promise<void> {
+    await this.repository.update(userId, {
+      isActive: true,
+      deletedAt: null,
+    });
+  }
+
 }

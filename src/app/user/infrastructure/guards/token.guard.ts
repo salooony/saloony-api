@@ -44,6 +44,11 @@ export class TokenGuard implements CanActivate {
       throw new UnauthorizedException('A valid token must be used.');
     }
 
+    // Check if user account is active
+    if (!user.isActive) {
+      throw new UnauthorizedException('Account is deactivated.');
+    }
+
     request.user = user;
 
     return true;
