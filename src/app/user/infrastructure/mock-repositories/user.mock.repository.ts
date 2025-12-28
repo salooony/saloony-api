@@ -1,3 +1,4 @@
+import { UpdateUserCriteria } from '@app/user/domain/criteria/update-user.criteria';
 import { User } from '@app/user/domain/entities/user';
 import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
 import { Injectable } from '@nestjs/common';
@@ -35,5 +36,10 @@ export class MockUsersReporitory implements IUserRepository {
     if (!user) return null;
 
     return user;
+  }
+
+  async updateOneById(id: string, updateCriteria: UpdateUserCriteria): Promise<void> {
+    const user = MockUsersReporitory.users.find((user) => user.id === id);
+    // update user here
   }
 }

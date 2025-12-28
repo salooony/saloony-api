@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { User as UserEntity } from '../schemas/user.entity';
 import { User } from '@app/user/domain/entities/user';
 import { UserMapper } from '../mappers/user.mapper';
+import { UpdateUserCriteria } from '@app/user/domain/criteria/update-user.criteria';
 
 @Injectable()
 export class UsersRepository implements IUserRepository {
@@ -31,5 +32,40 @@ export class UsersRepository implements IUserRepository {
     if (!user) return null;
 
     return UserMapper.map(user);
+  }
+
+  async updateOneById(id: string, updateCriteria: UpdateUserCriteria): Promise<void> {
+    const params = this.buildUpdateParams(updateCriteria);
+    await this.repository.update(id, params);
+  }
+
+  private buildUpdateParams(updateCriteria: UpdateUserCriteria): {} {
+    const params = {};
+
+    if (updateCriteria.firstname) {
+      params['firstname'] = updateCriteria.firstname;
+    }
+
+    if (updateCriteria.lastname) {
+      params['lastname'] = updateCriteria.lastname;
+    }
+
+    if (updateCriteria.birthdate) {
+      params['birthdate'] = updateCriteria.birthdate;
+    }
+
+    if (updateCriteria.email) {
+      params['email'] = updateCriteria.email;
+    }
+
+    if (updateCriteria.mobileNumber) {
+      params['mobileNumber'] = updateCriteria.mobileNumber;
+    }
+
+    if (updateCriteria.language) {
+      params['language'] = updateCriteria.language;
+    }
+
+    return params;
   }
 }
