@@ -13,8 +13,13 @@ import {
   Post,
   Req,
   ValidationPipe,
+  Put,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags, ApiConsumes } from '@nestjs/swagger';
+import { BadRequestException, Inject } from '@nestjs/common';
+import { UpdateUserAvatarUsecase } from '@app/user/application/usecases/update-user-avatar.usecase';
+import { UpdateAvatarDto } from '../../application/dtos/requests/update-avatar.dto';
+import { UploadFileRequestDto } from '@app/shared/uploads/application/dtos/upload-file.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -22,6 +27,7 @@ export class UserController {
   constructor(
     private readonly createUsecase: CreateUserUsecase,
     private readonly getUserInfoUsecase: GetUserInfoUsecase,
+    @Inject(UpdateUserAvatarUsecase) private readonly updateUserAvatar: UpdateUserAvatarUsecase,
   ) {}
 
   @ApiOperation({ summary: 'Register a new user' })
@@ -68,5 +74,25 @@ export class UserController {
   @Header('Content-Type', 'application/json')
   async getPeronalInfo(@CurrentUser() user: User): Promise<UserResponseDto> {
     return await this.getUserInfoUsecase.execute(user);
+  }
+
+  @Put('profile/avatar')
+  @ApiOperation({ summary: 'Update user avatar' })
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: UploadFileRequestDto })
+  public async uploadAvatar(@CurrentUser() user: User, @Req() req: UploadFileRequestDto) {
+    const filePart = await req.file();
+
+    if (!filePart) {
+      throw new BadRequestException('Avatar file is required');
+    }
+
+    const dto: UpdateAvatarDto = {
+      file: filePart,
+      user: user,
+    };
+
+    return await this.updateUserAvatar.execute(dto);
   }
 }

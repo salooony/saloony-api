@@ -25,6 +25,11 @@ export class UserMapper {
   static toEntity(user: User): UserEntity {
     const entity = new UserEntity();
 
+    // preserve id for updates so TypeORM performs an UPDATE instead of INSERT
+    if (user.id) {
+      (entity as any).id = user.id;
+    }
+
     entity.firstname = user.firstname;
     entity.lastname = user.lastname;
     entity.avatar = user.avatar;
@@ -35,6 +40,13 @@ export class UserMapper {
     entity.password = user.password;
     entity.language = user.language;
     entity.acl = user.acl;
+
+    if (user.createdAt) {
+      entity.createdAt = user.createdAt;
+    }
+    if (user.updatedAt) {
+      entity.updatedAt = user.updatedAt;
+    }
 
     return entity;
   }
