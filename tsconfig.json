@@ -20,7 +20,8 @@
       "@test/*": ["src/test/*"],
       "@config/*": ["src/config/*"],
       "@notification/*": ["src/app/notification/*"],
-      "@token/*": ["src/app/token/*"]
+      "@token/*": ["src/app/token/*"],
+       "@shared/*": ["src/app/shared/*"]
     },
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

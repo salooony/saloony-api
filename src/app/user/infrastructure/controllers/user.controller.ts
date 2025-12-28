@@ -20,8 +20,15 @@ import {
   Param,
   Post,
   ValidationPipe,
+  Put,
+  Req,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags, ApiConsumes } from '@nestjs/swagger';
+import { BadRequestException, Inject } from '@nestjs/common';
+import { UpdateAvatarDto } from '../../application/dtos/requests/update-avatar.dto';
+import { FastifyRequest } from 'fastify';
+import { UpdateAvatarUsecase } from '@app/user/application/usecases/update-avatar.usecase';
+
 
 @ApiTags('Users')
 @Controller('users')
@@ -30,6 +37,7 @@ export class UserController {
     private readonly createUsecase: CreateUserUsecase,
     private readonly getUserInfoUsecase: GetUserInfoUsecase,
     private readonly deleteUserUseCase: DeleteUserAccountUseCase,
+     @Inject(UpdateAvatarUsecase) private readonly updateAvatar: UpdateAvatarUsecase,
   ) {}
 
   @ApiOperation({ summary: 'Register a new user' })
@@ -118,5 +126,36 @@ export class UserController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteUser(@Param('id') userId: string): Promise<void> {
     await this.deleteUserUseCase.execute(userId);
+  }
+  @Put('profile/avatar')
+  @ApiOperation({ summary: 'Update user avatar' })
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'The user avatar was updated successfully.',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Avatar file is required.',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'User should be logged in.',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Something went wrong, try again.',
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: UpdateAvatarDto })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async uploadAvatar(@CurrentUser() user: User, @Req() req: FastifyRequest): Promise<void> {
+    const filePart = await req.file();
+
+    if (!filePart) {
+      throw new BadRequestException('Avatar file is required');
+    }
+
+    await this.updateAvatar.execute(filePart, user);
   }
 }

@@ -26,6 +26,9 @@ import { Salon } from '@salon/infrastructure/schemas/salon.entity';
 import { NotificationModule } from '@notification/infrastructure/modules/notification.module';
 import { TokensModule } from '@token/infrastructure/modules/token.module';
 import { TemplateModule } from '@notification/infrastructure/modules/template.module';
+import { FileModule } from '@app/shared/uploads/infrastructure/modules/file.module';
+import { UpdateAvatarUsecase } from '@user/application/usecases/update-avatar.usecase';
+
 
 @Module({
   imports: [
@@ -42,6 +45,7 @@ import { TemplateModule } from '@notification/infrastructure/modules/template.mo
         };
       },
     }),
+    FileModule,
 
     MailerModule.forRootAsync({
       inject: [ConfigService],
@@ -77,6 +81,7 @@ import { TemplateModule } from '@notification/infrastructure/modules/template.mo
     ResetPasswordUseCase,
 
     //  helpers
+    UpdateAvatarUsecase,
     UserTransformer,
 
     //  repositories & providers

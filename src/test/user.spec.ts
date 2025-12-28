@@ -1,22 +1,23 @@
-import { LoginRequestDto } from '@app/user/application/dtos/requests/login.request.dto';
-import { UserRequestDto } from '@app/user/application/dtos/requests/user.request.dto';
-import { UserResponseDto } from '@app/user/application/dtos/responses/user.response.dto';
-import { UserTransformer } from '@app/user/application/transformers/user.transformer';
-import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase';
-import { DeleteUserAccountUseCase } from '@app/user/application/usecases/delete-user-account.usecase';
-import { ForgotPasswordUseCase } from '@app/user/application/usecases/forgot-password.usecase';
-import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
-import { LoginUsecase } from '@app/user/application/usecases/login.usecase';
-import { ResetPasswordUseCase } from '@app/user/application/usecases/reset-password.usecase';
+import { LoginRequestDto } from '@user/application/dtos/requests/login.request.dto';
+import { UserRequestDto } from '@user/application/dtos/requests/user.request.dto';
+import { UserResponseDto } from '@user/application/dtos/responses/user.response.dto';
+import { UserTransformer } from '@user/application/transformers/user.transformer';
+import { CreateUserUsecase } from '@user/application/usecases/create.usecase';
+import { DeleteUserAccountUseCase } from '@user/application/usecases/delete-user-account.usecase';
+import { ForgotPasswordUseCase } from '@user/application/usecases/forgot-password.usecase';
+import { GetUserInfoUsecase } from '@user/application/usecases/get-user-info.usecase';
+import { LoginUsecase } from '@user/application/usecases/login.usecase';
+import { ResetPasswordUseCase } from '@user/application/usecases/reset-password.usecase';
+import { UpdateAvatarUsecase } from '@user/application/usecases/update-avatar.usecase';
 
-import { NotifierService } from '@app/notification/application/services/notifier.service';
-import { User } from '@app/user/domain/entities/user';
-import { UserRole } from '@app/user/domain/enums/user-role.enum';
-import { AuthController } from '@app/user/infrastructure/controllers/auth.controller';
-import { UserController } from '@app/user/infrastructure/controllers/user.controller';
-import { MockUsersReporitory } from '@app/user/infrastructure/mock-repositories/user.mock.repository';
-import { BcryptHashingProvider } from '@app/user/infrastructure/providers/bcrypt.hashing.provider';
-import { TokenGenerator } from '@app/user/infrastructure/providers/token-generator.provider';
+import { NotifierService } from '@notification/application/services/notifier.service';
+import { User } from '@user/domain/entities/user';
+import { UserRole } from '@user/domain/enums/user-role.enum';
+import { AuthController } from '@user/infrastructure/controllers/auth.controller';
+import { UserController } from '@user/infrastructure/controllers/user.controller';
+import { MockUsersReporitory } from '@user/infrastructure/mock-repositories/user.mock.repository';
+import { BcryptHashingProvider } from '@user/infrastructure/providers/bcrypt.hashing.provider';
+import { TokenGenerator } from '@user/infrastructure/providers/token-generator.provider';
 import jwtConfig from '@config/jwt.config';
 import { BadRequestException, ConflictException, UnauthorizedException } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -50,6 +51,12 @@ describe('UserController', () => {
         DeleteUserAccountUseCase,
         CreateUserUsecase,
         GetUserInfoUsecase,
+        {
+          provide: UpdateAvatarUsecase,
+          useValue: {
+            execute: jest.fn(),
+          },
+        },
         ForgotPasswordUseCase,
         LoginUsecase,
         ResetPasswordUseCase,

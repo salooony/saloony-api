@@ -1,10 +1,10 @@
 import { UserResponseDto } from '../dtos/responses/user.response.dto';
 import { Inject, NotFoundException } from '@nestjs/common';
-import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
+import { IUserRepository, USERS_REPOSITORY } from '@user/domain/ports/iuser.repository';
 
 export class GetUserInfoUsecase {
   constructor(
-    @Inject('UsersRepository')
+    @Inject(USERS_REPOSITORY)
     private readonly userRepository: IUserRepository,
   ) {}
 

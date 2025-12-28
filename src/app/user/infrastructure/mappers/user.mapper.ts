@@ -26,6 +26,11 @@ export class UserMapper {
   static toEntity(user: User): UserEntity {
     const entity = new UserEntity();
 
+    // preserve id for updates so TypeORM performs an UPDATE instead of INSERT
+    if (user.id) {
+      entity.id = user.id;
+    }
+
     entity.firstname = user.firstname;
     entity.lastname = user.lastname;
     entity.avatar = user.avatar;

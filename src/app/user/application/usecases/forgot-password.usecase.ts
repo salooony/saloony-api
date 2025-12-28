@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import * as crypto from 'crypto';
 import { ForgotPasswordRequestDto } from '../dtos/requests/forgot-password.request.dto';
 import { PasswordResetToken } from '../../domain/entities/password-reset-token';
-import { IUserRepository } from '../../domain/ports/iuser.repository';
+import { IUserRepository, USERS_REPOSITORY } from '../../domain/ports/iuser.repository';
 import { IPasswordResetTokenRepository } from '../../domain/ports/ipassword-reset-token.repository';
 import { IEmailSender } from '../../domain/ports/iemailsender.repository';
 import { ConfigService } from '@nestjs/config';
@@ -10,7 +10,7 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class ForgotPasswordUseCase {
   constructor(
-    @Inject('UsersRepository')
+    @Inject(USERS_REPOSITORY)
     private readonly userRepository: IUserRepository,
     private readonly configService: ConfigService,
 
@@ -19,7 +19,7 @@ export class ForgotPasswordUseCase {
 
     @Inject('IEmailSender')
     private readonly emailSender: IEmailSender,
-  ) {}
+  ) { }
   async execute(forgotPasswordRequest: ForgotPasswordRequestDto): Promise<void> {
     const email = forgotPasswordRequest.email.toLowerCase().trim();
 
