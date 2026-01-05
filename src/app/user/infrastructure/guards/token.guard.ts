@@ -43,7 +43,7 @@ export class TokenGuard implements CanActivate {
     return true;
   }
 
-  private extractTokenFromRequest(request: AppRequest): string {
+  private extractTokenFromRequest(request: AppRequest): string | undefined {
     const [, token] = request.headers.authorization?.split(' ') ?? [];
 
     return token;

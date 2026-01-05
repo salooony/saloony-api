@@ -1,4 +1,5 @@
-export default {
+/** @type {import('@commitlint/types').UserConfig} */
+module.exports = {
   extends: ['@commitlint/config-conventional'],
   plugins: [
     {
@@ -41,7 +42,7 @@ export default {
   ],
   rules: {
     'jira-ticket': [2, 'always'],
-    'subject-case': [0], // Disable the default subject-case rule
+    'subject-case': [0],
     'type-enum': [
       2,
       'always',

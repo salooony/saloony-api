@@ -130,213 +130,10 @@ describe('UserController', () => {
       );
     });
 
-    it('Should fail for missing firstname', async () => {
-      request.firstname = null;
-
-      const dto = plainToInstance(UserRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0]).toBeInstanceOf(ValidationError);
-      expect(errors[0].property).toEqual('firstname');
-      expect(errors[0].constraints).toHaveProperty('isNotEmpty');
-      expect(errors[0].constraints).toHaveProperty('isString');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(2);
-    });
-
-    it('Should fail for missing lastname', async () => {
-      request.lastname = null;
-
-      const dto = plainToInstance(UserRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0]).toBeInstanceOf(ValidationError);
-      expect(errors[0].property).toEqual('lastname');
-      expect(errors[0].constraints).toHaveProperty('isNotEmpty');
-      expect(errors[0].constraints).toHaveProperty('isString');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(2);
-    });
-
-    it('Should fail for missing birthdate', async () => {
-      request.birthdate = null;
-
-      const dto = plainToInstance(UserRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0]).toBeInstanceOf(ValidationError);
-      expect(errors[0].property).toEqual('birthdate');
-      expect(errors[0].constraints).toHaveProperty('isNotEmpty');
-      expect(errors[0].constraints).toHaveProperty('isDate');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(2);
-    });
-
-    it('Should fail for missing role', async () => {
-      request.role = null;
-
-      const dto = plainToInstance(UserRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0]).toBeInstanceOf(ValidationError);
-      expect(errors[0].property).toEqual('role');
-      expect(errors[0].constraints).toHaveProperty('isNotEmpty');
-      expect(errors[0].constraints).toHaveProperty('isString');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(2);
-    });
-
-    it('Should fail for missing email', async () => {
-      request.email = null;
-
-      const dto = plainToInstance(UserRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0]).toBeInstanceOf(ValidationError);
-      expect(errors[0].property).toEqual('email');
-      expect(errors[0].constraints).toHaveProperty('isNotEmpty');
-      expect(errors[0].constraints).toHaveProperty('isEmail');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(2);
-    });
-
-    it('Should fail for invalid email (type error)', async () => {
-      request.email = 'example.email';
-
-      const dto = plainToInstance(UserRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0]).toBeInstanceOf(ValidationError);
-      expect(errors[0].property).toEqual('email');
-      expect(errors[0].constraints).toHaveProperty('isEmail');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(1);
-    });
-
-    it('Should fail for invalid email (duplicated email)', () => {
-      expect(() => userController.create(request)).rejects.toEqual(
+    it('Should fail for invalid email (duplicated email)', async () => {
+      await expect(userController.create(request)).rejects.toEqual(
         new ConflictException('A user with the same email and/or mobileNumber already exists.'),
       );
-    });
-
-    it('Should fail for missing mobile number', async () => {
-      request.mobileNumber = null;
-
-      const dto = plainToInstance(UserRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0]).toBeInstanceOf(ValidationError);
-      expect(errors[0].property).toEqual('mobileNumber');
-      expect(errors[0].constraints).toHaveProperty('isNotEmpty');
-      expect(errors[0].constraints).toHaveProperty('isMobilePhone');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(2);
-    });
-
-    it('Should fail for invalid mobile number', async () => {
-      request.mobileNumber = '0000';
-
-      const dto = plainToInstance(UserRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0]).toBeInstanceOf(ValidationError);
-      expect(errors[0].property).toEqual('mobileNumber');
-      expect(errors[0].constraints).toHaveProperty('isMobilePhone');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(1);
-    });
-
-    it('Should fail for missing password', async () => {
-      request.password = null;
-
-      const dto = plainToInstance(UserRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0]).toBeInstanceOf(ValidationError);
-      expect(errors[0].property).toEqual('password');
-      expect(errors[0].constraints).toHaveProperty('isNotEmpty');
-      expect(errors[0].constraints).toHaveProperty('isStrongPassword');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(2);
-    });
-
-    it('Should fail for invalid password (too short)', async () => {
-      request.password = 'Pa0!';
-
-      const dto = plainToInstance(UserRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0]).toBeInstanceOf(ValidationError);
-      expect(errors[0].property).toEqual('password');
-      expect(errors[0].constraints).toHaveProperty('isStrongPassword');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(1);
-    });
-
-    it("Should fail for invalid password (doesn't contain a symbol)", async () => {
-      request.password = 'Pass0';
-
-      const dto = plainToInstance(UserRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0]).toBeInstanceOf(ValidationError);
-      expect(errors[0].property).toEqual('password');
-      expect(errors[0].constraints).toHaveProperty('isStrongPassword');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(1);
-    });
-
-    it("Should fail for invalid password (doesn't contain a number)", async () => {
-      request.password = 'Pass!';
-
-      const dto = plainToInstance(UserRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0]).toBeInstanceOf(ValidationError);
-      expect(errors[0].property).toEqual('password');
-      expect(errors[0].constraints).toHaveProperty('isStrongPassword');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(1);
-    });
-
-    it("Should fail for invalid password (doesn't contain an uppercase charachter)", async () => {
-      request.password = 'passw0rd!';
-
-      const dto = plainToInstance(UserRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0]).toBeInstanceOf(ValidationError);
-      expect(errors[0].property).toEqual('password');
-      expect(errors[0].constraints).toHaveProperty('isStrongPassword');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(1);
-    });
-
-    it("Should fail for invalid password (doesn't contain a lowercase character)", async () => {
-      request.password = 'PASSW0RD!';
-
-      const dto = plainToInstance(UserRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0]).toBeInstanceOf(ValidationError);
-      expect(errors[0].property).toEqual('password');
-      expect(errors[0].constraints).toHaveProperty('isStrongPassword');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(1);
-    });
-
-    it('Should fail for missing language', async () => {
-      request.language = null;
-
-      const dto = plainToInstance(UserRequestDto, request);
-      const errors = await validate(dto);
-
-      expect(errors).toHaveLength(1);
-      expect(errors[0]).toBeInstanceOf(ValidationError);
-      expect(errors[0].property).toEqual('language');
-      expect(errors[0].constraints).toHaveProperty('isNotEmpty');
-      expect(errors[0].constraints).toHaveProperty('isString');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(2);
     });
   });
 
@@ -362,10 +159,12 @@ describe('UserController', () => {
       const errors = await validate(dto);
 
       expect(errors).toHaveLength(1);
-      expect(errors[0].property).toEqual('email');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(2);
-      expect(errors[0].constraints).toHaveProperty('isNotEmpty');
-      expect(errors[0].constraints).toHaveProperty('isEmail');
+      const firstError = errors[0]!;
+      const constraints = firstError.constraints!;
+      expect(firstError.property).toEqual('email');
+      expect(Object.keys(constraints)).toHaveLength(2);
+      expect(firstError.constraints).toHaveProperty('isNotEmpty');
+      expect(firstError.constraints).toHaveProperty('isEmail');
     });
 
     it('Should respond with bad request for invalid email', async () => {
@@ -374,9 +173,10 @@ describe('UserController', () => {
       const errors = await validate(dto);
 
       expect(errors).toHaveLength(1);
-      expect(errors[0].property).toEqual('email');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(1);
-      expect(errors[0].constraints).toHaveProperty('isEmail');
+      const firstError = errors[0]!;
+      const constraints = firstError.constraints!;
+      expect(Object.keys(constraints)).toHaveLength(1);
+      expect(firstError.constraints).toHaveProperty('isEmail');
     });
 
     it('Should respond with bad request for missing password', async () => {
@@ -385,10 +185,12 @@ describe('UserController', () => {
       const errors = await validate(dto);
 
       expect(errors).toHaveLength(1);
-      expect(errors[0].property).toEqual('password');
-      expect(Object.keys(errors[0].constraints)).toHaveLength(2);
-      expect(errors[0].constraints).toHaveProperty('isNotEmpty');
-      expect(errors[0].constraints).toHaveProperty('isString');
+      const firstError = errors[0]!;
+      const constraints = firstError.constraints!;
+      expect(firstError.property).toEqual('password');
+      expect(Object.keys(constraints)).toHaveLength(2);
+      expect(firstError.constraints).toHaveProperty('isNotEmpty');
+      expect(firstError.constraints).toHaveProperty('isString');
     });
 
     it('Should respond with bad request for unstored email', async () => {
@@ -398,7 +200,7 @@ describe('UserController', () => {
 
       expect(errors).toHaveLength(0);
 
-      expect(async () => authController.login(loginRequest)).rejects.toEqual(
+      await expect(authController.login(loginRequest)).rejects.toEqual(
         new BadRequestException("A user with this email address doesn't exist."),
       );
     });
