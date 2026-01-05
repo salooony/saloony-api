@@ -3,6 +3,8 @@ import { UserRequestDto } from '@app/user/application/dtos/requests/user.request
 import { UserResponseDto } from '@app/user/application/dtos/responses/user.response.dto';
 import { UserTransformer } from '@app/user/application/transformers/user.transformer';
 import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase';
+import { ForgotPasswordUseCase } from '@app/user/application/usecases/forgot-password.usecase';
+import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
 import { LoginUsecase } from '@app/user/application/usecases/login.usecase';
 import { User } from '@app/user/domain/entities/user';
 import { AuthController } from '@app/user/infrastructure/controllers/auth.controller';
@@ -41,6 +43,8 @@ describe('UserController', () => {
       controllers: [UserController, AuthController],
       providers: [
         CreateUserUsecase,
+        GetUserInfoUsecase,
+        ForgotPasswordUseCase,
         LoginUsecase,
         UserTransformer,
         { provide: 'UsersRepository', useClass: MockUsersReporitory },
@@ -85,11 +89,9 @@ describe('UserController', () => {
 
       expect(errors).toHaveLength(0);
 
-      expect(response).toEqual({
-        ...expectedResponse,
-        id: expect.any(String),
-        createdAt: expect.any(Date),
-      });
+      expect(response).toEqual(expect.objectContaining(expectedResponse));
+      expect(response.id).toEqual(expect.any(String));
+      expect(response.createdAt).toEqual(expect.any(Date));
 
       expect(response.createdAt.toISOString().slice(0, 19)).toEqual(
         expectedResponse.createdAt.toISOString().slice(0, 19),
@@ -119,11 +121,9 @@ describe('UserController', () => {
 
       expect(errors).toHaveLength(0);
 
-      expect(response).toEqual({
-        ...expectedResponse,
-        id: expect.any(String),
-        createdAt: expect.any(Date),
-      });
+      expect(response).toEqual(expect.objectContaining(expectedResponse));
+      expect(response.id).toEqual(expect.any(String));
+      expect(response.createdAt).toEqual(expect.any(Date));
 
       expect(response.createdAt.toISOString().slice(0, 19)).toEqual(
         expectedResponse.createdAt.toISOString().slice(0, 19),

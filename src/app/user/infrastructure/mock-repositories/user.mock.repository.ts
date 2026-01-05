@@ -18,22 +18,26 @@ export class MockUsersReporitory implements IUserRepository {
 
     MockUsersReporitory.users.push(user);
 
-    return user;
+    return Promise.resolve(user);
   }
 
   async findOneById(id: string): Promise<User | null> {
     const user = MockUsersReporitory.users.find((user) => user.id === id);
 
-    if (!user) return null;
+    if (!user) {
+      return null;
+    }
 
-    return user;
+    return Promise.resolve(user);
   }
 
   async findOneByEmail(email: string): Promise<User | null> {
     const user = MockUsersReporitory.users.find((user) => user.email === email);
 
-    if (!user) return null;
+    if (!user) {
+      return null;
+    }
 
-    return user;
+    return Promise.resolve(user);
   }
 }

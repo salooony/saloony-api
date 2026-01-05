@@ -1,16 +1,17 @@
 import { User } from '@app/user/domain/entities/user';
 import { UserResponseDto } from '../dtos/responses/user.response.dto';
-import { InternalServerErrorException } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
+import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
 
 export class GetUserInfoUsecase {
-  constructor() {}
+  constructor(
+    @Inject('UsersRepository')
+    private readonly userRepository: IUserRepository,
+  ) {}
 
-  async execute(user: User | number): Promise<UserResponseDto> {
-    if (user instanceof User) {
-      return UserResponseDto.createFromEntity(user);
-    }
+  async execute(user: User): Promise<UserResponseDto> {
+    const userEntity = await this.userRepository.findOneById(user.id);
 
-    // TODO: implement get user details with their id (when permissions are determined)
-    throw new InternalServerErrorException();
+    return UserResponseDto.createFromEntity(userEntity);
   }
 }
