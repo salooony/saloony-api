@@ -21,9 +21,7 @@ export class CreateUserUsecase {
       return UserResponseDto.createFromEntity(createdUser);
     } catch (error) {
       if (error instanceof Error && error.message.includes('duplicate key')) {
-        throw new ConflictException(
-          'A user with the same email and/or mobileNumber already exists.',
-        );
+        throw new ConflictException('A user with the same email and/or mobileNumber already exists.');
       }
       console.log(error);
 

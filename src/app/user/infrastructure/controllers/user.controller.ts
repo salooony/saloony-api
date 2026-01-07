@@ -58,6 +58,6 @@ export class UserController {
   @Get('/me')
   @Header('Content-Type', 'application/json')
   async getPeronalInfo(@CurrentUser() user: User): Promise<UserResponseDto> {
-    return await this.getUserInfoUsecase.execute(user);
+    return await this.getUserInfoUsecase.execute(user.id);
   }
 }
