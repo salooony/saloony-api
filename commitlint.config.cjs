@@ -31,10 +31,6 @@ module.exports = {
             return [false, 'commit message must include a description'];
           }
 
-          if (description !== description.toLowerCase()) {
-            return [false, 'description must be in lowercase'];
-          }
-
           return [true];
         },
       },
