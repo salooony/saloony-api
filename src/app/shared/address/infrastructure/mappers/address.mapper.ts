@@ -1,4 +1,4 @@
-import { Address } from '@app/address/domain/entities/address';
+import { Address } from '@app/shared/address/domain/entities/address';
 import { Address as AddressEntity } from '../schemas/address.entity';
 
 export class AddressMapper {

@@ -1,9 +1,9 @@
-import { IAddressRepository } from '@app/address/domain/ports/iaddress.repository';
+import { IAddressRepository } from '@app/shared/address/domain/ports/iaddress.repository';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Address as AddressEntity } from '../schemas/address.entity';
-import { Address } from '@app/address/domain/entities/address';
+import { Address } from '@app/shared/address/domain/entities/address';
 import { AddressMapper } from '../mappers/address.mapper';
 
 @Injectable()
@@ -31,9 +31,5 @@ export class AddressRepository implements IAddressRepository {
     const addresses = await this.repository.find();
 
     return addresses.map((address) => AddressMapper.map(address));
-  }
-
-  async delete(id: string): Promise<void> {
-    await this.repository.delete(id);
   }
 }
