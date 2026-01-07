@@ -82,6 +82,14 @@ export class UserResponseDto {
   })
   public saloons: string[];
 
+  @ApiProperty({
+    description: 'The city ID where the user is located.',
+    type: String,
+    required: false,
+    example: '650e8400-e29b-41d4-a716-446655440001',
+  })
+  public cityId?: string;
+
   private constructor() {}
 
   public static createFromEntity(user: User) {
@@ -97,6 +105,7 @@ export class UserResponseDto {
     userResponse.createdAt = user.createdAt;
     userResponse.updatedAt = user.updatedAt;
     userResponse.language = user.language;
+    userResponse.cityId = user.cityId;
 
     userResponse.saloons = user.acl;
 

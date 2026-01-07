@@ -38,6 +38,9 @@ export class User {
   @Column({ type: 'varchar', length: 50 })
   role: string;
 
+  @Column({ type: 'uuid', name: 'city_id', nullable: true })
+  cityId?: string;
+
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
 
@@ -47,3 +50,4 @@ export class User {
   @Column({ type: 'varchar', array: true })
   acl: string[];
 }
+

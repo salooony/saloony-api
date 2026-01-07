@@ -14,6 +14,7 @@ export class UserTransformer {
     user.mobileNumber = userRequest.mobileNumber;
     user.password = userRequest.password;
     user.language = userRequest.language;
+    user.cityId = userRequest.cityId;
 
     user.acl = [];
 

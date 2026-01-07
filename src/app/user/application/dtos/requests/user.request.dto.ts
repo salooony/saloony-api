@@ -6,6 +6,8 @@ import {
   IsMobilePhone,
   IsStrongPassword,
   IsDate,
+  IsOptional,
+  IsUUID,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -97,6 +99,16 @@ export class UserRequestDto {
   @IsString()
   public language: string;
 
+  @ApiProperty({
+    description: 'The city ID where the user is located.',
+    type: String,
+    required: false,
+    example: '650e8400-e29b-41d4-a716-446655440001',
+  })
+  @IsOptional()
+  @IsUUID()
+  public cityId?: string;
+
   constructor(
     firstname: string,
     lastname: string,
@@ -106,6 +118,7 @@ export class UserRequestDto {
     mobileNumber: string,
     password: string,
     language: string,
+    cityId?: string,
   ) {
     this.firstname = firstname;
     this.lastname = lastname;
@@ -115,5 +128,6 @@ export class UserRequestDto {
     this.mobileNumber = mobileNumber;
     this.password = password;
     this.language = language;
+    this.cityId = cityId;
   }
 }
