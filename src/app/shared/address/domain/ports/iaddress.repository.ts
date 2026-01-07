@@ -1,7 +1,4 @@
-import { Address } from '../entities/address';
-
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface IAddressRepository {
-  save(address: Address): Promise<Address>;
-  findOneById(id: string): Promise<Address | null>;
-  findAll(): Promise<Address[]>;
+  // to be implemented later
 }
