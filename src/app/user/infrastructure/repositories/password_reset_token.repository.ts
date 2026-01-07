@@ -17,10 +17,7 @@ export class PasswordResetTokenRepository implements IPasswordResetTokenReposito
     return saved as PasswordResetToken;
   }
 
-  async findByUserIdAndTokenHash(
-    userId: string,
-    tokenHash: string,
-  ): Promise<PasswordResetToken | null> {
+  async findByUserIdAndTokenHash(userId: string, tokenHash: string): Promise<PasswordResetToken | null> {
     const token = await this.repository.findOne({ where: { userId, tokenHash } });
     return token ?? null;
   }
