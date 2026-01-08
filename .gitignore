@@ -42,9 +42,6 @@ lerna-debug.log*
 .env.production.local
 .env.local
 
-# ESLint config (Windows-specific)
-# eslint.config.mjs
-
 # temp directory
 .temp
 .tmp
