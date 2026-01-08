@@ -88,6 +88,7 @@
     "rootDir": "src",
     "moduleNameMapper": {
       "^@app/(.*)$": "<rootDir>/app/$1",
+      "^@address/(.*)$": "<rootDir>/app/address/$1",
       "^@test/(.*)$": "<rootDir>/test/$1",
       "^@config/(.*)$": "<rootDir>/config/$1"
     },
