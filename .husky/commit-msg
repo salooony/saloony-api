@@ -1,0 +1,25 @@
+npx --no-install commitlint --edit "$1" || {
+  echo "ⓘ   Conventional Commits are required for this repository
+
+The type must be one of the following:
+ - build
+ - chore
+ - ci
+ - docs
+ - feat
+ - fix
+ - perf
+ - refactor
+ - revert
+ - style
+ - test
+
+Examples:
+ - feat(parser): PROJ-123 add ability to parse arrays
+ - fix: correct minor typos in code
+ - docs: PROJ-123 update API documentation
+
+See https://www.conventionalcommits.org for more details.
+  "
+  exit 1
+}
