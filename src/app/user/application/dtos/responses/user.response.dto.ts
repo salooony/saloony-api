@@ -75,10 +75,7 @@ export class UserResponseDto {
   @ApiProperty({
     description: 'The saloons the user has access to.',
     type: [String],
-    example: [
-      'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11-Owner',
-      'a0eebc95-9c0b-4ef8-bb6d-6bb9bd380a11-Owner',
-    ],
+    example: ['a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11-Owner', 'a0eebc95-9c0b-4ef8-bb6d-6bb9bd380a11-Owner'],
   })
   public saloons: string[];
 
