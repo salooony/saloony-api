@@ -13,6 +13,7 @@
     "baseUrl": "./",
     "paths": {
       "@app/*": ["src/app/*"],
+      "@address/*": ["src/app/address/*"],
       "@test/*": ["src/test/*"],
       "@config/*": ["src/config/*"]
     },
