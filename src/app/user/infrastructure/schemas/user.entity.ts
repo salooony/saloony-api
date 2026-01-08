@@ -50,4 +50,3 @@ export class User {
   @Column({ type: 'varchar', array: true })
   acl: string[];
 }
-

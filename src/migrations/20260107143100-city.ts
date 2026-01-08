@@ -94,7 +94,3 @@ export class City20260107143100 implements MigrationInterface {
     await queryRunner.dropTable('city');
   }
 }
-
-
-
-
