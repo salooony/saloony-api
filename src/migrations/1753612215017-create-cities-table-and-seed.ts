@@ -1,0 +1,137 @@
+import { MigrationInterface, QueryRunner, Table, TableColumn, TableForeignKey } from 'typeorm';
+
+export class CreateCitiesTableAndSeed1753612215017 implements MigrationInterface {
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    // 1️⃣ Create cities table with country_id FK
+    await queryRunner.createTable(
+      new Table({
+        name: 'city',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'uuid',
+            isNullable: false,
+          },
+          {
+            name: 'name',
+            type: 'varchar',
+            length: '100',
+            isNullable: false,
+          },
+          {
+            name: 'country_id',
+            type: 'uuid',
+            isNullable: false,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+            isNullable: false,
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+            onUpdate: 'CURRENT_TIMESTAMP',
+            isNullable: false,
+          },
+        ],
+        uniques: [
+          {
+            name: 'UK_city_country_id_name',
+            columnNames: ['country_id', 'name'],
+          },
+        ],
+      }),
+    );
+
+    // 2️⃣ Add FK constraint to countries table
+    await queryRunner.createForeignKey(
+      'city',
+      new TableForeignKey({
+        name: 'FK_city_country_id',
+        columnNames: ['country_id'],
+        referencedTableName: 'countries',
+        referencedColumnNames: ['id'],
+        onDelete: 'CASCADE',
+      }),
+    );
+
+    // 3️⃣ Add city_id column to user table
+    await queryRunner.addColumn(
+      'user',
+      new TableColumn({
+        name: 'city_id',
+        type: 'uuid',
+        isNullable: true,
+      }),
+    );
+
+    // 4️⃣ Add foreign key constraint for user.city_id
+    await queryRunner.createForeignKey(
+      'user',
+      new TableForeignKey({
+        name: 'FK_user_city_id',
+        columnNames: ['city_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'city',
+        onDelete: 'SET NULL',
+      }),
+    );
+
+    // 5️⃣ Seed Tunisian and French cities
+    await queryRunner.query(`
+      INSERT INTO "city" (name, country_id, created_at, updated_at) VALUES
+      ('Tunis', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
+      ('Sfax', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
+      ('Sousse', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
+      ('Kairouan', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
+      ('Gabes', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
+      ('Djerba', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
+      ('Tozeur', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
+      ('Monastir', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
+      ('Nabeul', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
+      ('Mahdia', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
+      ('Gafsa', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
+      ('Jendouba', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
+      ('Kebili', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
+      ('Kasserine', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
+      ('Paris', (SELECT id FROM countries WHERE code = 'FR'), NOW(), NOW()),
+      ('Lyon', (SELECT id FROM countries WHERE code = 'FR'), NOW(), NOW()),
+      ('Marseille', (SELECT id FROM countries WHERE code = 'FR'), NOW(), NOW()),
+      ('Toulouse', (SELECT id FROM countries WHERE code = 'FR'), NOW(), NOW()),
+      ('Nice', (SELECT id FROM countries WHERE code = 'FR'), NOW(), NOW()),
+      ('Nantes', (SELECT id FROM countries WHERE code = 'FR'), NOW(), NOW()),
+      ('Strasbourg', (SELECT id FROM countries WHERE code = 'FR'), NOW(), NOW()),
+      ('Montpellier', (SELECT id FROM countries WHERE code = 'FR'), NOW(), NOW()),
+      ('Bordeaux', (SELECT id FROM countries WHERE code = 'FR'), NOW(), NOW()),
+      ('Lille', (SELECT id FROM countries WHERE code = 'FR'), NOW(), NOW())
+    `);
+  }
+
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    // 1️⃣ Drop foreign key from user table
+    const userTable = await queryRunner.getTable('user');
+    const userForeignKey = userTable?.foreignKeys.find((fk) => fk.columnNames.includes('city_id'));
+    if (userForeignKey) {
+      await queryRunner.dropForeignKey('user', userForeignKey);
+    }
+
+    // 2️⃣ Drop city_id column from user
+    await queryRunner.dropColumn('user', 'city_id');
+
+    // 3️⃣ Drop foreign key from city table
+    const cityTable = await queryRunner.getTable('city');
+    const cityForeignKey = cityTable?.foreignKeys.find((fk) => fk.columnNames.includes('country_id'));
+    if (cityForeignKey) {
+      await queryRunner.dropForeignKey('city', cityForeignKey);
+    }
+
+    // 4️⃣ Drop city table
+    await queryRunner.dropTable('city');
+  }
+}
