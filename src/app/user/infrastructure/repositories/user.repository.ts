@@ -35,37 +35,6 @@ export class UsersRepository implements IUserRepository {
   }
 
   async updateOneById(id: string, updateCriteria: UpdateUserCriteria): Promise<void> {
-    const params = this.buildUpdateParams(updateCriteria);
-    await this.repository.update(id, params);
-  }
-
-  private buildUpdateParams(updateCriteria: UpdateUserCriteria): {} {
-    const params = {};
-
-    if (updateCriteria.firstname) {
-      params['firstname'] = updateCriteria.firstname;
-    }
-
-    if (updateCriteria.lastname) {
-      params['lastname'] = updateCriteria.lastname;
-    }
-
-    if (updateCriteria.birthdate) {
-      params['birthdate'] = updateCriteria.birthdate;
-    }
-
-    if (updateCriteria.email) {
-      params['email'] = updateCriteria.email;
-    }
-
-    if (updateCriteria.mobileNumber) {
-      params['mobileNumber'] = updateCriteria.mobileNumber;
-    }
-
-    if (updateCriteria.language) {
-      params['language'] = updateCriteria.language;
-    }
-
-    return params;
+    await this.repository.update(id, updateCriteria);
   }
 }
