@@ -2,7 +2,6 @@ import { UpdateUserCriteria } from '@app/user/domain/criteria/update-user.criter
 import { User } from '@app/user/domain/entities/user';
 import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
 import { Injectable } from '@nestjs/common';
-import { first } from 'rxjs';
 
 @Injectable()
 export class MockUsersReporitory implements IUserRepository {
