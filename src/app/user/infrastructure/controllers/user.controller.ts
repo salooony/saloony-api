@@ -6,18 +6,7 @@ import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase
 import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
 import { UpdateUserUsecase } from '@app/user/application/usecases/update-user.usecase';
 import { User } from '@app/user/domain/entities/user';
-import {
-  Body,
-  Controller,
-  Get,
-  Header,
-  HttpCode,
-  HttpStatus,
-  Patch,
-  Post,
-  Req,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Get, Header, HttpCode, HttpStatus, Patch, Post, Req, ValidationPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Users')
@@ -72,7 +61,7 @@ export class UserController {
   @Get('/me')
   @Header('Content-Type', 'application/json')
   async getPeronalInfo(@CurrentUser() user: User): Promise<UserResponseDto> {
-    return await this.getUserInfoUsecase.execute(user);
+    return await this.getUserInfoUsecase.execute(user.id);
   }
 
   @ApiOperation({ summary: 'Update personal information.' })
