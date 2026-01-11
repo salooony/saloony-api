@@ -23,6 +23,6 @@ export class UpdateUserUsecase {
   }
 
   private buildCriteria(updateUser: UpdateUserRequestDto): UpdateUserCriteria {
-    return Object.fromEntries(Object.entries(updateUser).filter(([_, value]) => value !== undefined));
+    return Object.fromEntries(Object.entries(updateUser).filter(([, value]) => value !== undefined));
   }
 }

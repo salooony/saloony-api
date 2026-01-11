@@ -2,6 +2,7 @@ import { UpdateUserCriteria } from '@app/user/domain/criteria/update-user.criter
 import { User } from '@app/user/domain/entities/user';
 import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
 import { Injectable } from '@nestjs/common';
+import { first } from 'rxjs';
 
 @Injectable()
 export class MockUsersReporitory implements IUserRepository {
@@ -44,6 +45,17 @@ export class MockUsersReporitory implements IUserRepository {
 
   async updateOneById(id: string, updateCriteria: UpdateUserCriteria): Promise<void> {
     const user = MockUsersReporitory.users.find((user) => user.id === id);
+    if (!user) throw new Error();
+
     // update user here
+    if (updateCriteria.firstname) user.firstname = updateCriteria.firstname;
+    if (updateCriteria.lastname) user.lastname = updateCriteria.lastname;
+    if (updateCriteria.avatar) user.avatar = updateCriteria.avatar;
+    if (updateCriteria.birthdate) user.birthdate = updateCriteria.birthdate;
+    if (updateCriteria.email) user.email = updateCriteria.email;
+    if (updateCriteria.mobileNumber) user.mobileNumber = updateCriteria.mobileNumber;
+    if (updateCriteria.language) user.language = updateCriteria.language;
+
+    return Promise.resolve();
   }
 }
