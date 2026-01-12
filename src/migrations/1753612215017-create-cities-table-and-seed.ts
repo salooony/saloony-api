@@ -103,15 +103,6 @@ export class CreateCitiesTableAndSeed1753612215017 implements MigrationInterface
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    // 1️⃣ Drop foreign key from user table
-    const userTable = await queryRunner.getTable('user');
-    const userForeignKey = userTable?.foreignKeys.find((fk) => fk.columnNames.includes('city_id'));
-    if (userForeignKey) {
-      await queryRunner.dropForeignKey('user', userForeignKey);
-    }
-
-    // 2️⃣ Drop city_id column from user
-    await queryRunner.dropColumn('user', 'city_id');
 
     // 3️⃣ Drop foreign key from city table
     const cityTable = await queryRunner.getTable('city');
