@@ -40,6 +40,7 @@ export class CreateCitiesTableAndSeed1753612215017 implements MigrationInterface
             isNullable: false,
           },
         ],
+        // Ensure no two cities with the same name exist in the same country
         uniques: [
           {
             name: 'UK_city_country_id_name',
