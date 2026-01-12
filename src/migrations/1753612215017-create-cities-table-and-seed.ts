@@ -61,15 +61,6 @@ export class CreateCitiesTableAndSeed1753612215017 implements MigrationInterface
       }),
     );
 
-    // 3️⃣ Add city_id column to user table
-    await queryRunner.addColumn(
-      'user',
-      new TableColumn({
-        name: 'city_id',
-        type: 'uuid',
-        isNullable: true,
-      }),
-    );
 
 
     // 5️⃣ Seed Tunisian and French cities
