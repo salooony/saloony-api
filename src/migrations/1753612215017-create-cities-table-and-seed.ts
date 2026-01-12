@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm
 
 export class CreateCitiesTableAndSeed1753612215017 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    // 1️⃣ Create cities table with country_id FK
+    // Create cities table with country_id FK
     await queryRunner.createTable(
       new Table({
         name: 'city',
@@ -49,7 +49,7 @@ export class CreateCitiesTableAndSeed1753612215017 implements MigrationInterface
       }),
     );
 
-    // 2️⃣ Add FK constraint to countries table
+    // Add FK constraint to countries table
     await queryRunner.createForeignKey(
       'city',
       new TableForeignKey({
@@ -57,13 +57,13 @@ export class CreateCitiesTableAndSeed1753612215017 implements MigrationInterface
         columnNames: ['country_id'],
         referencedTableName: 'countries',
         referencedColumnNames: ['id'],
-        onDelete: 'CASCADE',
+        onDelete: 'RESTRICT',
       }),
     );
 
 
 
-    // 5️⃣ Seed Tunisian and French cities
+    // Seed Tunisian cities
     await queryRunner.query(`
       INSERT INTO "city" (name, country_id, created_at, updated_at) VALUES
       ('Tunis', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
@@ -79,30 +79,19 @@ export class CreateCitiesTableAndSeed1753612215017 implements MigrationInterface
       ('Gafsa', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
       ('Jendouba', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
       ('Kebili', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
-      ('Kasserine', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
-      ('Paris', (SELECT id FROM countries WHERE code = 'FR'), NOW(), NOW()),
-      ('Lyon', (SELECT id FROM countries WHERE code = 'FR'), NOW(), NOW()),
-      ('Marseille', (SELECT id FROM countries WHERE code = 'FR'), NOW(), NOW()),
-      ('Toulouse', (SELECT id FROM countries WHERE code = 'FR'), NOW(), NOW()),
-      ('Nice', (SELECT id FROM countries WHERE code = 'FR'), NOW(), NOW()),
-      ('Nantes', (SELECT id FROM countries WHERE code = 'FR'), NOW(), NOW()),
-      ('Strasbourg', (SELECT id FROM countries WHERE code = 'FR'), NOW(), NOW()),
-      ('Montpellier', (SELECT id FROM countries WHERE code = 'FR'), NOW(), NOW()),
-      ('Bordeaux', (SELECT id FROM countries WHERE code = 'FR'), NOW(), NOW()),
-      ('Lille', (SELECT id FROM countries WHERE code = 'FR'), NOW(), NOW())
+      ('Kasserine', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW())
     `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-
-    // 3️⃣ Drop foreign key from city table
+    // Drop foreign key from city table
     const cityTable = await queryRunner.getTable('city');
     const cityForeignKey = cityTable?.foreignKeys.find((fk) => fk.columnNames.includes('country_id'));
     if (cityForeignKey) {
       await queryRunner.dropForeignKey('city', cityForeignKey);
     }
 
-    // 4️⃣ Drop city table
+    // Drop city table
     await queryRunner.dropTable('city');
   }
 }
