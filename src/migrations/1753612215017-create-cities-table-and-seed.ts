@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table, TableColumn, TableForeignKey } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm';
 
 export class CreateCitiesTableAndSeed1753612215017 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
