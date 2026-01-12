@@ -61,8 +61,6 @@ export class CreateCitiesTableAndSeed1753612215017 implements MigrationInterface
       }),
     );
 
-
-
     // Seed Tunisian cities
     await queryRunner.query(`
       INSERT INTO "city" (name, country_id, created_at, updated_at) VALUES
