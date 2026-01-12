@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { City } from './city.entity';
 
-@Entity({ name: 'user' })
-export class User {
+@Entity({ name: 'address' })
+export class Address {
   @PrimaryGeneratedColumn()
   id: string;
 
