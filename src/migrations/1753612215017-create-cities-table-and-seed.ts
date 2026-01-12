@@ -71,17 +71,6 @@ export class CreateCitiesTableAndSeed1753612215017 implements MigrationInterface
       }),
     );
 
-    // 4️⃣ Add foreign key constraint for user.city_id
-    await queryRunner.createForeignKey(
-      'user',
-      new TableForeignKey({
-        name: 'FK_user_city_id',
-        columnNames: ['city_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'city',
-        onDelete: 'SET NULL',
-      }),
-    );
 
     // 5️⃣ Seed Tunisian and French cities
     await queryRunner.query(`
