@@ -5,7 +5,7 @@ export class CreateCitiesTableAndSeed1753612215017 implements MigrationInterface
     // Create cities table with country_id FK
     await queryRunner.createTable(
       new Table({
-        name: 'city',
+        name: 'cities',
         columns: [
           {
             name: 'id',
@@ -18,7 +18,7 @@ export class CreateCitiesTableAndSeed1753612215017 implements MigrationInterface
           {
             name: 'name',
             type: 'varchar',
-            length: '100',
+            length: '255',
             isNullable: false,
           },
           {
@@ -43,7 +43,7 @@ export class CreateCitiesTableAndSeed1753612215017 implements MigrationInterface
         // Ensure no two cities with the same name exist in the same country
         uniques: [
           {
-            name: 'UK_city_country_id_name',
+            name: 'UQ_CITIES_COUNTRY_ID_NAME',
             columnNames: ['country_id', 'name'],
           },
         ],
@@ -52,19 +52,19 @@ export class CreateCitiesTableAndSeed1753612215017 implements MigrationInterface
 
     // Add FK constraint to countries table
     await queryRunner.createForeignKey(
-      'city',
+      'cities',
       new TableForeignKey({
-        name: 'FK_city_country_id',
+        name: 'FK_CITIES_COUNTRIES_COUNTRY_ID',
         columnNames: ['country_id'],
         referencedTableName: 'countries',
         referencedColumnNames: ['id'],
-        onDelete: 'RESTRICT',
+        onDelete: 'CASCADE',
       }),
     );
 
     // Seed Tunisian cities
     await queryRunner.query(`
-      INSERT INTO "city" (name, country_id, created_at, updated_at) VALUES
+      INSERT INTO "cities" (name, country_id, created_at, updated_at) VALUES
       ('Tunis', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
       ('Sfax', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
       ('Sousse', (SELECT id FROM countries WHERE code = 'TN'), NOW(), NOW()),
@@ -84,13 +84,13 @@ export class CreateCitiesTableAndSeed1753612215017 implements MigrationInterface
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     // Drop foreign key from city table
-    const cityTable = await queryRunner.getTable('city');
+    const cityTable = await queryRunner.getTable('cities');
     const cityForeignKey = cityTable?.foreignKeys.find((fk) => fk.columnNames.includes('country_id'));
     if (cityForeignKey) {
-      await queryRunner.dropForeignKey('city', cityForeignKey);
+      await queryRunner.dropForeignKey('cities', cityForeignKey);
     }
 
     // Drop city table
-    await queryRunner.dropTable('city');
+    await queryRunner.dropTable('cities');
   }
 }
