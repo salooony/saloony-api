@@ -1,4 +1,4 @@
-import { User } from '@app/user/domain/entities/user';
+import { User } from '@app/user/domain/entities/user.entity';
 import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
 import { Injectable } from '@nestjs/common';
 

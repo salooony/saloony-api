@@ -1,5 +1,5 @@
-import { Token } from '@app/user/domain/entities/token';
-import { User } from '@app/user/domain/entities/user';
+import { Token } from '@app/user/domain/entities/token.entity';
+import { User } from '@app/user/domain/entities/user.entity';
 import { ITokenGenerator } from '@app/user/domain/ports/itoken-generator.provider';
 import jwtConfig from '@config/jwt.config';
 import { Inject, Injectable } from '@nestjs/common';

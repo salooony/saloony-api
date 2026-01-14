@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PasswordResetTokenEntity } from '../schemas/password-reset-token.entity';
-import { PasswordResetToken } from '../../domain/entities/password-reset-token';
+import { PasswordResetToken } from '../../domain/entities/password-reset-token.entity';
 import { IPasswordResetTokenRepository } from '../../domain/ports/ipassword-reset-token.repository';
 
 @Injectable()

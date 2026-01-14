@@ -1,4 +1,4 @@
-import { Saloon } from '../../domain/entities/saloon';
+import { Saloon } from '../../domain/entities/saloon.entity';
 import { Saloon as SaloonEntity } from '../schemas/saloon.entity';
 
 export class SaloonMapper {

@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import * as crypto from 'crypto';
 import { ForgotPasswordRequestDto } from '../dtos/requests/forgot-password.request.dto';
-import { PasswordResetToken } from '../../domain/entities/password-reset-token';
+import { PasswordResetToken } from '../../domain/entities/password-reset-token.entity';
 import { IUserRepository } from '../../domain/ports/iuser.repository';
 import { IPasswordResetTokenRepository } from '../../domain/ports/ipassword-reset-token.repository';
 import { IEmailSender } from '../../domain/ports/iemailsender.repository';

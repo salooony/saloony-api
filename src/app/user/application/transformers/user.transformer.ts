@@ -1,4 +1,4 @@
-import { User } from '@app/user/domain/entities/user';
+import { User } from '@app/user/domain/entities/user.entity';
 import { UserRequestDto } from '../dtos/requests/user.request.dto';
 
 export class UserTransformer {
