@@ -4,7 +4,7 @@ export class InitialSchema1753612215016 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'users',
+        name: 'user',
         columns: [
           {
             name: 'id',
@@ -71,12 +71,17 @@ export class InitialSchema1753612215016 implements MigrationInterface {
             default: 'CURRENT_TIMESTAMP',
             onUpdate: 'CURRENT_TIMESTAMP',
           },
+          {
+            name: 'acl',
+            type: 'varchar',
+            isArray: true,
+          },
         ],
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('users');
+    await queryRunner.dropTable('user');
   }
 }

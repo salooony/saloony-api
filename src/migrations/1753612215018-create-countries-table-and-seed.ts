@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class CreateCountriesTableAndSeed1736693000000 implements MigrationInterface {
+export class CreateCountriesTableAndSeed1753612215018 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     // 1️⃣ Create countries table
     await queryRunner.createTable(
@@ -32,16 +32,22 @@ export class CreateCountriesTableAndSeed1736693000000 implements MigrationInterf
             type: 'varchar',
             isNullable: false,
           },
+          {
+            name: 'is_active',
+            type: 'boolean',
+            isNullable: false,
+            default: true, // ✅ default value
+          },
         ],
       }),
     );
 
     // 2️⃣ Seed initial countries
     await queryRunner.query(`
-      INSERT INTO countries (code, icon, name)
+      INSERT INTO countries (code, icon, name, is_active)
       VALUES
-        ('PS', '🇵🇸', 'Palestine'),
-        ('TN', '🇹🇳', 'Tunisia')
+        ('PS', '🇵🇸', 'Palestine', true),
+        ('TN', '🇹🇳', 'Tunisia', true)
     `);
   }
 
