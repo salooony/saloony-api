@@ -40,4 +40,23 @@ export class MockUsersReporitory implements IUserRepository {
 
     return Promise.resolve(user);
   }
+
+  async update(user: User): Promise<User> {
+    const index = MockUsersReporitory.users.findIndex((u) => u.id === user.id);
+    if (index === -1) {
+      throw new Error('User not found');
+    }
+
+    const current = MockUsersReporitory.users[index];
+
+    const updated: User = {
+      ...current,
+      ...user,
+      updatedAt: new Date(),
+    };
+
+    MockUsersReporitory.users[index] = updated;
+
+    return Promise.resolve(updated);
+  }
 }
