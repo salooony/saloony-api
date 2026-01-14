@@ -50,7 +50,6 @@ export class CreateCitiesTableAndSeed1753612215017 implements MigrationInterface
       }),
     );
 
-    // Add FK constraint to countries table
     await queryRunner.createForeignKey(
       'cities',
       new TableForeignKey({
@@ -83,7 +82,6 @@ export class CreateCitiesTableAndSeed1753612215017 implements MigrationInterface
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    // Drop foreign key from city table
     const cityTable = await queryRunner.getTable('cities');
     const cityForeignKey = cityTable?.foreignKeys.find((fk) => fk.columnNames.includes('country_id'));
     if (cityForeignKey) {
