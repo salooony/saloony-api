@@ -5,7 +5,7 @@ export class CreateCitiesTableAndSeed1753612215017 implements MigrationInterface
     // Create cities table with country_id FK
     await queryRunner.createTable(
       new Table({
-        name: 'city',
+        name: 'cities',
         columns: [
           {
             name: 'id',
