@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Get the current branch name
+branch_name=$(git rev-parse --abbrev-ref HEAD)
+echo "Current branch: $branch_name"
+
+# Make sure code is clean
+npx lint-staged

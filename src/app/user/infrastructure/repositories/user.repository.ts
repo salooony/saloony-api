@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User as UserEntity } from '../schemas/user.entity';
-import { User } from '@app/user/domain/entities/user';
+import { User } from '@user/domain/entities/user';
 import { UserMapper } from '../mappers/user.mapper';
 
 @Injectable()
@@ -35,5 +35,11 @@ export class UsersRepository implements IUserRepository {
 
   async delete(userId: string): Promise<void> {
     await this.repository.softDelete(userId);
+  }
+  async update(user: User): Promise<User> {
+    const entity = UserMapper.toEntity(user);
+    const saved = await this.repository.save(entity);
+
+    return UserMapper.map(saved);
   }
 }
