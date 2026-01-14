@@ -1,15 +1,23 @@
-import { Public } from '@app/user/application/decorators/public.decorator';
-import { LoginRequestDto } from '@app/user/application/dtos/requests/login.request.dto';
-import { LoginResponseDto } from '@app/user/application/dtos/responses/login.response.dto';
-import { LoginUsecase } from '@app/user/application/usecases/login.usecase';
-import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Public } from '@user/application/decorators/public.decorator';
+import { LoginRequestDto } from '@user/application/dtos/requests/login.request.dto';
+import { LoginResponseDto } from '@user/application/dtos/responses/login.response.dto';
+import { LoginUsecase } from '@user/application/usecases/login.usecase';
+import { Body, Controller, HttpStatus, Post, Query } from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ForgotPasswordRequestDto } from '@user/application/dtos/requests/forgot-password.request.dto';
+import { ForgotPasswordUseCase } from '@user/application/usecases/forgot-password.usecase';
+import { ResetPasswordRequestDTO } from '@user/application/dtos/requests/reset-password.request.dto';
+import { ResetPasswordUseCase } from '@user/application/usecases/reset-password.usecase';
 
 @ApiTags('Users')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly loginUsecase: LoginUsecase) {}
-
+  constructor(
+    private readonly loginUsecase: LoginUsecase,
+    private readonly forgotPasswordUseCase: ForgotPasswordUseCase,
+    private readonly resetPasswordUseCase: ResetPasswordUseCase,
+  ) {}
+  //Login Endpoint
   @ApiOperation({ summary: 'Login the user and recieve access & refresh tokens.' })
   @ApiBody({ type: LoginRequestDto })
   @ApiResponse({
@@ -33,5 +41,29 @@ export class AuthController {
   @Post('login')
   async login(@Body() loginRequest: LoginRequestDto): Promise<LoginResponseDto> {
     return await this.loginUsecase.execute(loginRequest);
+  }
+
+  // Forgot Password Endpoint
+  @Public()
+  @Post('forgot-password')
+  @ApiOperation({ summary: 'Initiate the forgot password process for a user.' })
+  @ApiBody({ type: ForgotPasswordRequestDto })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Forgot password process initiated successfully.',
+  })
+  async forgotPassword(@Body() forgotPasswordRequestDto: ForgotPasswordRequestDto) {
+    await this.forgotPasswordUseCase.execute(forgotPasswordRequestDto);
+    return { message: 'If your email exists, a password reset link has been sent.' };
+  }
+
+  // Reset Password Endpoint
+  @Public()
+  @Post('reset-password')
+  @ApiOperation({ summary: 'Reset password using a valid reset token.' })
+  @ApiQuery({ name: 'token', required: true, description: 'Reset token from email link' })
+  @ApiBody({ type: ResetPasswordRequestDTO })
+  async resetPassword(@Query('token') token: string, @Body() body: ResetPasswordRequestDTO): Promise<void> {
+    await this.resetPasswordUseCase.execute({ token, newPassword: body.newPassword });
   }
 }

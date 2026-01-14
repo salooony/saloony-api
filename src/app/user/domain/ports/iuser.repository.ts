@@ -5,4 +5,5 @@ export interface IUserRepository {
   findOneById(id: string): Promise<User | null>;
   findOneByEmail(email: string): Promise<User | null>;
   delete(userId: string): Promise<void>;
+  update(user: User): Promise<User>;
 }

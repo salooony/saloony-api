@@ -1,13 +1,6 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-  DeleteDateColumn
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 
-@Entity({ name: 'user' })
+@Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn('uuid') // discuss this
   id: string;
@@ -53,5 +46,5 @@ export class User {
     type: 'timestamp',
     nullable: true,
   })
-  deletedAt: Date;
+  deletedAt?: Date;
 }

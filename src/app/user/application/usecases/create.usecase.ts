@@ -12,22 +12,20 @@ export class CreateUserUsecase {
     @Inject('UsersRepository') private readonly userRepository: IUserRepository,
   ) {}
 
-async execute(userRequestDto: UserRequestDto): Promise<UserResponseDto> {
-  const user = this.transformer.toEntity(userRequestDto);
-  user.password = await this.hashingProvider.hash(user.password);
-  try {
-    const createdUser = await this.userRepository.save(user);
+  async execute(userRequestDto: UserRequestDto): Promise<UserResponseDto> {
+    const user = this.transformer.toEntity(userRequestDto);
+    user.password = await this.hashingProvider.hash(user.password);
+    try {
+      const createdUser = await this.userRepository.save(user);
 
-    return UserResponseDto.createFromEntity(createdUser);
-  } catch (error) {
-    if (error instanceof Error && error.message.includes('duplicate key')) {
-      throw new ConflictException(
-        'A user with the same email and/or mobileNumber already exists.',
-      );
+      return UserResponseDto.createFromEntity(createdUser);
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('duplicate key')) {
+        throw new ConflictException('A user with the same email and/or mobileNumber already exists.');
+      }
+      console.log(error);
+
+      throw new InternalServerErrorException('Failed to create user.');
     }
-    console.log(error);
-
-    throw new InternalServerErrorException('Failed to create user.');
   }
-}
 }

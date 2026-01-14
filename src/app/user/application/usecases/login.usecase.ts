@@ -17,7 +17,7 @@ export class LoginUsecase {
     @Inject('HashingProvider') private hashingProvider: HashingProviderInterface,
     @Inject('UsersRepository') private readonly userRepository: IUserRepository,
     @Inject('TokenGenerator') private tokenGenerator: ITokenGenerator,
-  ) { }
+  ) {}
 
   async execute(loginRequest: LoginRequestDto): Promise<LoginResponseDto> {
     // get the user from database
@@ -26,10 +26,7 @@ export class LoginUsecase {
     if (!user) throw new BadRequestException("A user with this email address doesn't exist.");
 
     // validate the password in the request
-    const validCredentials = await this.hashingProvider.compare(
-      loginRequest.password,
-      user.password,
-    );
+    const validCredentials = await this.hashingProvider.compare(loginRequest.password, user.password);
 
     if (!validCredentials) throw new UnauthorizedException('Invalid credentials.');
 

@@ -9,13 +9,14 @@ import { User } from '@app/user/domain/entities/user';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Header,
+  HttpCode,
   HttpStatus,
+  Param,
   Post,
-  Req,
   ValidationPipe,
-  Put, HttpCode, Delete,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -25,8 +26,8 @@ export class UserController {
   constructor(
     private readonly createUsecase: CreateUserUsecase,
     private readonly getUserInfoUsecase: GetUserInfoUsecase,
-    private readonly deleteUserUseCase: DeleteUserAccountUseCase
-  ) { }
+    private readonly deleteUserUseCase: DeleteUserAccountUseCase,
+  ) {}
 
   @ApiOperation({ summary: 'Register a new user' })
   @ApiBody({ type: UserRequestDto })
@@ -72,10 +73,10 @@ export class UserController {
   @Get('/me')
   @Header('Content-Type', 'application/json')
   async getPeronalInfo(@CurrentUser() user: User): Promise<UserResponseDto> {
-    return await this.getUserInfoUsecase.execute(user);
+    return await this.getUserInfoUsecase.execute(user.id);
   }
 
-  @ApiOperation({ summary: 'Delete user account.' })
+  @ApiOperation({ summary: 'Delete current user account.' })
   @ApiBearerAuth()
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
@@ -89,9 +90,29 @@ export class UserController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Something went wrong, try again.',
   })
-  @Delete('/account')
+  @Delete('/me')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteUser(@CurrentUser() user: User): Promise<void> {
-    await this.deleteUserUseCase.execute(user);
+  async deleteMe(@CurrentUser() user: User): Promise<void> {
+    await this.deleteUserUseCase.execute(user.id);
+  }
+
+  @ApiOperation({ summary: 'Delete user account (Admin).' })
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'Account deleted successfully.',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'User should be logged in.',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Something went wrong, try again.',
+  })
+  @Delete('/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteUser(@Param('id') userId: string): Promise<void> {
+    await this.deleteUserUseCase.execute(userId);
   }
 }
