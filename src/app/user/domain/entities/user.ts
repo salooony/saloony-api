@@ -12,4 +12,5 @@ export class User {
   public updatedAt: Date;
   public language: string;
   public acl: string[] = [];
+  public deletedAt?: Date;
 }
