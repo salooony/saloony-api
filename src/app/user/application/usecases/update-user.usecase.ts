@@ -8,7 +8,9 @@ export class UpdateUserUsecase {
   constructor(@Inject('UsersRepository') private readonly userRepository: IUserRepository) {}
 
   async execute(user: User, updateUser: UpdateUserRequestDto): Promise<void> {
-    const updateCriteria = this.buildCriteria(updateUser);
+    const updateCriteria = Object.fromEntries(
+      Object.entries(updateUser).filter(([, value]) => value !== undefined),
+    ) as UpdateUserCriteria;
 
     try {
       await this.userRepository.updateOneById(user.id, updateCriteria);
@@ -16,13 +18,8 @@ export class UpdateUserUsecase {
       if (error instanceof Error && error.message.includes('duplicate key')) {
         throw new ConflictException('A user with the same email and/or mobileNumber already exists.');
       }
-      console.log(error);
 
       throw new InternalServerErrorException('Failed to update user information.');
     }
-  }
-
-  private buildCriteria(updateUser: UpdateUserRequestDto): UpdateUserCriteria {
-    return Object.fromEntries(Object.entries(updateUser).filter(([, value]) => value !== undefined));
   }
 }
