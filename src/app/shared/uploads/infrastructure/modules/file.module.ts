@@ -1,7 +1,15 @@
 import { Module } from '@nestjs/common';
-import { UploadFileUsecase } from '../../application/usecases/upload-file-usecase';
+import { UploadFileService } from '../../application/services/upload-file.service';
+import { FilePathService } from '../../application/services/file-path.service';
+
 @Module({
-  providers: [UploadFileUsecase],
-  exports: [UploadFileUsecase],
+  providers: [
+    {
+      provide: 'IUploadFileService',
+      useClass: UploadFileService,
+    },
+    FilePathService,
+  ],
+  exports: ['IUploadFileService', FilePathService],
 })
 export class FileModule {}

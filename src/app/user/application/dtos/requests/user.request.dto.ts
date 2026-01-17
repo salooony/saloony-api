@@ -1,12 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsNotEmpty,
-  IsString,
-  IsEmail,
-  IsMobilePhone,
-  IsStrongPassword,
-  IsDate,
-} from 'class-validator';
+import { IsNotEmpty, IsString, IsEmail, IsMobilePhone, IsStrongPassword, IsDate } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class UserRequestDto {

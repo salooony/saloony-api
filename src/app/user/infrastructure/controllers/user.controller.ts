@@ -1,25 +1,16 @@
 import { CurrentUser } from '@app/user/application/decorators/current-user.decorator';
+import { FastifyRequest } from 'fastify';
 import { UserRequestDto } from '@app/user/application/dtos/requests/user.request.dto';
 import { UserResponseDto } from '@app/user/application/dtos/responses/user.response.dto';
 import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase';
 import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
 import { User } from '@app/user/domain/entities/user';
-import {
-  Body,
-  Controller,
-  Get,
-  Header,
-  HttpStatus,
-  Post,
-  Req,
-  ValidationPipe,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Get, Header, HttpStatus, Post, Req, ValidationPipe, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags, ApiConsumes } from '@nestjs/swagger';
 import { BadRequestException, Inject } from '@nestjs/common';
 import { UpdateUserAvatarUsecase } from '@app/user/application/usecases/update-user-avatar.usecase';
 import { UpdateAvatarDto } from '../../application/dtos/requests/update-avatar.dto';
-import { UploadFileRequestDto } from '@app/shared/uploads/application/dtos/upload-file.dto';
+import { Public } from '@app/user/application/decorators/public.decorator';
 
 @ApiTags('Users')
 @Controller('users')
@@ -49,6 +40,7 @@ export class UserController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Something went wrong, try again.',
   })
+  @Public()
   @Post()
   @Header('Content-Type', 'application/json')
   async create(@Body(new ValidationPipe()) userRequest: UserRequestDto): Promise<UserResponseDto> {
@@ -73,26 +65,21 @@ export class UserController {
   @Get('/me')
   @Header('Content-Type', 'application/json')
   async getPeronalInfo(@CurrentUser() user: User): Promise<UserResponseDto> {
-    return await this.getUserInfoUsecase.execute(user);
+    return await this.getUserInfoUsecase.execute(user.id);
   }
 
   @Put('profile/avatar')
   @ApiOperation({ summary: 'Update user avatar' })
   @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
-  @ApiBody({ type: UploadFileRequestDto })
-  public async uploadAvatar(@CurrentUser() user: User, @Req() req: UploadFileRequestDto) {
+  @ApiBody({ type: UpdateAvatarDto })
+  public async uploadAvatar(@CurrentUser() user: User, @Req() req: FastifyRequest) {
     const filePart = await req.file();
 
     if (!filePart) {
       throw new BadRequestException('Avatar file is required');
     }
 
-    const dto: UpdateAvatarDto = {
-      file: filePart,
-      user: user,
-    };
-
-    return await this.updateUserAvatar.execute(dto);
+    return await this.updateUserAvatar.execute(filePart, user);
   }
 }

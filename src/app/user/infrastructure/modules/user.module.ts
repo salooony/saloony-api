@@ -16,10 +16,32 @@ import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info
 import { UpdateUserAvatarUsecase } from '@app/user/application/usecases/update-user-avatar.usecase';
 import { FileModule } from '@app/shared/uploads/infrastructure/modules/file.module';
 
+import { SmtpEmailSender } from '../../infrastructure/email/smtpEmail.sender';
+import { ForgotPasswordUseCase } from '../../application/usecases/forgot-password.usecase';
+import { PasswordResetTokenRepository } from '../../infrastructure/repositories/password_reset_token.repository';
+import { PasswordResetTokenEntity } from '../../infrastructure/schemas/password-reset-token.entity';
+import { ResetPasswordUseCase } from '../../application/usecases/reset-password.usecase';
+import { MailerModule } from '@nestjs-modules/mailer';
+
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.MAIL_HOST || 'localhost',
+        port: Number(process.env.MAIL_PORT) || 1025,
+        secure: false,
+        auth: {
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASSWORD,
+        },
+      },
+      defaults: {
+        from: '"No Reply" <noreply@example.com>',
+      },
+    }),
+    TypeOrmModule.forFeature([User, PasswordResetTokenEntity]),
     ConfigModule.forFeature(jwtConfig),
+
     JwtModule.registerAsync({
       inject: [ConfigService],
       global: true,
@@ -32,17 +54,31 @@ import { FileModule } from '@app/shared/uploads/infrastructure/modules/file.modu
     }),
     FileModule,
   ],
+
   controllers: [UserController, AuthController],
+
   providers: [
+    //  usecases
     CreateUserUsecase,
     LoginUsecase,
     GetUserInfoUsecase,
     UpdateUserAvatarUsecase,
+    ForgotPasswordUseCase,
+    ResetPasswordUseCase,
+
+    //  helpers
     UserTransformer,
+
+    //  repositories & providers
     { provide: 'UsersRepository', useClass: UsersRepository },
     { provide: 'HashingProvider', useClass: BcryptHashingProvider },
     { provide: 'TokenGenerator', useClass: TokenGenerator },
+    { provide: 'PasswordResetTokenRepository', useClass: PasswordResetTokenRepository },
+
+    { provide: 'IEmailSender', useClass: SmtpEmailSender },
+    { provide: 'IUserRepository', useClass: UsersRepository },
   ],
+
   exports: [{ provide: 'UsersRepository', useClass: UsersRepository }],
 })
 export class UserModule {}

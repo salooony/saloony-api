@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import appConfig from './config/app.config';
 import databaseConfig, { DatabaseConfig } from './config/database.config';
 import { UserModule } from '@app/user/infrastructure/modules/user.module';
+import { AddressModule } from '@address/infrastructure/modules/address.module';
 import jwtConfig from '@config/jwt.config';
 import { APP_GUARD } from '@nestjs/core';
 import { TokenGuard } from '@app/user/infrastructure/guards/token.guard';
@@ -22,7 +23,7 @@ const ENV = process.env.NODE_ENV;
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const db = configService.get<DatabaseConfig>('database');
+        const db = configService.getOrThrow<DatabaseConfig>('database');
 
         return {
           type: 'postgres',
@@ -38,6 +39,7 @@ const ENV = process.env.NODE_ENV;
     }),
 
     UserModule,
+    AddressModule,
   ],
   providers: [
     {
