@@ -1,11 +1,11 @@
-export enum NotificationType {
+export enum TemplateType {
   APPOINTMENT = 'appointment',
   MARKETING = 'marketing',
   SECURITY = 'security',
   SYSTEM = 'system',
 }
 
-export enum NotificationTemplateKey {
+export enum TemplateKey {
   APP_BOOKED_SUCCESS = 'app_booked_success',
   APP_CANCELLED_BY_SALON = 'app_cancelled_by_salon',
   APP_REMINDER = 'app_reminder',
