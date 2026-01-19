@@ -15,4 +15,32 @@ export class User {
   public language: string;
   public acl: string[] = [];
   public deletedAt?: Date;
+
+
+  public status: UserStatus = UserStatus.PENDING;
+  public emailVerified: boolean = false;
+  public phoneVerified: boolean = false;
+  public operatorValidated: boolean = false;
+
+  public updateStatus(): void {
+    if (this.status === UserStatus.BLOCKED) return;
+
+    if (this.emailVerified && this.phoneVerified) {
+      if (this.operatorValidated) {
+        this.status = UserStatus.ACTIVE;
+      } else {
+        this.status = UserStatus.WAITING_OPERATOR_VALIDATION;
+      }
+    } else if (this.emailVerified) {
+      this.status = UserStatus.WAITING_PHONE_VERIFICATION;
+    } else if (this.phoneVerified) {
+      this.status = UserStatus.WAITING_EMAIL_VERIFICATION;
+    } else {
+      this.status = UserStatus.PENDING;
+    }
+  }
+
+  public block(): void {
+    this.status = UserStatus.BLOCKED;
+  }
 }
