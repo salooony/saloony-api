@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Country } from './country.entity';
+import { Country } from './country.schema';
 
 @Entity({ name: 'city' })
 export class City {
