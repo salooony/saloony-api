@@ -1,8 +1,10 @@
-import { City } from './city.entity';
 export class Address {
   constructor(
     public readonly id: string,
-    public readonly street: string,
-    public readonly city: City,
+    public readonly location: { lat: number; lng: number },
+    public readonly postcode: string,
+    public readonly cityId: string,
+    public readonly address: string,
+    public readonly complement?: string,
   ) {}
 }
