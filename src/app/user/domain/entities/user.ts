@@ -16,7 +16,6 @@ export class User {
   public acl: string[] = [];
   public deletedAt?: Date;
 
-
   public status: UserStatus = UserStatus.PENDING;
   public emailVerified: boolean = false;
   public phoneVerified: boolean = false;
