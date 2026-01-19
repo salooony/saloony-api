@@ -33,6 +33,9 @@ export class UsersRepository implements IUserRepository {
     return UserMapper.map(user);
   }
 
+  async delete(userId: string): Promise<void> {
+    await this.repository.softDelete(userId);
+  }
   async update(user: User): Promise<User> {
     const entity = UserMapper.toEntity(user);
     const saved = await this.repository.save(entity);
