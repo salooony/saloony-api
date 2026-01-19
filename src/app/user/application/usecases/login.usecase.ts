@@ -10,6 +10,7 @@ import { LoginResponseDto } from '../dtos/responses/login.response.dto';
 import { HashingProviderInterface } from '../providers/hashing.provider.interface';
 import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
 import { ITokenGenerator } from '@app/user/domain/ports/itoken-generator.provider';
+import { UserStatus } from '@app/user/domain/enums/user-status.enum';
 
 @Injectable()
 export class LoginUsecase {
@@ -24,6 +25,10 @@ export class LoginUsecase {
     const user = await this.userRepository.findOneByEmail(loginRequest.email);
 
     if (!user) throw new BadRequestException("A user with this email address doesn't exist.");
+
+    if (user.status === UserStatus.BLOCKED) {
+      throw new UnauthorizedException('Your account has been blocked. Please contact support.');
+    }
 
     // validate the password in the request
     const validCredentials = await this.hashingProvider.compare(loginRequest.password, user.password);

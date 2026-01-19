@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { UserStatus } from '@app/user/domain/enums/user-status.enum';
 
 @Entity({ name: 'user' })
 export class User {
@@ -31,6 +32,23 @@ export class User {
 
   @Column({ type: 'varchar', length: 50 })
   role: string;
+
+  @Column({
+    type: 'enum',
+    enum: UserStatus,
+    default: UserStatus.PENDING,
+  })
+  @Index()
+  status: UserStatus;
+
+  @Column({ type: 'boolean', name: 'email_verified', default: false })
+  emailVerified: boolean;
+
+  @Column({ type: 'boolean', name: 'phone_verified', default: false })
+  phoneVerified: boolean;
+
+  @Column({ type: 'boolean', name: 'operator_validated', default: false })
+  operatorValidated: boolean;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;

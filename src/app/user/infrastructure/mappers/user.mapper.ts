@@ -18,6 +18,10 @@ export class UserMapper {
     user.updatedAt = createdUser.updatedAt;
     user.language = createdUser.language;
     user.acl = createdUser.acl;
+    user.status = createdUser.status;
+    user.emailVerified = createdUser.emailVerified;
+    user.phoneVerified = createdUser.phoneVerified;
+    user.operatorValidated = createdUser.operatorValidated;
 
     return user;
   }
@@ -35,6 +39,10 @@ export class UserMapper {
     entity.password = user.password;
     entity.language = user.language;
     entity.acl = user.acl;
+    entity.status = user.status;
+    entity.emailVerified = user.emailVerified;
+    entity.phoneVerified = user.phoneVerified;
+    entity.operatorValidated = user.operatorValidated;
 
     return entity;
   }
