@@ -47,17 +47,11 @@ export class MockUsersReporitory implements IUserRepository {
       throw new Error('User not found');
     }
 
-    const current = MockUsersReporitory.users[index];
+    const current = MockUsersReporitory.users[index] as User;
 
-    const updated: User = {
-      ...current,
-      ...user,
-      updatedAt: new Date(),
-    };
+    Object.assign(current, user, { updatedAt: new Date() });
 
-    MockUsersReporitory.users[index] = updated;
-
-    return Promise.resolve(updated);
+    return Promise.resolve(current);
   }
 
   delete(userId: string): Promise<void> {
