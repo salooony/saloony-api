@@ -1,4 +1,4 @@
-import { Country } from './country';
+import { Country } from './country.entity';
 
 export class City {
   constructor(

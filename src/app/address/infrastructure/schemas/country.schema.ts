@@ -12,6 +12,7 @@ export class Country {
   icon: string;
 
   @Column({ type: 'varchar', nullable: false })
+
   name: string;
 
   @Column({ type: 'boolean', name: 'is_active', default: true })
