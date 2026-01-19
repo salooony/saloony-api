@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TokenEntity } from '../schemas/token.entity';
+import { TokenSchema } from '../schemas/token.schema';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TokenEntity])],
+  imports: [TypeOrmModule.forFeature([TokenSchema])],
   providers: [],
   exports: [],
 })

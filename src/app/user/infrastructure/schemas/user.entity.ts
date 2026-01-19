@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, DeleteDateColumn  ,OneToMany} from 'typeorm';
 
 @Entity({ name: 'users' })
 export class User {
@@ -47,4 +47,5 @@ export class User {
     nullable: true,
   })
   deletedAt?: Date;
+
 }
