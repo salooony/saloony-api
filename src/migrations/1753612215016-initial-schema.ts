@@ -65,13 +65,12 @@ export class InitialSchema1753612215016 implements MigrationInterface {
           {
             name: 'created_at',
             type: 'timestamp',
-            default: 'now()',
+            default: 'CURRENT_TIMESTAMP()',
           },
           {
             name: 'updated_at',
             type: 'timestamp',
-            default: 'now()',
-            onUpdate: 'now()',
+            default: 'CURRENT_TIMESTAMP',
           },
           {
             name: 'acl',
