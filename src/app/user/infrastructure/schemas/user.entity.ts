@@ -49,15 +49,6 @@ export class User {
   @Index()
   status: UserStatus;
 
-  @Column({ type: 'boolean', name: 'email_verified', default: false })
-  emailVerified: boolean;
-
-  @Column({ type: 'boolean', name: 'phone_verified', default: false })
-  phoneVerified: boolean;
-
-  @Column({ type: 'boolean', name: 'operator_validated', default: false })
-  operatorValidated: boolean;
-
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
 
