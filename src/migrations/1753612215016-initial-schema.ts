@@ -80,7 +80,6 @@ export class InitialSchema1753612215016 implements MigrationInterface {
         ],
       }),
     );
-    // Create Index for Status
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
