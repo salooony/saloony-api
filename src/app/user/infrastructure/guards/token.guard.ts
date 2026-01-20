@@ -5,6 +5,7 @@ import { IS_PUBLIC_KEY } from '@app/user/application/decorators/public.decorator
 import { Reflector } from '@nestjs/core';
 import { AppRequest } from '@app/shared/application/requests/app.request';
 import { JwtPayload } from '@app/shared/application/auth/jwt-payload.type';
+import { UserStatus } from '@app/user/domain/enums/user-status.enum';
 
 @Injectable()
 export class TokenGuard implements CanActivate {
@@ -36,6 +37,10 @@ export class TokenGuard implements CanActivate {
 
     if (!user) {
       throw new UnauthorizedException('A valid token must be used.');
+    }
+
+    if (user.status === UserStatus.BLOCKED) {
+      throw new UnauthorizedException('Your account has been blocked. Please contact support.');
     }
 
     request.user = user;

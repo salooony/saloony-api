@@ -18,8 +18,8 @@ export class UserMapper {
     user.updatedAt = createdUser.updatedAt;
     user.language = createdUser.language;
     user.acl = createdUser.acl;
+    user.status = createdUser.status;
     user.deletedAt = createdUser.deletedAt;
-
     return user;
   }
 
@@ -37,7 +37,7 @@ export class UserMapper {
     entity.language = user.language;
     entity.acl = user.acl;
     entity.deletedAt = user.deletedAt;
-
+    entity.status = user.status;
     return entity;
   }
 }
