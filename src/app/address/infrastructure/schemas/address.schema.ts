@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { City } from './city.schema';
 
-@Entity({ name: 'address' })
+@Entity({ name: 'addresses' })
 export class Address {
   @PrimaryGeneratedColumn('uuid')
   id: string;
