@@ -6,8 +6,11 @@ export class City {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: false })
   name: string;
+
+  @Column({ type: 'uuid', name: 'country_id' })
+  countryId: string;
 
   @ManyToOne(() => Country, { nullable: false })
   @JoinColumn({ name: 'country_id' })
