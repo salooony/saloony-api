@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable, ForbiddenException, UnauthorizedException } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { DataSource } from 'typeorm';
 import { ROLES_KEY } from '../decorators/roles.decorator';
@@ -6,6 +6,7 @@ import { SALON_ROLES_KEY } from '../decorators/salon-roles.decorator';
 import { UserRole } from '../../user/domain/enums/user-role.enum';
 import { SalonRole } from '../../saloon/domain/enums/salon-role.enum';
 import { SalonMembershipEntity } from '../../user/infrastructure/schemas/salon-membership.entity';
+import { User } from '../../user/domain/entities/user';
 
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
@@ -32,7 +33,7 @@ export class AuthorizationGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    const user = request.user;
+    const user = request.user as User;
 
     if (!user) {
       throw new UnauthorizedException('User not found in request');
@@ -52,13 +53,14 @@ export class AuthorizationGuard implements CanActivate {
 
     // 3. Check Salon Roles
     if (requiredSalonRoles) {
-      const salonId = request.params.salonId || request.body.salonId || request.query.salonId;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      const salonId = (request.params?.salonId || request.body?.salonId || request.query?.salonId) as
+        | string
+        | undefined;
 
       if (!salonId) {
-        if (!salonId) {
-          // We can't verify salon access without a salonId.
-          return false;
-        }
+        // We can't verify salon access without a salonId.
+        return false;
       }
 
       // Check Membership directly from DB.
