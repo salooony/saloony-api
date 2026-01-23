@@ -7,6 +7,7 @@ import { ForgotPasswordUseCase } from '@app/user/application/usecases/forgot-pas
 import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
 import { LoginUsecase } from '@app/user/application/usecases/login.usecase';
 import { User } from '@app/user/domain/entities/user';
+import { UserRole } from '@app/user/domain/enums/user-role.enum';
 import { AuthController } from '@app/user/infrastructure/controllers/auth.controller';
 import { UserController } from '@app/user/infrastructure/controllers/user.controller';
 import { MockUsersReporitory } from '@app/user/infrastructure/mock-repositories/user.mock.repository';
@@ -18,7 +19,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { plainToInstance } from 'class-transformer';
-import { validate, ValidationError } from 'class-validator';
+import { validate } from 'class-validator';
 
 describe('UserController', () => {
   let userController: UserController, request: UserRequestDto, authController: AuthController;
@@ -60,7 +61,7 @@ describe('UserController', () => {
       firstname: 'John',
       lastname: 'Doe',
       birthdate: new Date('4/3/2005'),
-      role: 'CLIENT',
+      role: UserRole.CLIENT,
       email: 'user1@email.com',
       mobileNumber: '00000',
       password: 'P@ssw0rd',
@@ -82,7 +83,7 @@ describe('UserController', () => {
       client.password = 'p@ssword';
       client.createdAt = new Date();
       client.language = 'French';
-      client.role = 'CLIENT';
+      client.role = UserRole.CLIENT;
 
       const response = await userController.create(request);
       const expectedResponse = UserResponseDto.createFromEntity(client);
@@ -100,7 +101,7 @@ describe('UserController', () => {
 
     it('Should create a saloon user peacefully', async () => {
       request.email = 'user2@email.com';
-      request.role = 'SALOON_USER';
+      request.role = UserRole.CLIENT;
 
       const dto = plainToInstance(UserRequestDto, request);
       const errors = await validate(dto);
@@ -114,7 +115,7 @@ describe('UserController', () => {
       saloonUser.password = 'p@ssword';
       saloonUser.createdAt = new Date();
       saloonUser.language = 'French';
-      saloonUser.role = 'SALOON_USER';
+      saloonUser.role = UserRole.CLIENT;
 
       const response = await userController.create(request);
       const expectedResponse = UserResponseDto.createFromEntity(saloonUser);
@@ -212,7 +213,7 @@ describe('UserController', () => {
 
       expect(errors).toHaveLength(0);
 
-      expect(async () => authController.login(loginRequest)).rejects.toEqual(
+      await expect(authController.login(loginRequest)).rejects.toEqual(
         new UnauthorizedException('Invalid credentials.'),
       );
     });

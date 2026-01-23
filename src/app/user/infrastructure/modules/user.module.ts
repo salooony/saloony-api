@@ -19,11 +19,12 @@ import { SmtpEmailSender } from '../../infrastructure/email/smtpEmail.sender';
 import { ForgotPasswordUseCase } from '../../application/usecases/forgot-password.usecase';
 import { PasswordResetTokenRepository } from '../../infrastructure/repositories/password_reset_token.repository';
 import { PasswordResetTokenEntity } from '../../infrastructure/schemas/password-reset-token.entity';
+import { SalonMembershipEntity } from '../schemas/salon-membership.entity';
 import { ResetPasswordUseCase } from '../../application/usecases/reset-password.usecase';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, PasswordResetTokenEntity]),
+    TypeOrmModule.forFeature([User, PasswordResetTokenEntity, SalonMembershipEntity]),
     ConfigModule.forFeature(jwtConfig),
 
     JwtModule.registerAsync({

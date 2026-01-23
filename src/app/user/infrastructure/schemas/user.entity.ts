@@ -8,6 +8,9 @@ import {
   DeleteDateColumn,
 } from 'typeorm';
 import { UserStatus } from '@app/user/domain/enums/user-status.enum';
+import { UserRole } from '@app/user/domain/enums/user-role.enum';
+import { SalonMembershipEntity } from './salon-membership.entity';
+import { OneToMany } from 'typeorm';
 
 @Entity({ name: 'users' })
 export class User {
@@ -38,8 +41,11 @@ export class User {
   @Column({ type: 'varchar', length: 50 })
   language: string;
 
-  @Column({ type: 'varchar', length: 50 })
-  role: string;
+  @Column({ type: 'enum', enum: UserRole, default: UserRole.CLIENT }) // defaulting to CLIENT for safety
+  role: UserRole;
+
+  @OneToMany('SalonMembershipEntity', (membership: SalonMembershipEntity) => membership.user)
+  salonMemberships: SalonMembershipEntity[];
 
   @Column({
     type: 'enum',

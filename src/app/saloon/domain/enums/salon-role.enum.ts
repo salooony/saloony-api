@@ -1,0 +1,5 @@
+export enum SalonRole {
+  SALON_ADMIN = 'SALON_ADMIN',
+  SALON_OPERATOR = 'SALON_OPERATOR',
+  SALON_CLIENT = 'SALON_CLIENT',
+}

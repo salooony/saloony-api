@@ -1,4 +1,5 @@
 import { UserStatus } from '../enums/user-status.enum';
+import { UserRole } from '../enums/user-role.enum';
 
 export class User {
   public id: string;
@@ -6,7 +7,7 @@ export class User {
   public lastname: string;
   public avatar: string;
   public birthdate: Date;
-  public role: string;
+  public role: UserRole;
   public email: string;
   public mobileNumber: string;
   public password: string;
