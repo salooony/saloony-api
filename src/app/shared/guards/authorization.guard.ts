@@ -1,4 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
 import { DataSource } from 'typeorm';
 import { ROLES_KEY } from '../decorators/roles.decorator';
@@ -32,8 +33,8 @@ export class AuthorizationGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
-    const user = request.user as User;
+    const request = context.switchToHttp().getRequest<Request & { user?: User }>();
+    const user = request.user;
 
     if (!user) {
       throw new UnauthorizedException('User not found in request');
