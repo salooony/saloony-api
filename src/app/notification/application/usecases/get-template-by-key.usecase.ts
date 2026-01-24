@@ -1,7 +1,6 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { ITemplateRepository } from '../../domain/ports/template.repository.interface';
-import { Template } from '../../infrastructure/schemas/template.entity';
-import { TemplateKey } from '../../domain/enums/template-type.enum';
+import { Template } from '../../domain/entities/template';
 
 @Injectable()
 export class GetTemplateByKeyUseCase {
@@ -10,7 +9,7 @@ export class GetTemplateByKeyUseCase {
     private readonly templateRepository: ITemplateRepository,
   ) {}
 
-  async execute(key: TemplateKey): Promise<Template> {
+  async execute(key: string): Promise<Template> {
     const template = await this.templateRepository.findByKey(key);
 
     if (!template) {

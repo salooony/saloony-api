@@ -15,9 +15,10 @@
     "paths": {
       "@app/*": ["src/app/*"],
       "@address/*": ["src/app/address/*"],
+      "@user/*": ["src/app/user/*"],
       "@test/*": ["src/test/*"],
       "@config/*": ["src/config/*"],
-      "@notification/*": ["src/app/shared/notification/*"]
+      "@notification/*": ["src/app/notification/*"]
     },
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

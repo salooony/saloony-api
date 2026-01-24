@@ -5,12 +5,14 @@ import { PasswordResetToken } from '../../domain/entities/password-reset-token';
 import { IUserRepository } from '../../domain/ports/iuser.repository';
 import { IPasswordResetTokenRepository } from '../../domain/ports/ipassword-reset-token.repository';
 import { IEmailSender } from '../../domain/ports/iemailsender.repository';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ForgotPasswordUseCase {
   constructor(
     @Inject('UsersRepository')
     private readonly userRepository: IUserRepository,
+    private readonly configService: ConfigService,
 
     @Inject('PasswordResetTokenRepository')
     private readonly passwordResetTokenRepository: IPasswordResetTokenRepository,
@@ -18,29 +20,29 @@ export class ForgotPasswordUseCase {
     @Inject('IEmailSender')
     private readonly emailSender: IEmailSender,
   ) {}
-  //1. retrieve user by email
   async execute(forgotPasswordRequest: ForgotPasswordRequestDto): Promise<void> {
     const email = forgotPasswordRequest.email.toLowerCase().trim();
+
+    const ttlMs: number = Number(this.configService.get<string>('PASSWORD_RESET_TOKEN_TTL_MS') ?? '900000');
+
     const user = await this.userRepository.findOneByEmail(email);
     if (!user) return;
 
-    //2. generate a unique token
     const token = crypto.randomBytes(32).toString('hex');
     const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
 
-    //3. create a password reset token entity
     const tokenEntity = new PasswordResetToken({
       userId: user.id,
-      tokenHash: tokenHash,
-      expiresAt: new Date(Date.now() + 900000),
+      tokenHash,
+      expiresAt: new Date(Date.now() + ttlMs),
     });
 
-    //4. store the token in the database
     await this.passwordResetTokenRepository.create(tokenEntity);
 
-    //5. send password reset email
-    const resetLink = `https://yourapp.com/reset-password?token=${encodeURIComponent(token)}`;
+    const frontUrl: string = this.configService.get<string>('FRONTEND_URL') ?? 'http://localhost:3000';
+
+    const resetLink = `${frontUrl}/reset-password?token=${encodeURIComponent(token)}`;
+
     await this.emailSender.sendResetEmail(user.email, resetLink);
-    console.log('RESET LINK:', resetLink);
   }
 }

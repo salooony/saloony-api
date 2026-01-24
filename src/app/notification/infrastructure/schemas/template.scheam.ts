@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
-import { TemplateType, TemplateKey } from '../../domain/enums/template-type.enum';
+import { TemplateType } from '../../domain/enums/template-type.enum';
 
 @Entity('notification_templates')
 export class Template {
@@ -7,11 +7,11 @@ export class Template {
   id: string;
 
   @Column({
-    type: 'enum',
-    enum: TemplateKey,
+    type: 'varchar',
+    length: 255,
     unique: true,
   })
-  key: TemplateKey;
+  key: string;
 
   @Column({
     type: 'enum',

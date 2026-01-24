@@ -5,7 +5,7 @@ import appConfig from './config/app.config';
 import databaseConfig, { DatabaseConfig } from './config/database.config';
 import { UserModule } from '@app/user/infrastructure/modules/user.module';
 import { AddressModule } from '@address/infrastructure/modules/address.module';
-import { TemplateModule } from '@app/shared/notification/infrastructure/modules/template.module';
+import { TemplateModule } from '@app/notification/infrastructure/modules/template.module';
 import jwtConfig from '@config/jwt.config';
 import { APP_GUARD } from '@nestjs/core';
 import { TokenGuard } from '@app/user/infrastructure/guards/token.guard';
