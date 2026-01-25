@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class CreateCountryTableAndSeed1768988251400 implements MigrationInterface {
+export class CreateCountriesTableAndSeed1753612215017 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'country',
+        name: 'countries',
         columns: [
           {
             name: 'id',
@@ -42,7 +42,7 @@ export class CreateCountryTableAndSeed1768988251400 implements MigrationInterfac
     );
 
     await queryRunner.query(`
-      INSERT INTO country (code, icon, name, is_active)
+      INSERT INTO countries (code, icon, name, is_active)
       VALUES
         ('PS', '🇵🇸', 'Palestine', true),
         ('TN', '🇹🇳', 'Tunisia', true)
@@ -50,6 +50,6 @@ export class CreateCountryTableAndSeed1768988251400 implements MigrationInterfac
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('country');
+    await queryRunner.dropTable('countries');
   }
 }
