@@ -13,6 +13,7 @@ import jwtConfig from '@config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from '../controllers/auth.controller';
 import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
+import { DeleteUserAccountUseCase } from '@app/user/application/usecases/delete-user-account.usecase';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { SmtpEmailSender } from '../../infrastructure/email/smtpEmail.sender';
 import { ForgotPasswordUseCase } from '../../application/usecases/forgot-password.usecase';
@@ -62,6 +63,7 @@ import { ResetPasswordUseCase } from '../../application/usecases/reset-password.
     CreateUserUsecase,
     LoginUsecase,
     GetUserInfoUsecase,
+    DeleteUserAccountUseCase,
     ForgotPasswordUseCase,
     ResetPasswordUseCase,
 

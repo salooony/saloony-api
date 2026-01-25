@@ -2,6 +2,7 @@ import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class InitialSchema1753612215016 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
+    // Create User Table
     await queryRunner.createTable(
       new Table({
         name: 'user',
@@ -32,6 +33,7 @@ export class InitialSchema1753612215016 implements MigrationInterface {
             name: 'avatar',
             type: 'varchar',
             length: '100',
+            isNullable: true,
           },
           {
             name: 'email',
@@ -69,7 +71,6 @@ export class InitialSchema1753612215016 implements MigrationInterface {
             name: 'updated_at',
             type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',
-            onUpdate: 'CURRENT_TIMESTAMP',
           },
           {
             name: 'acl',
