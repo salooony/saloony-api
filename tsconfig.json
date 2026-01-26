@@ -20,7 +20,8 @@
       "@address/*": ["src/app/address/*"],
       "@user/*": ["src/app/user/*"],
       "@test/*": ["src/test/*"],
-      "@config/*": ["src/config/*"]
+      "@config/*": ["src/config/*"],
+      "@token/*": ["src/app/token/*"]
     },
 
     "experimentalDecorators": true,

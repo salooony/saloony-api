@@ -7,7 +7,8 @@ import { UserModule } from '@app/user/infrastructure/modules/user.module';
 import { AddressModule } from '@address/infrastructure/modules/address.module';
 import jwtConfig from '@config/jwt.config';
 import { APP_GUARD } from '@nestjs/core';
-import { TokenGuard } from '@app/user/infrastructure/guards/token.guard';
+import { TokenGuard } from '@user/infrastructure/guards/token.guard';
+import { TokenModule } from '@token/infrastructure/modules/token.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -40,6 +41,7 @@ const ENV = process.env.NODE_ENV;
 
     UserModule,
     AddressModule,
+    TokenModule,
   ],
   providers: [
     {
