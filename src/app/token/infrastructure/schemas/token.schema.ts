@@ -1,11 +1,4 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  ManyToOne, JoinColumn 
-
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from '@user/infrastructure/schemas/user.entity';
 import { TokenType } from '@token/domin/enums/token-type.enum';
 
@@ -18,9 +11,9 @@ export class TokenSchema {
   token!: string;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
-  createdAt!: Date ;
+  createdAt!: Date;
 
-  @Column({ name: 'expired_at', type: 'timestamp' , nullable: true })
+  @Column({ name: 'expired_at', type: 'timestamp', nullable: true })
   expiredAt!: Date | null;
 
   @Column({ name: 'is_hashed', type: 'boolean', default: false })
@@ -32,7 +25,6 @@ export class TokenSchema {
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'owner_id' })
   owner!: User;
-
 
   @Column({ name: 'type', type: 'varchar' })
   type!: TokenType;

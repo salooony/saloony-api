@@ -1,8 +1,7 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class CreateCountriesTableAndSeed1753612215018 implements MigrationInterface {
+export class CreateCountriesTableAndSeed1753612215017 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    // 1️⃣ Create countries table
     await queryRunner.createTable(
       new Table({
         name: 'countries',
@@ -20,7 +19,7 @@ export class CreateCountriesTableAndSeed1753612215018 implements MigrationInterf
             type: 'varchar',
             length: '5',
             isNullable: false,
-            isUnique: true, // ✅ unique constraint
+            isUnique: true,
           },
           {
             name: 'icon',
@@ -36,13 +35,12 @@ export class CreateCountriesTableAndSeed1753612215018 implements MigrationInterf
             name: 'is_active',
             type: 'boolean',
             isNullable: false,
-            default: true, // ✅ default value
+            default: true,
           },
         ],
       }),
     );
 
-    // 2️⃣ Seed initial countries
     await queryRunner.query(`
       INSERT INTO countries (code, icon, name, is_active)
       VALUES
@@ -52,7 +50,6 @@ export class CreateCountriesTableAndSeed1753612215018 implements MigrationInterf
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    // Rollback
     await queryRunner.dropTable('countries');
   }
 }

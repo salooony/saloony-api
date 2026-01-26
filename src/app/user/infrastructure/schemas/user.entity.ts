@@ -1,4 +1,13 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, DeleteDateColumn  ,OneToMany} from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
+import { UserStatus } from '@app/user/domain/enums/user-status.enum';
 
 @Entity({ name: 'users' })
 export class User {
@@ -32,6 +41,14 @@ export class User {
   @Column({ type: 'varchar', length: 50 })
   role: string;
 
+  @Column({
+    type: 'enum',
+    enum: UserStatus,
+    default: UserStatus.PENDING,
+  })
+  @Index()
+  status: UserStatus;
+
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
 
@@ -47,5 +64,4 @@ export class User {
     nullable: true,
   })
   deletedAt?: Date;
-
 }
