@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
-import { User } from '@app/user/infrastructure/schemas/user.entity';
-import { Saloon } from '@app/saloon/infrastructure/schemas/saloon.entity';
+import { User } from '../app/user/infrastructure/schemas/user.entity';
+import { Saloon } from '../app/saloon/infrastructure/schemas/saloon.entity';
 
 dotenv.config();
 
