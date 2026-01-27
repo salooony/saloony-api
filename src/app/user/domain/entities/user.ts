@@ -18,9 +18,6 @@ export class User {
   public deletedAt?: Date;
 
   public status: UserStatus = UserStatus.DRAFT;
-  public emailVerified: boolean = false;
-  public phoneVerified: boolean = false;
-  public operatorValidated: boolean = false;
 
   public block(): void {
     this.status = UserStatus.BLOCKED;
