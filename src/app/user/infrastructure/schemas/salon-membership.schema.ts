@@ -16,12 +16,12 @@ export class SalonMembershipEntity {
   @Column({ name: 'user_id' })
   userId: string;
 
-  @ManyToOne(() => Salon, { onDelete: 'CASCADE' })
+  @ManyToOne('Salon', { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'salon_id' })
   salon: Salon;
 
   @Column({ name: 'salon_id' })
-  salonId: number;
+  salonId: string;
 
   @Column({
     type: 'enum',

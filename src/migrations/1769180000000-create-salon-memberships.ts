@@ -19,7 +19,7 @@ export class CreateSalonMemberships1769180000000 implements MigrationInterface {
           },
           {
             name: 'salon_id',
-            type: 'int',
+            type: 'uuid',
           },
           {
             name: 'role',

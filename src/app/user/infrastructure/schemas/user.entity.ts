@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { UserStatus } from '@app/user/domain/enums/user-status.enum';
 import { UserRole } from '@app/user/domain/enums/user-role.enum';
-import { SalonMembershipEntity } from './salon-membership.entity';
+import { SalonMembershipEntity } from './salon-membership.schema';
 import { OneToMany } from 'typeorm';
 
 @Entity({ name: 'users' })

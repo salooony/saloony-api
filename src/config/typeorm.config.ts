@@ -2,7 +2,7 @@ import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
 import { User } from '@app/user/infrastructure/schemas/user.entity';
 import { Salon } from '@app/salon/infrastructure/schemas/salon.entity';
-import { SalonMembershipEntity } from '@app/user/infrastructure/schemas/salon-membership.entity';
+import { SalonMembershipEntity } from '@app/user/infrastructure/schemas/salon-membership.schema';
 
 dotenv.config();
 
