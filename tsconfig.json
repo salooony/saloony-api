@@ -2,18 +2,15 @@
   "compilerOptions": {
     "target": "ES2023",
     "lib": ["ES2023"],
-
     "module": "commonjs",
     "moduleResolution": "node",
     "types": ["node"],
-
     "outDir": "./dist",
     "sourceMap": true,
     "declaration": true,
     "removeComments": true,
     "incremental": true,
     "skipLibCheck": true,
-
     "baseUrl": "./",
     "paths": {
       "@app/*": ["src/app/*"],
@@ -21,26 +18,22 @@
       "@user/*": ["src/app/user/*"],
       "@test/*": ["src/test/*"],
       "@config/*": ["src/config/*"],
+      "@notification/*": ["src/app/notification/*"],
       "@token/*": ["src/app/token/*"]
     },
-
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "useDefineForClassFields": false,
-
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-
     "strict": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
     "strictBindCallApply": true,
     "strictPropertyInitialization": false,
-
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-
     "noUncheckedIndexedAccess": true,
     "useUnknownInCatchVariables": true
   },
