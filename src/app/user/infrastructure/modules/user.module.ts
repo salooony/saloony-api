@@ -5,7 +5,7 @@ import { UsersRepository } from '../repositories/user.repository';
 import { BcryptHashingProvider } from '../providers/bcrypt.hashing.provider';
 import { CreateUserUsecase } from '@user/application/usecases/create.usecase';
 import { UserTransformer } from '@user/application/transformers/user.transformer';
-import { User } from '@user/infrastructure/schemas/user.entity';
+import { User } from '@user/infrastructure/schemas/user.schema';
 import { LoginUsecase } from '@user/application/usecases/login.usecase';
 import { TokenGenerator } from '@user/infrastructure/providers/token-generator.provider';
 import { ConfigModule, ConfigService } from '@nestjs/config';

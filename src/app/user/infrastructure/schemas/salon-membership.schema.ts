@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
-import { User } from './user.entity';
+import { User } from './user.schema';
 import { Salon } from '../../../salon/infrastructure/schemas/salon.entity';
 import { SalonRole } from '@salon/domain/enums/salon-role.enum';
 
