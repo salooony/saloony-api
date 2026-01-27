@@ -99,26 +99,26 @@ describe('UserController', () => {
       );
     });
 
-    it('Should create a saloon user peacefully', async () => {
+    it('Should create a salon user peacefully', async () => {
       request.email = 'user2@email.com';
       request.role = UserRole.CLIENT;
 
       const dto = plainToInstance(UserRequestDto, request);
       const errors = await validate(dto);
 
-      const saloonUser = new User();
-      saloonUser.firstname = 'John';
-      saloonUser.lastname = 'Doe';
-      saloonUser.birthdate = new Date('4/3/2005');
-      saloonUser.email = 'user2@email.com';
-      saloonUser.mobileNumber = '00000';
-      saloonUser.password = 'p@ssword';
-      saloonUser.createdAt = new Date();
-      saloonUser.language = 'French';
-      saloonUser.role = UserRole.CLIENT;
+      const salonUser = new User();
+      salonUser.firstname = 'John';
+      salonUser.lastname = 'Doe';
+      salonUser.birthdate = new Date('4/3/2005');
+      salonUser.email = 'user2@email.com';
+      salonUser.mobileNumber = '00000';
+      salonUser.password = 'p@ssword';
+      salonUser.createdAt = new Date();
+      salonUser.language = 'French';
+      salonUser.role = UserRole.CLIENT;
 
       const response = await userController.create(request);
-      const expectedResponse = UserResponseDto.createFromEntity(saloonUser);
+      const expectedResponse = UserResponseDto.createFromEntity(salonUser);
 
       expect(errors).toHaveLength(0);
 

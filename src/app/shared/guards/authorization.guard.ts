@@ -4,7 +4,7 @@ import { DataSource } from 'typeorm';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { SALON_ROLES_KEY } from '../decorators/salon-roles.decorator';
 import { UserRole } from '@user/domain/enums/user-role.enum';
-import { SalonRole } from '@saloon/domain/enums/salon-role.enum';
+import { SalonRole } from '@salon/domain/enums/salon-role.enum';
 import { SalonMembershipEntity } from '@user/infrastructure/schemas/salon-membership.entity';
 import { AppRequest } from '@app/shared/application/requests/app.request';
 

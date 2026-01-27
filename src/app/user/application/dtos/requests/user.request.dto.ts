@@ -36,7 +36,7 @@ export class UserRequestDto {
   public birthdate: Date;
 
   @ApiProperty({
-    description: 'The role of the user (could be for a client or saloon user).',
+    description: 'The role of the user (could be for a client or salon user).',
     type: String,
     required: true,
     example: 'Client',

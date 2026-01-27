@@ -90,7 +90,7 @@
       "^@app/(.*)$": "<rootDir>/app/$1",
       "^@address/(.*)$": "<rootDir>/app/address/$1",
       "^@user/(.*)$": "<rootDir>/app/user/$1",
-      "^@saloon/(.*)$": "<rootDir>/app/saloon/$1",
+      "^@salon/(.*)$": "<rootDir>/app/salon/$1",
       "^@test/(.*)$": "<rootDir>/test/$1",
       "^@config/(.*)$": "<rootDir>/config/$1"
     },

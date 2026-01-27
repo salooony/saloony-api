@@ -16,7 +16,7 @@
       "@app/*": ["src/app/*"],
       "@address/*": ["src/app/address/*"],
       "@user/*": ["src/app/user/*"],
-      "@saloon/*": ["src/app/saloon/*"],
+      "@salon/*": ["src/app/salon/*"],
       "@test/*": ["src/test/*"],
       "@config/*": ["src/config/*"],
       "@notification/*": ["src/app/notification/*"],

@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { User } from './user.entity';
-import { Saloon } from '@saloon/infrastructure/schemas/saloon.entity';
-import { SalonRole } from '@saloon/domain/enums/salon-role.enum';
+import { Salon } from '../../../salon/infrastructure/schemas/salon.entity';
+import { SalonRole } from '@salon/domain/enums/salon-role.enum';
 
 @Entity({ name: 'salons_users' })
 @Unique(['userId', 'salonId'])
@@ -16,9 +16,9 @@ export class SalonMembershipEntity {
   @Column({ name: 'user_id' })
   userId: string;
 
-  @ManyToOne(() => Saloon, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Salon, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'salon_id' })
-  salon: Saloon;
+  salon: Salon;
 
   @Column({ name: 'salon_id' })
   salonId: number;

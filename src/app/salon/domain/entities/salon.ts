@@ -1,4 +1,4 @@
-export class Saloon {
+export class Salon {
   public id: number;
   public name: string;
   public createdAt: Date;

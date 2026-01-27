@@ -32,7 +32,7 @@ export class UserResponseDto {
   public birthdate: Date;
 
   @ApiProperty({
-    description: 'The role of the user (could be client or saloon user).',
+    description: 'The role of the user (could be client or salon user).',
     enum: UserRole,
     example: UserRole.CLIENT,
   })
