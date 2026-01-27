@@ -7,8 +7,8 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
 } from 'typeorm';
-import { UserStatus } from '../../domain/enums/user-status.enum';
-import { UserRole } from '../../domain/enums/user-role.enum';
+import { UserStatus } from '@app/user/domain/enums/user-status.enum';
+import { UserRole } from '@app/user/domain/enums/user-role.enum';
 import { SalonMembershipEntity } from './salon-membership.schema';
 import { OneToMany } from 'typeorm';
 
