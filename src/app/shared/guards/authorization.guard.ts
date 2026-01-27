@@ -1,13 +1,12 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
-import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
 import { DataSource } from 'typeorm';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { SALON_ROLES_KEY } from '../decorators/salon-roles.decorator';
-import { UserRole } from '../../user/domain/enums/user-role.enum';
-import { SalonRole } from '../../saloon/domain/enums/salon-role.enum';
-import { SalonMembershipEntity } from '../../user/infrastructure/schemas/salon-membership.entity';
-import { User } from '../../user/domain/entities/user';
+import { UserRole } from '@user/domain/enums/user-role.enum';
+import { SalonRole } from '@saloon/domain/enums/salon-role.enum';
+import { SalonMembershipEntity } from '@user/infrastructure/schemas/salon-membership.entity';
+import { AppRequest } from '@app/shared/application/requests/app.request';
 
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
@@ -33,7 +32,7 @@ export class AuthorizationGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest<Request & { user?: User }>();
+    const request = context.switchToHttp().getRequest<AppRequest>();
     const user = request.user;
 
     if (!user) {
@@ -54,10 +53,11 @@ export class AuthorizationGuard implements CanActivate {
 
     // 3. Check Salon Roles
     if (requiredSalonRoles) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      const salonId = (request.params?.salonId || request.body?.salonId || request.query?.salonId) as
-        | string
-        | undefined;
+      /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+      const salonId = ((request.params as Record<string, unknown>)?.salonId ??
+        (request.body as Record<string, unknown>)?.salonId ??
+        (request.query as Record<string, unknown>)?.salonId) as string | undefined;
+      /* eslint-enable @typescript-eslint/no-unsafe-member-access */
 
       if (!salonId) {
         // We can't verify salon access without a salonId.

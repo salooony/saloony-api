@@ -1,4 +1,4 @@
-import { SalonRole } from '../../../saloon/domain/enums/salon-role.enum';
+import { SalonRole } from '@saloon/domain/enums/salon-role.enum';
 
 export class SalonMembership {
   id: string;

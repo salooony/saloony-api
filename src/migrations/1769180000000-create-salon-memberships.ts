@@ -4,7 +4,7 @@ export class CreateSalonMemberships1769180000000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'salon_memberships',
+        name: 'salons_users',
         columns: [
           {
             name: 'id',
@@ -23,7 +23,8 @@ export class CreateSalonMemberships1769180000000 implements MigrationInterface {
           },
           {
             name: 'role',
-            type: 'varchar',
+            type: 'enum',
+            enum: ['salon_admin', 'salon_operator', 'salon_staff'],
           },
           {
             name: 'created_at',
@@ -36,7 +37,7 @@ export class CreateSalonMemberships1769180000000 implements MigrationInterface {
     );
 
     await queryRunner.createForeignKey(
-      'salon_memberships',
+      'salons_users',
       new TableForeignKey({
         columnNames: ['user_id'],
         referencedColumnNames: ['id'],
@@ -46,17 +47,17 @@ export class CreateSalonMemberships1769180000000 implements MigrationInterface {
     );
 
     await queryRunner.createForeignKey(
-      'salon_memberships',
+      'salons_users',
       new TableForeignKey({
         columnNames: ['salon_id'],
         referencedColumnNames: ['id'],
-        referencedTableName: 'saloon',
+        referencedTableName: 'salons',
         onDelete: 'CASCADE',
       }),
     );
 
     await queryRunner.createUniqueConstraint(
-      'salon_memberships',
+      'salons_users',
       new TableUnique({
         columnNames: ['user_id', 'salon_id'],
       }),
@@ -64,15 +65,15 @@ export class CreateSalonMemberships1769180000000 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    const table = await queryRunner.getTable('salon_memberships');
+    const table = await queryRunner.getTable('salons_users');
     if (table) {
       const foreignKeyUser = table.foreignKeys.find((fk) => fk.columnNames.indexOf('user_id') !== -1);
       const foreignKeySalon = table.foreignKeys.find((fk) => fk.columnNames.indexOf('salon_id') !== -1);
 
-      if (foreignKeyUser) await queryRunner.dropForeignKey('salon_memberships', foreignKeyUser);
-      if (foreignKeySalon) await queryRunner.dropForeignKey('salon_memberships', foreignKeySalon);
+      if (foreignKeyUser) await queryRunner.dropForeignKey('salons_users', foreignKeyUser);
+      if (foreignKeySalon) await queryRunner.dropForeignKey('salons_users', foreignKeySalon);
 
-      await queryRunner.dropTable('salon_memberships');
+      await queryRunner.dropTable('salons_users');
     }
   }
 }

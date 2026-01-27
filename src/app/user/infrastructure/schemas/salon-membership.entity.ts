@@ -1,9 +1,9 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { User } from './user.entity';
-import { Saloon } from '../../../saloon/infrastructure/schemas/saloon.entity';
-import { SalonRole } from '../../../saloon/domain/enums/salon-role.enum';
+import { Saloon } from '@saloon/infrastructure/schemas/saloon.entity';
+import { SalonRole } from '@saloon/domain/enums/salon-role.enum';
 
-@Entity({ name: 'salon_memberships' })
+@Entity({ name: 'salons_users' })
 @Unique(['userId', 'salonId'])
 export class SalonMembershipEntity {
   @PrimaryGeneratedColumn('uuid')
