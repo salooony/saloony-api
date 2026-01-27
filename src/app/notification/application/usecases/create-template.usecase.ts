@@ -1,7 +1,7 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { ITemplateRepository } from '../../domain/ports/template.repository.interface';
-import { Template } from '../../domain/entities/template';
-import { CreateTemplateRequestDto } from '../dtos/requests/create-template.request.dto';
+import { Injectable, Inject, ConflictException } from '@nestjs/common';
+import { ITemplateRepository } from '@notification/domain/ports/template.repository.interface';
+import { Template } from '@notification/domain/entities/template';
+import { CreateTemplateRequestDto } from '@notification/application/dtos/requests/create-template.request.dto';
 
 @Injectable()
 export class CreateTemplateUseCase {
@@ -16,7 +16,7 @@ export class CreateTemplateUseCase {
     // Check if template with this key already exists
     const existingTemplate = await this.templateRepository.findByKey(key);
     if (existingTemplate) {
-      throw new Error(`Template with key ${key} already exists`);
+      throw new ConflictException(`Template with key ${key} already exists`);
     }
 
     const template = new Template();

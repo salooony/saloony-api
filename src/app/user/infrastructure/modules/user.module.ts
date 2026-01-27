@@ -3,23 +3,23 @@ import { UserController } from '../controllers/user.controller';
 import { Module } from '@nestjs/common';
 import { UsersRepository } from '../repositories/user.repository';
 import { BcryptHashingProvider } from '../providers/bcrypt.hashing.provider';
-import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase';
-import { UserTransformer } from '@app/user/application/transformers/user.transformer';
-import { User } from '../schemas/user.entity';
-import { LoginUsecase } from '@app/user/application/usecases/login.usecase';
-import { TokenGenerator } from '../providers/token-generator.provider';
+import { CreateUserUsecase } from '@user/application/usecases/create.usecase';
+import { UserTransformer } from '@user/application/transformers/user.transformer';
+import { User } from '@user/infrastructure/schemas/user.entity';
+import { LoginUsecase } from '@user/application/usecases/login.usecase';
+import { TokenGenerator } from '@user/infrastructure/providers/token-generator.provider';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import jwtConfig from '@config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthController } from '../controllers/auth.controller';
-import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
-import { DeleteUserAccountUseCase } from '@app/user/application/usecases/delete-user-account.usecase';
+import { AuthController } from '@user/infrastructure/controllers/auth.controller';
+import { GetUserInfoUsecase } from '@user/application/usecases/get-user-info.usecase';
+import { DeleteUserAccountUseCase } from '@user/application/usecases/delete-user-account.usecase';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { SmtpEmailSender } from '../../infrastructure/email/smtpEmail.sender';
-import { ForgotPasswordUseCase } from '../../application/usecases/forgot-password.usecase';
-import { PasswordResetTokenRepository } from '../../infrastructure/repositories/password_reset_token.repository';
-import { PasswordResetTokenEntity } from '../../infrastructure/schemas/password-reset-token.entity';
-import { ResetPasswordUseCase } from '../../application/usecases/reset-password.usecase';
+import { SmtpEmailSender } from '@user/infrastructure/email/smtpEmail.sender';
+import { ForgotPasswordUseCase } from '@user/application/usecases/forgot-password.usecase';
+import { PasswordResetTokenRepository } from '@user/infrastructure/repositories/password_reset_token.repository';
+import { PasswordResetTokenEntity } from '@user/infrastructure/schemas/password-reset-token.entity';
+import { ResetPasswordUseCase } from '@user/application/usecases/reset-password.usecase';
 
 @Module({
   imports: [

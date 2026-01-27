@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsOptional, IsString, IsObject } from 'class-validator';
-import { TemplateType } from '../../../domain/enums/template-type.enum';
+import { TemplateType } from '@notification/domain/enums/template-type.enum';
 
 export class CreateTemplateRequestDto {
   @ApiProperty({
@@ -61,20 +61,4 @@ export class CreateTemplateRequestDto {
   @IsOptional()
   @IsObject()
   public metadata?: Record<string, any>;
-
-  constructor(
-    key: string,
-    type: TemplateType,
-    title: string,
-    message: string,
-    defaultParameters?: Record<string, any>,
-    metadata?: Record<string, any>,
-  ) {
-    this.key = key;
-    this.type = type;
-    this.title = title;
-    this.message = message;
-    this.defaultParameters = defaultParameters;
-    this.metadata = metadata;
-  }
 }

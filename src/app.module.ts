@@ -3,12 +3,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import appConfig from './config/app.config';
 import databaseConfig, { DatabaseConfig } from './config/database.config';
-import { UserModule } from '@app/user/infrastructure/modules/user.module';
+import { UserModule } from '@user/infrastructure/modules/user.module';
 import { AddressModule } from '@address/infrastructure/modules/address.module';
-import { TemplateModule } from '@app/notification/infrastructure/modules/template.module';
+import { TemplateModule } from '@notification/infrastructure/modules/template.module';
 import jwtConfig from '@config/jwt.config';
 import { APP_GUARD } from '@nestjs/core';
-import { TokenGuard } from '@app/user/infrastructure/guards/token.guard';
+import { TokenGuard } from '@user/infrastructure/guards/token.guard';
+import { TokenModule } from '@token/infrastructure/modules/token.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -42,6 +43,7 @@ const ENV = process.env.NODE_ENV;
     UserModule,
     AddressModule,
     TemplateModule,
+    TokenModule,
   ],
   providers: [
     {

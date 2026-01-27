@@ -18,7 +18,8 @@
       "@user/*": ["src/app/user/*"],
       "@test/*": ["src/test/*"],
       "@config/*": ["src/config/*"],
-      "@notification/*": ["src/app/notification/*"]
+      "@notification/*": ["src/app/notification/*"],
+      "@token/*": ["src/app/token/*"]
     },
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

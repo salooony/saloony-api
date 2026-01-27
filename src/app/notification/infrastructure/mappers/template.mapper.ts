@@ -1,5 +1,5 @@
 import { Template as DomainTemplate } from '../../domain/entities/template';
-import { Template as SchemaTemplate } from '../schemas/template.scheam';
+import { Template as SchemaTemplate } from '../schemas/template.schema';
 
 export class TemplateMapper {
   public static toDomain(schema: SchemaTemplate | null): DomainTemplate | null {

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Template as SchemaTemplate } from '../schemas/template.scheam';
+import { Template as SchemaTemplate } from '../schemas/template.schema';
 import { Template as DomainTemplate } from '../../domain/entities/template';
 import { ITemplateRepository } from '../../domain/ports/template.repository.interface';
 import { TemplateMapper } from '../mappers/template.mapper';

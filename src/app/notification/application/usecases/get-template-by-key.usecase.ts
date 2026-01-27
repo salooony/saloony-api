@@ -1,6 +1,6 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { ITemplateRepository } from '../../domain/ports/template.repository.interface';
-import { Template } from '../../domain/entities/template';
+import { ITemplateRepository } from '@notification/domain/ports/template.repository.interface';
+import { Template } from '@notification/domain/entities/template';
 
 @Injectable()
 export class GetTemplateByKeyUseCase {
