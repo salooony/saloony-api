@@ -1,5 +1,5 @@
 import { User } from '@app/user/domain/entities/user';
-import { User as UserEntity } from '../schemas/user.entity';
+import { User as UserEntity } from '../schemas/user.schema';
 
 export class UserMapper {
   static map(createdUser: UserEntity): User {

@@ -1,5 +1,6 @@
 import { User } from '@app/user/domain/entities/user';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserRole } from '@app/user/domain/enums/user-role.enum';
 
 export class UserResponseDto {
   @ApiProperty({
@@ -31,11 +32,11 @@ export class UserResponseDto {
   public birthdate: Date;
 
   @ApiProperty({
-    description: 'The role of the user (could be client or saloon user).',
-    type: String,
-    example: 'Client',
+    description: 'The role of the user (could be client or salon user).',
+    enum: UserRole,
+    example: UserRole.CLIENT,
   })
-  public role: string;
+  public role: UserRole;
 
   @ApiProperty({
     description: 'The email address.',

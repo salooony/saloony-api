@@ -7,7 +7,10 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
 } from 'typeorm';
-import { UserStatus } from '@app/user/domain/enums/user-status.enum';
+import { UserStatus } from '@user/domain/enums/user-status.enum';
+import { UserRole } from '@user/domain/enums/user-role.enum';
+import { SalonMembership } from './salon-membership.schema';
+import { OneToMany } from 'typeorm';
 
 @Entity({ name: 'users' })
 export class User {
@@ -38,13 +41,16 @@ export class User {
   @Column({ type: 'varchar', length: 50 })
   language: string;
 
-  @Column({ type: 'varchar', length: 50 })
-  role: string;
+  @Column({ type: 'enum', enum: UserRole, default: UserRole.CLIENT }) // defaulting to CLIENT for safety
+  role: UserRole;
+
+  @OneToMany('SalonMembership', (membership: SalonMembership) => membership.user)
+  salonMemberships: SalonMembership[];
 
   @Column({
     type: 'enum',
     enum: UserStatus,
-    default: UserStatus.PENDING,
+    default: UserStatus.DRAFT,
   })
   @Index()
   status: UserStatus;

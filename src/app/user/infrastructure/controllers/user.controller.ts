@@ -1,4 +1,6 @@
 import { CurrentUser } from '@app/user/application/decorators/current-user.decorator';
+import { Roles } from '@app/shared/decorators/roles.decorator';
+import { UserRole } from '@app/user/domain/enums/user-role.enum';
 import { Public } from '@app/user/application/decorators/public.decorator';
 import { UserRequestDto } from '@app/user/application/dtos/requests/user.request.dto';
 import { UserResponseDto } from '@app/user/application/dtos/responses/user.response.dto';
@@ -110,6 +112,7 @@ export class UserController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Something went wrong, try again.',
   })
+  @Roles(UserRole.ADMIN)
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteUser(@Param('id') userId: string): Promise<void> {

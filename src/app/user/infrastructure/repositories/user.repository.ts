@@ -2,7 +2,7 @@ import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User as UserEntity } from '../schemas/user.entity';
+import { User as UserEntity } from '../schemas/user.schema';
 import { User } from '@user/domain/entities/user';
 import { UserMapper } from '../mappers/user.mapper';
 

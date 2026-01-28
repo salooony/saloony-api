@@ -1,5 +1,5 @@
-export class Saloon {
-  public id: number;
+export class Salon {
+  public id: string;
   public name: string;
   public createdAt: Date;
   public updatedAt: Date;

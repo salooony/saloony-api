@@ -1,18 +1,19 @@
 import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
-import { User } from '../app/user/infrastructure/schemas/user.entity';
-import { Saloon } from '../app/saloon/infrastructure/schemas/saloon.entity';
+import { User } from '@user/infrastructure/schemas/user.schema';
+import { Salon } from '@salon/infrastructure/schemas/salon.entity';
+import { SalonMembership } from '@user/infrastructure/schemas/salon-membership.schema';
 
 dotenv.config();
 
-export default new DataSource({
+export const connectionSource = new DataSource({
   type: 'postgres',
   host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  username: process.env.DB_USER,
+  port: parseInt(process.env.DB_PORT || '5432'),
+  username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   synchronize: false,
-  entities: [User, Saloon],
+  entities: [User, Salon, SalonMembership],
   migrations: ['src/migrations/*.ts'],
 });
