@@ -14,6 +14,7 @@ export class Address {
 
   @Column({ type: 'varchar', length: 10 })
   postcode: string;
+
   @Column({ type: 'uuid', name: 'city_id' })
   cityId: string;
 
