@@ -21,10 +21,11 @@ import { PasswordResetTokenRepository } from '@user/infrastructure/repositories/
 import { PasswordResetTokenEntity } from '@user/infrastructure/schemas/password-reset-token.schema';
 import { SalonMembership } from '@user/infrastructure/schemas/salon-membership.schema';
 import { ResetPasswordUseCase } from '@user/application/usecases/reset-password.usecase';
+import { Salon } from '@salon/infrastructure/schemas/salon.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, PasswordResetTokenEntity, SalonMembership]),
+    TypeOrmModule.forFeature([User, PasswordResetTokenEntity, SalonMembership, Salon]),
     ConfigModule.forFeature(jwtConfig),
 
     JwtModule.registerAsync({

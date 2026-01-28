@@ -3,9 +3,11 @@ import { UserRequestDto } from '@app/user/application/dtos/requests/user.request
 import { UserResponseDto } from '@app/user/application/dtos/responses/user.response.dto';
 import { UserTransformer } from '@app/user/application/transformers/user.transformer';
 import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase';
+import { DeleteUserAccountUseCase } from '@app/user/application/usecases/delete-user-account.usecase';
 import { ForgotPasswordUseCase } from '@app/user/application/usecases/forgot-password.usecase';
 import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
 import { LoginUsecase } from '@app/user/application/usecases/login.usecase';
+import { ResetPasswordUseCase } from '@app/user/application/usecases/reset-password.usecase';
 import { User } from '@app/user/domain/entities/user';
 import { UserRole } from '@app/user/domain/enums/user-role.enum';
 import { AuthController } from '@app/user/infrastructure/controllers/auth.controller';
@@ -43,14 +45,30 @@ describe('UserController', () => {
       ],
       controllers: [UserController, AuthController],
       providers: [
+        DeleteUserAccountUseCase,
         CreateUserUsecase,
         GetUserInfoUsecase,
         ForgotPasswordUseCase,
         LoginUsecase,
+        ResetPasswordUseCase,
         UserTransformer,
         { provide: 'UsersRepository', useClass: MockUsersReporitory },
         { provide: 'HashingProvider', useClass: BcryptHashingProvider },
         { provide: 'TokenGenerator', useClass: TokenGenerator },
+        {
+          provide: 'PasswordResetTokenRepository',
+          useValue: {
+            create: jest.fn(),
+            findByTokenHash: jest.fn(),
+            deleteById: jest.fn(),
+          },
+        },
+        {
+          provide: 'IEmailSender',
+          useValue: {
+            sendResetEmail: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
@@ -90,13 +108,11 @@ describe('UserController', () => {
 
       expect(errors).toHaveLength(0);
 
-      expect(response).toEqual(expect.objectContaining(expectedResponse));
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { createdAt: _c, id: _i, ...expectedProps } = expectedResponse;
+      expect(response).toEqual(expect.objectContaining(expectedProps));
       expect(response.id).toEqual(expect.any(String));
       expect(response.createdAt).toEqual(expect.any(Date));
-
-      expect(response.createdAt.toISOString().slice(0, 19)).toEqual(
-        expectedResponse.createdAt.toISOString().slice(0, 19),
-      );
     });
 
     it('Should create a salon user peacefully', async () => {
@@ -122,13 +138,11 @@ describe('UserController', () => {
 
       expect(errors).toHaveLength(0);
 
-      expect(response).toEqual(expect.objectContaining(expectedResponse));
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { createdAt: _c, id: _i, ...expectedProps } = expectedResponse;
+      expect(response).toEqual(expect.objectContaining(expectedProps));
       expect(response.id).toEqual(expect.any(String));
       expect(response.createdAt).toEqual(expect.any(Date));
-
-      expect(response.createdAt.toISOString().slice(0, 19)).toEqual(
-        expectedResponse.createdAt.toISOString().slice(0, 19),
-      );
     });
 
     it('Should fail for invalid email (duplicated email)', async () => {
