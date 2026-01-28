@@ -7,9 +7,9 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
 } from 'typeorm';
-import { UserStatus } from '@app/user/domain/enums/user-status.enum';
-import { UserRole } from '@app/user/domain/enums/user-role.enum';
-import { SalonMembershipEntity } from './salon-membership.schema';
+import { UserStatus } from '@user/domain/enums/user-status.enum';
+import { UserRole } from '@user/domain/enums/user-role.enum';
+import { SalonMembership } from './salon-membership.schema';
 import { OneToMany } from 'typeorm';
 
 @Entity({ name: 'users' })
@@ -44,8 +44,8 @@ export class User {
   @Column({ type: 'enum', enum: UserRole, default: UserRole.CLIENT }) // defaulting to CLIENT for safety
   role: UserRole;
 
-  @OneToMany('SalonMembershipEntity', (membership: SalonMembershipEntity) => membership.user)
-  salonMemberships: SalonMembershipEntity[];
+  @OneToMany('SalonMembership', (membership: SalonMembership) => membership.user)
+  salonMemberships: SalonMembership[];
 
   @Column({
     type: 'enum',

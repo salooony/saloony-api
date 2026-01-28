@@ -39,6 +39,7 @@ export class CreateSalonMemberships1769180000000 implements MigrationInterface {
     await queryRunner.createForeignKey(
       'salons_users',
       new TableForeignKey({
+        name: 'FK_SALONS_USERS_USERS_USER_ID',
         columnNames: ['user_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'users',
@@ -49,6 +50,7 @@ export class CreateSalonMemberships1769180000000 implements MigrationInterface {
     await queryRunner.createForeignKey(
       'salons_users',
       new TableForeignKey({
+        name: 'FK_SALONS_USERS_SALONS_SALON_ID',
         columnNames: ['salon_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'salons',
@@ -59,6 +61,7 @@ export class CreateSalonMemberships1769180000000 implements MigrationInterface {
     await queryRunner.createUniqueConstraint(
       'salons_users',
       new TableUnique({
+        name: 'UQ_SALONS_USERS_USER_ID_SALON_ID',
         columnNames: ['user_id', 'salon_id'],
       }),
     );

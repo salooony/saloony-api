@@ -5,7 +5,7 @@ import { SalonRole } from '@salon/domain/enums/salon-role.enum';
 
 @Entity({ name: 'salons_users' })
 @Unique(['userId', 'salonId'])
-export class SalonMembershipEntity {
+export class SalonMembership {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
