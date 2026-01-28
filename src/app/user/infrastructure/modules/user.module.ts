@@ -5,7 +5,7 @@ import { UsersRepository } from '../repositories/user.repository';
 import { BcryptHashingProvider } from '../providers/bcrypt.hashing.provider';
 import { CreateUserUsecase } from '@user/application/usecases/create.usecase';
 import { UserTransformer } from '@user/application/transformers/user.transformer';
-import { User } from '@user/infrastructure/schemas/user.entity';
+import { User } from '@user/infrastructure/schemas/user.schema';
 import { LoginUsecase } from '@user/application/usecases/login.usecase';
 import { TokenGenerator } from '@user/infrastructure/providers/token-generator.provider';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -18,12 +18,14 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { SmtpEmailSender } from '@user/infrastructure/email/smtpEmail.sender';
 import { ForgotPasswordUseCase } from '@user/application/usecases/forgot-password.usecase';
 import { PasswordResetTokenRepository } from '@user/infrastructure/repositories/password_reset_token.repository';
-import { PasswordResetTokenEntity } from '@user/infrastructure/schemas/password-reset-token.entity';
+import { PasswordResetTokenEntity } from '@user/infrastructure/schemas/password-reset-token.schema';
+import { SalonMembership } from '@user/infrastructure/schemas/salon-membership.schema';
 import { ResetPasswordUseCase } from '@user/application/usecases/reset-password.usecase';
+import { Salon } from '@salon/infrastructure/schemas/salon.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, PasswordResetTokenEntity]),
+    TypeOrmModule.forFeature([User, PasswordResetTokenEntity, SalonMembership, Salon]),
     ConfigModule.forFeature(jwtConfig),
 
     JwtModule.registerAsync({

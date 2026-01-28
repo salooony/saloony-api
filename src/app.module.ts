@@ -10,6 +10,7 @@ import jwtConfig from '@config/jwt.config';
 import { APP_GUARD } from '@nestjs/core';
 import { TokenGuard } from '@user/infrastructure/guards/token.guard';
 import { TokenModule } from '@token/infrastructure/modules/token.module';
+import { AuthorizationGuard } from '@app/shared/guards/authorization.guard';
 
 const ENV = process.env.NODE_ENV;
 
@@ -49,6 +50,10 @@ const ENV = process.env.NODE_ENV;
     {
       provide: APP_GUARD,
       useClass: TokenGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthorizationGuard,
     },
   ],
 })

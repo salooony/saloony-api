@@ -1,9 +1,9 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity({ name: 'saloon' })
-export class Saloon {
-  @PrimaryGeneratedColumn()
-  id: number;
+@Entity({ name: 'salons' })
+export class Salon {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'varchar', length: 100 })
   name: string;
