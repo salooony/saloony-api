@@ -26,7 +26,11 @@ const ENV = process.env.NODE_ENV;
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const db = configService.get<DatabaseConfig>('database');
+        const db = configService.get<DatabaseConfig | undefined>('database');
+
+        if (!db) {
+          throw new Error('Database configuration is missing');
+        }
 
         return {
           type: 'postgres',
