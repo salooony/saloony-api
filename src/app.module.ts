@@ -26,7 +26,7 @@ const ENV = process.env.NODE_ENV;
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const db = configService.getOrThrow<DatabaseConfig>('database');
+        const db = configService.get<DatabaseConfig>('database');
 
         return {
           type: 'postgres',
