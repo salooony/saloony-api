@@ -23,7 +23,7 @@ export class RequestEmailVerificationUseCase {
     }
 
     // TODO: Generate verification token using Token module (under development)
-    const token = Math.floor(100000 + Math.random() * 900000).toString();
+    // const token = Math.floor(100000 + Math.random() * 900000).toString();
 
     // TODO: Send notification via Notification.Notifier
     // Channel: EMAIL
