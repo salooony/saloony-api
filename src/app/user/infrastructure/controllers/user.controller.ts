@@ -7,6 +7,7 @@ import { UserResponseDto } from '@app/user/application/dtos/responses/user.respo
 import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase';
 import { DeleteUserAccountUseCase } from '@app/user/application/usecases/delete-user-account.usecase';
 import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
+import { RequestEmailVerificationUseCase } from '@app/user/application/usecases/request-email-verification.usecase';
 import { User } from '@app/user/domain/entities/user';
 import {
   Body,
@@ -29,6 +30,7 @@ export class UserController {
     private readonly createUsecase: CreateUserUsecase,
     private readonly getUserInfoUsecase: GetUserInfoUsecase,
     private readonly deleteUserUseCase: DeleteUserAccountUseCase,
+    private readonly requestEmailVerificationUseCase: RequestEmailVerificationUseCase,
   ) {}
 
   @ApiOperation({ summary: 'Register a new user' })
@@ -117,5 +119,15 @@ export class UserController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteUser(@Param('id') userId: string): Promise<void> {
     await this.deleteUserUseCase.execute(userId);
+  }
+
+  @Post('email/validate/request')
+  @HttpCode(HttpStatus.ACCEPTED)
+  @ApiOperation({ summary: 'Request email verification code' })
+  @ApiBearerAuth()
+  @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Verification code sent.' })
+  @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Email already verified.' })
+  async requestEmailVerification(@CurrentUser() user: User): Promise<{ status: string; channel: string }> {
+    return await this.requestEmailVerificationUseCase.execute(user.id);
   }
 }
