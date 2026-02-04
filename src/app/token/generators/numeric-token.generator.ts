@@ -1,6 +1,18 @@
 import { randomInt } from 'crypto';
 import { TokenGenerator } from './token-generator.interface';
 import { TokenGeneratorType } from '@token/domin/enums/token-generator-type.enum';
+import { z } from 'zod';
+
+const DEFAULT_DIGITS = 6;
+
+const NumericOptionsSchema = z.object({
+  digits: z.number().int().positive().default(DEFAULT_DIGITS),
+});
+type NumericOptions = z.infer<typeof NumericOptionsSchema>;
+
+function parseNumericOptions(options?: unknown): NumericOptions {
+  return NumericOptionsSchema.parse(options ?? {});
+}
 
 export class NumericTokenGenerator implements TokenGenerator {
   supports(type: TokenGeneratorType): boolean {
@@ -8,11 +20,7 @@ export class NumericTokenGenerator implements TokenGenerator {
   }
 
   generate(options?: Record<string, unknown>): string {
-    const digits = options?.digits as number ?? 6;
-
-    if (!Number.isInteger(digits) || digits <= 0) {
-      throw new Error('Invalid digits option');
-    }
+    const { digits } = parseNumericOptions(options);
 
     const max = 10 ** digits;
     const num = randomInt(0, max);

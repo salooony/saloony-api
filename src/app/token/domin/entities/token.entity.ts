@@ -1,5 +1,4 @@
 import { User } from '@app/user/domain/entities/user';
-import { TokenType } from '../enums/token-type.enum';
 
 export class Token {
   constructor(
@@ -8,7 +7,6 @@ export class Token {
     public readonly expiredAt: Date | null,
     public readonly isHashed: boolean,
     public readonly owner: User,
-    public readonly type: TokenType,
   ) {}
 
   isExpired(now = new Date()): boolean {

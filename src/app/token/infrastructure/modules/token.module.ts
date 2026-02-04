@@ -5,22 +5,19 @@ import { NumericTokenGenerator } from '@token/generators/numeric-token.generator
 import { UrlSafeStringTokenGenerator } from '@token/generators/url-safe-string-token.generator';
 
 @Module({
-providers: [
-  NumericTokenGenerator,
-  UrlSafeStringTokenGenerator,
+  providers: [
+    NumericTokenGenerator,
+    UrlSafeStringTokenGenerator,
 
-  {
-    provide: TOKEN_GENERATORS,
-    useFactory: (
-      numeric: NumericTokenGenerator,
-      url: UrlSafeStringTokenGenerator,
-    ) => [numeric, url],
-    inject: [NumericTokenGenerator, UrlSafeStringTokenGenerator],
-  },
+    {
+      provide: TOKEN_GENERATORS,
+      useFactory: (numeric: NumericTokenGenerator, url: UrlSafeStringTokenGenerator) => [numeric, url],
+      inject: [NumericTokenGenerator, UrlSafeStringTokenGenerator],
+    },
 
-  TokenGeneratorRegistry,
-  TokenGeneratorService,
-],
+    TokenGeneratorRegistry,
+    TokenGeneratorService,
+  ],
 
   exports: [TokenGeneratorService],
 })

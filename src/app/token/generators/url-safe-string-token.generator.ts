@@ -1,6 +1,20 @@
 import { randomBytes } from 'crypto';
 import { TokenGenerator } from './token-generator.interface';
 import { TokenGeneratorType } from '@token/domin/enums/token-generator-type.enum';
+import { z } from 'zod';
+
+const DEFAULT_BYTES = 32;
+
+// schema
+const UrlSafeOptionsSchema = z.object({
+  bytes: z.number().int().positive().default(DEFAULT_BYTES),
+});
+
+type UrlSafeOptions = z.infer<typeof UrlSafeOptionsSchema>;
+
+function parseUrlSafeOptions(options?: unknown): UrlSafeOptions {
+  return UrlSafeOptionsSchema.parse(options ?? {});
+}
 
 export class UrlSafeStringTokenGenerator implements TokenGenerator {
   supports(type: TokenGeneratorType): boolean {
@@ -8,16 +22,10 @@ export class UrlSafeStringTokenGenerator implements TokenGenerator {
   }
 
   generate(options?: Record<string, unknown>): string {
-    const bytes = options?.bytes as number ?? 32;
+    const { bytes } = parseUrlSafeOptions(options);
 
-    if (!Number.isInteger(bytes) || bytes <= 0) {
-      throw new Error('Invalid bytes option');
-    }
+    const buffer = randomBytes(bytes);
 
-    return randomBytes(bytes)
-      .toString('base64')
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '');
+    return buffer.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
   }
 }
