@@ -122,12 +122,12 @@ export class UserController {
   }
 
   @Post('email/validate/request')
-  @HttpCode(HttpStatus.ACCEPTED)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Request email verification code' })
   @ApiBearerAuth()
-  @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Verification code sent.' })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Verification code sent.' })
   @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Email already verified.' })
-  async requestEmailVerification(@CurrentUser() user: User): Promise<{ status: string; channel: string }> {
-    return await this.requestEmailVerificationUseCase.execute(user.id);
+  async requestEmailVerification(@CurrentUser() user: User): Promise<void> {
+    await this.requestEmailVerificationUseCase.execute(user);
   }
 }

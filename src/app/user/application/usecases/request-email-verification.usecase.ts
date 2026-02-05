@@ -1,24 +1,13 @@
-import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { IUserRepository } from '@user/domain/ports/iuser.repository';
-import { UserStatus } from '@user/domain/enums/user-status.enum';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { NotifierService } from '@notification/application/services/notifier.service';
+import { User } from '@user/domain/entities/user';
 
 @Injectable()
 export class RequestEmailVerificationUseCase {
-  constructor(
-    @Inject('UsersRepository')
-    private readonly userRepository: IUserRepository,
-    private readonly notifierService: NotifierService,
-  ) {}
+  constructor(private readonly notifierService: NotifierService) {}
 
-  async execute(userId: string): Promise<{ status: 'SENT'; channel: 'EMAIL' }> {
-    const user = await this.userRepository.findOneById(userId);
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    if (this.isEmailVerified(user.status)) {
+  execute(user: User): Promise<void> {
+    if (user.isEmailVerified()) {
       throw new ConflictException('Email already verified');
     }
 
@@ -36,15 +25,6 @@ export class RequestEmailVerificationUseCase {
     //   payload: { code: token }
     // });
 
-    return { status: 'SENT', channel: 'EMAIL' };
-  }
-
-  private isEmailVerified(status: UserStatus): boolean {
-    return [
-      UserStatus.WAITING_PHONE_VERIFICATION,
-      UserStatus.WAITING_OPERATOR_VALIDATION,
-      UserStatus.ACTIVE,
-      UserStatus.BLOCKED,
-    ].includes(status);
+    return Promise.resolve();
   }
 }
