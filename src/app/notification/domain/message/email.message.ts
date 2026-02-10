@@ -1,9 +1,15 @@
 import { IMessage } from './message.interface';
 
-export class EmailMessage implements IMessage {
+export class EmailMessage extends IMessage {
   constructor(
-    public readonly to: string,
+    to: string,
     public readonly subject: string,
-    public readonly content: string,
-  ) {}
+    private readonly content: string,
+  ) {
+    super(to);
+  }
+
+  getContent(): string {
+    return this.content;
+  }
 }

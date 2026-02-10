@@ -4,7 +4,7 @@ import { Template } from '@notification/domain/entities/template';
 import { CreateTemplateRequestDto } from '@notification/application/dtos/requests/create-template.request.dto';
 
 @Injectable()
-export class CreateTemplateUseCase {
+export class CreateTemplateService {
   constructor(
     @Inject('ITemplateRepository')
     private readonly templateRepository: ITemplateRepository,

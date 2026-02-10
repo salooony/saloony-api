@@ -15,3 +15,6 @@ yarn-debug.log*
 yarn-error.log*
 tsconfig.build.tsbuildinfo
 
+# whatsapp-web.js (PoC)
+.wwebjs_auth
+.wwebjs_cache

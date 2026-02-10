@@ -1,4 +1,5 @@
-export interface IMessage {
-  readonly to: string;
-  readonly content: string;
+export abstract class IMessage {
+  constructor(public readonly to: string) {}
+
+  abstract getContent(): string;
 }

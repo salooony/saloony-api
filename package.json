@@ -43,9 +43,11 @@
     "class-validator": "^0.14.2",
     "nodemailer": "^7.0.10",
     "pg": "^8.16.0",
+    "qrcode-terminal": "^0.12.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "typeorm": "^0.3.23"
+    "typeorm": "^0.3.23",
+    "whatsapp-web.js": "^1.34.6"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.3.0",

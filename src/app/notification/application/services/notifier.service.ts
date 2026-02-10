@@ -10,11 +10,11 @@ export class NotifierService {
     private readonly channels: INotifierChannel[],
   ) {}
 
-  notify(message: IMessage): void {
+  async notify(message: IMessage): Promise<void> {
     const channel = this.channels.find((c) => c.supports(message));
     if (!channel) {
       throw new UnsupportedMessageException(message.constructor.name);
     }
-    channel.notify(message);
+    await channel.notify(message);
   }
 }

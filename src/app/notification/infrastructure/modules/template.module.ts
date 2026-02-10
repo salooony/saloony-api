@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Template } from '@notification/infrastructure/schemas/template.schema';
 import { TemplateRepository } from '@notification/infrastructure/repositories/template.repository';
-import { CreateTemplateUseCase } from '@notification/application/usecases/create-template.usecase';
-import { GetTemplateByKeyUseCase } from '@notification/application/usecases/get-template-by-key.usecase';
+import { CreateTemplateService } from '@app/notification/application/services/create-template.service';
+import { GetTemplateByKeyService } from '@app/notification/application/services/get-template-by-key.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Template])],
@@ -13,9 +13,9 @@ import { GetTemplateByKeyUseCase } from '@notification/application/usecases/get-
       provide: 'ITemplateRepository',
       useClass: TemplateRepository,
     },
-    CreateTemplateUseCase,
-    GetTemplateByKeyUseCase,
+    CreateTemplateService,
+    GetTemplateByKeyService,
   ],
-  exports: [CreateTemplateUseCase, GetTemplateByKeyUseCase],
+  exports: [CreateTemplateService, GetTemplateByKeyService],
 })
 export class TemplateModule {}

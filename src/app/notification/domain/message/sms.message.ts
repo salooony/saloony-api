@@ -1,8 +1,14 @@
 import { IMessage } from './message.interface';
 
-export class SmsMessage implements IMessage {
+export class SmsMessage extends IMessage {
   constructor(
-    public readonly to: string,
-    public readonly content: string,
-  ) {}
+    to: string,
+    private readonly content: string,
+  ) {
+    super(to);
+  }
+
+  getContent(): string {
+    return this.content;
+  }
 }
