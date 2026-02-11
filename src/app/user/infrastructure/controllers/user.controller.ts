@@ -8,6 +8,7 @@ import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase
 import { DeleteUserAccountUseCase } from '@app/user/application/usecases/delete-user-account.usecase';
 import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
 import { RequestEmailVerificationUseCase } from '@app/user/application/usecases/request-email-verification.usecase';
+import { RequestPhoneVerificationUseCase } from '@app/user/application/usecases/request-phone-verification.usecase';
 import { User } from '@app/user/domain/entities/user';
 import {
   Body,
@@ -31,6 +32,7 @@ export class UserController {
     private readonly getUserInfoUsecase: GetUserInfoUsecase,
     private readonly deleteUserUseCase: DeleteUserAccountUseCase,
     private readonly requestEmailVerificationUseCase: RequestEmailVerificationUseCase,
+    private readonly requestPhoneVerificationUseCase: RequestPhoneVerificationUseCase,
   ) {}
 
   @ApiOperation({ summary: 'Register a new user' })
@@ -130,4 +132,18 @@ export class UserController {
   async requestEmailVerification(@CurrentUser() user: User): Promise<void> {
     await this.requestEmailVerificationUseCase.execute(user);
   }
+
+  // TODO: Add rate limiting (@Throttle decorator) when rate limiting module is implemented
+  @Post('phone/validate/request')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Request phone verification code' })
+  @ApiBearerAuth()
+  @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Verification code request accepted.' })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Verification code sent.' })
+  @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Phone already verified.' })
+  @ApiResponse({ status: HttpStatus.SERVICE_UNAVAILABLE, description: 'Notification service unavailable.' })
+  async requestPhoneVerification(@CurrentUser() user: User): Promise<void> {
+    await this.requestPhoneVerificationUseCase.execute(user);
+  }
 }
+  

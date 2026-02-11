@@ -23,6 +23,7 @@ import { SalonMembership } from '@user/infrastructure/schemas/salon-membership.s
 import { ResetPasswordUseCase } from '@user/application/usecases/reset-password.usecase';
 import { Salon } from '@salon/infrastructure/schemas/salon.entity';
 import { RequestEmailVerificationUseCase } from '@user/application/usecases/request-email-verification.usecase';
+import { RequestPhoneVerificationUseCase } from '@user/application/usecases/request-phone-verification.usecase';
 import { NotificationModule } from '@notification/infrastructure/modules/notification.module';
 
 @Module({
@@ -72,6 +73,7 @@ import { NotificationModule } from '@notification/infrastructure/modules/notific
     ForgotPasswordUseCase,
     ResetPasswordUseCase,
     RequestEmailVerificationUseCase,
+    RequestPhoneVerificationUseCase,
 
     //  helpers
     UserTransformer,
