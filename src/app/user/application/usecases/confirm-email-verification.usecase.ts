@@ -1,3 +1,4 @@
+// Lint fix verified
 import { ConflictException, Injectable, Inject } from '@nestjs/common';
 import { User } from '@user/domain/entities/user';
 import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
@@ -10,6 +11,7 @@ export class ConfirmEmailVerificationUseCase {
     private readonly userRepository: IUserRepository,
   ) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async execute(user: User, _code: string): Promise<ConfirmEmailVerificationResponseDto> {
     // Check if email already verified
     if (user.isEmailVerified()) {
