@@ -91,6 +91,8 @@
       "^@address/(.*)$": "<rootDir>/app/address/$1",
       "^@user/(.*)$": "<rootDir>/app/user/$1",
       "^@salon/(.*)$": "<rootDir>/app/salon/$1",
+      "^@notification/(.*)$": "<rootDir>/app/notification/$1",
+      "^@token/(.*)$": "<rootDir>/app/token/$1",
       "^@test/(.*)$": "<rootDir>/test/$1",
       "^@config/(.*)$": "<rootDir>/config/$1"
     },
