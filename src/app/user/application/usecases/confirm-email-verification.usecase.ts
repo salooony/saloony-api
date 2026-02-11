@@ -1,11 +1,4 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-  GoneException,
-  BadRequestException,
-  Inject,
-} from '@nestjs/common';
+import { ConflictException, Injectable, Inject } from '@nestjs/common';
 import { User } from '@user/domain/entities/user';
 import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
 import { ConfirmEmailVerificationResponseDto } from '@user/application/dtos/responses/confirm-email-verification.response.dto';
@@ -17,7 +10,7 @@ export class ConfirmEmailVerificationUseCase {
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async execute(user: User, code: string): Promise<ConfirmEmailVerificationResponseDto> {
+  async execute(user: User, _code: string): Promise<ConfirmEmailVerificationResponseDto> {
     // Check if email already verified
     if (user.isEmailVerified()) {
       throw new ConflictException('Email already verified');
