@@ -9,6 +9,9 @@ import { DeleteUserAccountUseCase } from '@app/user/application/usecases/delete-
 import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
 import { RequestEmailVerificationUseCase } from '@app/user/application/usecases/request-email-verification.usecase';
 import { RequestPhoneVerificationUseCase } from '@app/user/application/usecases/request-phone-verification.usecase';
+import { ConfirmEmailVerificationUseCase } from '@app/user/application/usecases/confirm-email-verification.usecase';
+import { ConfirmEmailVerificationRequestDto } from '@app/user/application/dtos/requests/confirm-email-verification.request.dto';
+import { ConfirmEmailVerificationResponseDto } from '@app/user/application/dtos/responses/confirm-email-verification.response.dto';
 import { User } from '@app/user/domain/entities/user';
 import {
   Body,
@@ -33,6 +36,7 @@ export class UserController {
     private readonly deleteUserUseCase: DeleteUserAccountUseCase,
     private readonly requestEmailVerificationUseCase: RequestEmailVerificationUseCase,
     private readonly requestPhoneVerificationUseCase: RequestPhoneVerificationUseCase,
+    private readonly confirmEmailVerificationUseCase: ConfirmEmailVerificationUseCase,
   ) {}
 
   @ApiOperation({ summary: 'Register a new user' })
@@ -131,6 +135,26 @@ export class UserController {
   @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Email already verified.' })
   async requestEmailVerification(@CurrentUser() user: User): Promise<void> {
     await this.requestEmailVerificationUseCase.execute(user);
+  }
+
+  @Post('email/validate/confirm')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Confirm email verification code' })
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Email verified successfully.',
+    type: ConfirmEmailVerificationResponseDto,
+  })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid verification code format.' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'No active verification token found.' })
+  @ApiResponse({ status: HttpStatus.GONE, description: 'Verification code has expired.' })
+  @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Email already verified.' })
+  async confirmEmailVerification(
+    @CurrentUser() user: User,
+    @Body() dto: ConfirmEmailVerificationRequestDto,
+  ): Promise<ConfirmEmailVerificationResponseDto> {
+    return await this.confirmEmailVerificationUseCase.execute(user, dto.code);
   }
 
   // TODO: Add rate limiting (@Throttle decorator) when rate limiting module is implemented

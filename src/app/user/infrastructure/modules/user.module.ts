@@ -24,6 +24,7 @@ import { ResetPasswordUseCase } from '@user/application/usecases/reset-password.
 import { Salon } from '@salon/infrastructure/schemas/salon.entity';
 import { RequestEmailVerificationUseCase } from '@user/application/usecases/request-email-verification.usecase';
 import { RequestPhoneVerificationUseCase } from '@user/application/usecases/request-phone-verification.usecase';
+import { ConfirmEmailVerificationUseCase } from '@user/application/usecases/confirm-email-verification.usecase';
 import { NotificationModule } from '@notification/infrastructure/modules/notification.module';
 
 @Module({
@@ -74,6 +75,7 @@ import { NotificationModule } from '@notification/infrastructure/modules/notific
     ResetPasswordUseCase,
     RequestEmailVerificationUseCase,
     RequestPhoneVerificationUseCase,
+    ConfirmEmailVerificationUseCase,
 
     //  helpers
     UserTransformer,

@@ -35,4 +35,8 @@ export class User {
   public isPhoneVerified(): boolean {
     return [UserStatus.WAITING_OPERATOR_VALIDATION, UserStatus.ACTIVE, UserStatus.BLOCKED].includes(this.status);
   }
+
+  public verifyEmail(): void {
+    this.status = UserStatus.WAITING_PHONE_VERIFICATION;
+  }
 }
