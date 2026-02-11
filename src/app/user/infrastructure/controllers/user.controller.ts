@@ -146,4 +146,3 @@ export class UserController {
     await this.requestPhoneVerificationUseCase.execute(user);
   }
 }
-  
