@@ -23,7 +23,6 @@ export class EmailChannel implements INotifierChannel {
         to: message.to,
         subject: message.subject,
         text: body,
-        html: this.toHtml(body),
       });
       this.logger.log(`Email sent to ${message.to}`);
     } catch (error) {
@@ -34,10 +33,5 @@ export class EmailChannel implements INotifierChannel {
 
   supports(message: IMessage): boolean {
     return message instanceof EmailMessage;
-  }
-
-  private toHtml(text: string): string {
-    const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    return escaped.replace(/\r?\n/g, '<br/>');
   }
 }

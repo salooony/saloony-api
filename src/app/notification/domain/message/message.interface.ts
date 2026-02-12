@@ -1,5 +1,8 @@
-export abstract class IMessage {
-  constructor(public readonly to: string) {}
+export type TemplateContext = Record<string, unknown>;
 
-  abstract getContent(): string;
+export interface IMessage {
+  to: string;
+  templateKey: string;
+  context: TemplateContext;
+  getContent(): string;
 }

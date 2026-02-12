@@ -1,15 +1,17 @@
-import { IMessage } from './message.interface';
+import { MessageAbstruct } from './MessageAbstruct';
+import { TemplateContext } from './message.interface';
 
-export class EmailMessage extends IMessage {
+export class EmailMessage extends MessageAbstruct {
   constructor(
     to: string,
     public readonly subject: string,
-    private readonly content: string,
+    templateKey: string,
+    context: TemplateContext,
   ) {
-    super(to);
+    super(to, templateKey, context);
   }
 
   getContent(): string {
-    return this.content;
+    return this.renderTemplate();
   }
 }

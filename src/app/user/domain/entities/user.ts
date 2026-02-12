@@ -22,4 +22,13 @@ export class User {
   public block(): void {
     this.status = UserStatus.BLOCKED;
   }
+
+  public isEmailVerified(): boolean {
+    return [
+      UserStatus.WAITING_PHONE_VERIFICATION,
+      UserStatus.WAITING_OPERATOR_VALIDATION,
+      UserStatus.ACTIVE,
+      UserStatus.BLOCKED,
+    ].includes(this.status);
+  }
 }

@@ -23,7 +23,9 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        # Allow legacy peer deps resolution on CI to avoid ERESOLVE failures
+        # caused by peer ranges mismatching across transitive packages.
+        run: npm ci --legacy-peer-deps
 
       - name: Prettier check
         run: npm run format:check

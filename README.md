@@ -4,9 +4,9 @@ Saloony is a RESTful API built with [NestJS](https://nestjs.com/) designed to se
 
 ## ⚙️ Requirements
 
-* [Docker](https://www.docker.com/) (required)
-* [Node.js](https://nodejs.org/)
-* [npm](https://www.npmjs.com/)
+- [Docker](https://www.docker.com/) (required)
+- [Node.js](https://nodejs.org/)
+- [npm](https://www.npmjs.com/)
 
 ---
 

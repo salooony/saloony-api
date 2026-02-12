@@ -3,7 +3,7 @@ import { ITemplateRepository } from '@notification/domain/ports/template.reposit
 import { Template } from '@notification/domain/entities/template';
 
 @Injectable()
-export class GetTemplateByKeyService {
+export class GetTemplateByKeyUseCase {
   constructor(
     @Inject('ITemplateRepository')
     private readonly templateRepository: ITemplateRepository,

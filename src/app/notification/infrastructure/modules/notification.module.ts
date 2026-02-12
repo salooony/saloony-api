@@ -1,21 +1,19 @@
 import { Module } from '@nestjs/common';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TemplateModule } from './template.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { NotifierService } from '../../application/services/notifier.service';
+import { CreateTemplateUseCase } from '../../application/usecase/create-template.usecase';
+import { GetTemplateByKeyUseCase } from '../../application/usecase/get-template-by-key.usecase';
 import { SmsChannel } from '../channels/sms.channel';
 import { EmailChannel } from '../channels/email.channel';
 import { WhatsAppWebChannel } from '../channels/whatsapp-web.channel';
-
-function parseBoolean(value: string | undefined): boolean {
-  if (!value) return false;
-  const normalized = value.trim().toLowerCase();
-  return ['true', '1', 'yes', 'on'].includes(normalized);
-}
+import { TemplateRepository } from '../repositories/template.repository';
+import { Template } from '../schemas/template.schema';
 
 @Module({
   imports: [
-    TemplateModule,
+    TypeOrmModule.forFeature([Template]),
     MailerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -23,7 +21,7 @@ function parseBoolean(value: string | undefined): boolean {
         transport: {
           host: configService.get<string>('SMTP_HOST'),
           port: Number(configService.get<string>('SMTP_PORT') ?? 587),
-          secure: parseBoolean(configService.get<string>('SMTP_SECURE')),
+          secure: configService.get<boolean>('SMTP_SECURE'),
           auth: {
             user: configService.get<string>('SMTP_USER'),
             pass: configService.get<string>('SMTP_PASS'),
@@ -36,6 +34,13 @@ function parseBoolean(value: string | undefined): boolean {
     }),
   ],
   providers: [
+    TemplateRepository,
+    {
+      provide: 'ITemplateRepository',
+      useClass: TemplateRepository,
+    },
+    CreateTemplateUseCase,
+    GetTemplateByKeyUseCase,
     SmsChannel,
     EmailChannel,
     WhatsAppWebChannel,
@@ -45,7 +50,8 @@ function parseBoolean(value: string | undefined): boolean {
         const nodeEnvRaw = configService.get<string>('NODE_ENV') ?? process.env.NODE_ENV ?? '';
         const nodeEnv = nodeEnvRaw.trim().toLowerCase();
 
-        const waEnabled = parseBoolean(configService.get<string>('WA_WEB_ENABLED'));
+        const waEnabledRaw = configService.get<string>('WA_WEB_ENABLED');
+        const waEnabled = !!waEnabledRaw && ['true', '1', 'yes', 'on'].includes(waEnabledRaw.trim().toLowerCase());
         const isDevOrTest = nodeEnv === 'development' || nodeEnv === 'test' || !nodeEnv;
         const allowWa = waEnabled && isDevOrTest && nodeEnv !== 'production';
 
@@ -56,6 +62,6 @@ function parseBoolean(value: string | undefined): boolean {
     },
     NotifierService,
   ],
-  exports: [TemplateModule, NotifierService],
+  exports: [CreateTemplateUseCase, GetTemplateByKeyUseCase, NotifierService],
 })
 export class NotificationModule {}
