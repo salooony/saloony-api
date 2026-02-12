@@ -53,11 +53,9 @@ export class AuthorizationGuard implements CanActivate {
 
     // 3. Check Salon Roles
     if (requiredSalonRoles) {
-      /* eslint-disable @typescript-eslint/no-unsafe-member-access */
       const salonId = ((request.params as Record<string, unknown>)?.salonId ??
         (request.body as Record<string, unknown>)?.salonId ??
         (request.query as Record<string, unknown>)?.salonId) as string | undefined;
-      /* eslint-enable @typescript-eslint/no-unsafe-member-access */
 
       if (!salonId) {
         // We can't verify salon access without a salonId.
