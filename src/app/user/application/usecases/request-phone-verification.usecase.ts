@@ -1,12 +1,14 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { NotifierService } from '@notification/application/services/notifier.service';
 import { User } from '@user/domain/entities/user';
+import { SmsMessage } from '@notification/domain/message/sms.message';
 
 @Injectable()
 export class RequestPhoneVerificationUseCase {
   constructor(private readonly notifierService: NotifierService) {}
 
-  execute(user: User): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async execute(user: User): Promise<void> {
     // Ensure user has a phone number
     if (!user.mobileNumber) {
       throw new ConflictException('User does not have a phone number');
@@ -18,21 +20,14 @@ export class RequestPhoneVerificationUseCase {
     }
 
     // TODO: Generate verification token using Token module (under development)
-    // const token = Math.floor(100000 + Math.random() * 900000).toString();
+    const token = Math.floor(100000 + Math.random() * 900000).toString();
 
     // TODO: Persist token metadata if needed
 
-    // TODO: Send notification via Notification.Notifier
+    // Send notification via Notification.Notifier
     // Channel: PHONE (SMS)
-    // Template: verify_phone
-    // Payload includes: code (and optional TTL)
+    const message = new SmsMessage(user.mobileNumber, `Your verification code is: ${token}`);
 
-    // this.notifierService.notify({
-    //   channel: 'PHONE',
-    //   template: 'verify_phone',
-    //   payload: { code: token }
-    // });
-
-    return Promise.resolve();
+    this.notifierService.notify(message);
   }
 }
