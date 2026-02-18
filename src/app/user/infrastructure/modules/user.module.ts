@@ -22,6 +22,8 @@ import { PasswordResetTokenEntity } from '@user/infrastructure/schemas/password-
 import { SalonMembership } from '@user/infrastructure/schemas/salon-membership.schema';
 import { ResetPasswordUseCase } from '@user/application/usecases/reset-password.usecase';
 import { Salon } from '@salon/infrastructure/schemas/salon.entity';
+import { RequestEmailVerificationUseCase } from '@user/application/usecases/request-email-verification.usecase';
+import { NotificationModule } from '@notification/infrastructure/modules/notification.module';
 
 @Module({
   imports: [
@@ -56,6 +58,7 @@ import { Salon } from '@salon/infrastructure/schemas/salon.entity';
         },
       }),
     }),
+    NotificationModule,
   ],
 
   controllers: [UserController, AuthController],
@@ -68,6 +71,7 @@ import { Salon } from '@salon/infrastructure/schemas/salon.entity';
     DeleteUserAccountUseCase,
     ForgotPasswordUseCase,
     ResetPasswordUseCase,
+    RequestEmailVerificationUseCase,
 
     //  helpers
     UserTransformer,
