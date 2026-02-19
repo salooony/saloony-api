@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, Logger } from '@nestjs/common';
 import { NotifierService } from '@notification/application/services/notifier.service';
 import { User } from '@user/domain/entities/user';
 import { SmsMessage } from '@notification/domain/message/sms.message';
@@ -8,6 +8,8 @@ import { GetTemplateByKeyUseCase } from '@notification/application/usecases/get-
 
 @Injectable()
 export class RequestPhoneVerificationUseCase {
+  private readonly logger = new Logger(RequestPhoneVerificationUseCase.name);
+
   constructor(
     private readonly notifierService: NotifierService,
     private readonly tokenGeneratorService: TokenGeneratorService,
@@ -17,7 +19,7 @@ export class RequestPhoneVerificationUseCase {
   async execute(user: User): Promise<void> {
     // Ensure user has a phone number
     if (!user.mobileNumber) {
-      throw new ConflictException('User does not have a phone number');
+      throw new BadRequestException('User does not have a phone number');
     }
 
     // If phone already verified → return 409 Conflict
@@ -39,5 +41,6 @@ export class RequestPhoneVerificationUseCase {
     const message = new SmsMessage(user.mobileNumber, messageContent);
 
     this.notifierService.notify(message);
+    this.logger.log(`Phone verification SMS sent to ${user.mobileNumber}`);
   }
 }
