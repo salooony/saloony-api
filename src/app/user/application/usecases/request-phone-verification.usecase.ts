@@ -2,12 +2,18 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { NotifierService } from '@notification/application/services/notifier.service';
 import { User } from '@user/domain/entities/user';
 import { SmsMessage } from '@notification/domain/message/sms.message';
+import { TokenGeneratorService } from '@token/application/token-generator.service';
+import { TokenGeneratorType } from '@token/domin/enums/token-generator-type.enum';
+import { GetTemplateByKeyUseCase } from '@notification/application/usecases/get-template-by-key.usecase';
 
 @Injectable()
 export class RequestPhoneVerificationUseCase {
-  constructor(private readonly notifierService: NotifierService) {}
+  constructor(
+    private readonly notifierService: NotifierService,
+    private readonly tokenGeneratorService: TokenGeneratorService,
+    private readonly getTemplateByKeyUseCase: GetTemplateByKeyUseCase,
+  ) {}
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async execute(user: User): Promise<void> {
     // Ensure user has a phone number
     if (!user.mobileNumber) {
@@ -19,14 +25,18 @@ export class RequestPhoneVerificationUseCase {
       throw new ConflictException('Phone already verified');
     }
 
-    // TODO: Generate verification token using Token module (under development)
-    const token = Math.floor(100000 + Math.random() * 900000).toString();
+    // Generate verification token using Token module
+    const token = this.tokenGeneratorService.generate(TokenGeneratorType.NUMBER, { digits: 6 });
 
-    // TODO: Persist token metadata if needed
+    // Fetch SMS template
+    const template = await this.getTemplateByKeyUseCase.execute('phone_verification');
+
+    // Hydrate template message with token
+    const messageContent = template.message.replace('{{code}}', token);
 
     // Send notification via Notification.Notifier
     // Channel: PHONE (SMS)
-    const message = new SmsMessage(user.mobileNumber, `Your verification code is: ${token}`);
+    const message = new SmsMessage(user.mobileNumber, messageContent);
 
     this.notifierService.notify(message);
   }

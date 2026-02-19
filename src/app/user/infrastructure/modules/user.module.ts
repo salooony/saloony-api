@@ -25,6 +25,8 @@ import { Salon } from '@salon/infrastructure/schemas/salon.entity';
 import { RequestEmailVerificationUseCase } from '@user/application/usecases/request-email-verification.usecase';
 import { RequestPhoneVerificationUseCase } from '@user/application/usecases/request-phone-verification.usecase';
 import { NotificationModule } from '@notification/infrastructure/modules/notification.module';
+import { TokensModule } from '@token/infrastructure/modules/token.module';
+import { TemplateModule } from '@notification/infrastructure/modules/template.module';
 
 @Module({
   imports: [
@@ -60,6 +62,8 @@ import { NotificationModule } from '@notification/infrastructure/modules/notific
       }),
     }),
     NotificationModule,
+    TokensModule,
+    TemplateModule,
   ],
 
   controllers: [UserController, AuthController],
