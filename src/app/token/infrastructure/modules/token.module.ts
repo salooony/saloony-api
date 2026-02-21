@@ -17,10 +17,7 @@ import { TokenService } from '@token/application/service/token.service';
 
     {
       provide: TOKEN_GENERATORS,
-      useFactory: (
-        numeric: NumericTokenGenerator,
-        url: UrlSafeStringTokenGenerator,
-      ) => [numeric, url],
+      useFactory: (numeric: NumericTokenGenerator, url: UrlSafeStringTokenGenerator) => [numeric, url],
       inject: [NumericTokenGenerator, UrlSafeStringTokenGenerator],
     },
 
@@ -32,8 +29,6 @@ import { TokenService } from '@token/application/service/token.service';
       useClass: TypeOrmTokenRepository,
     },
   ],
-  exports: [TokenGeneratorService , TokenService],
+  exports: [TokenGeneratorService, TokenService],
 })
 export class TokensModule {}
-
-

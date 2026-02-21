@@ -3,10 +3,7 @@ import { createHash } from 'crypto';
 import { TokenGeneratorService } from './token-generator.service';
 import { TokenGeneratorType } from '@token/domin/enums/token-generator-type.enum';
 import { Token } from '@token/domin/entities/token.entity';
-import {
-  TokenRepositoryPort,
-  TOKEN_REPOSITORY,
-} from '@token/domin/ports/token.repository.port';
+import { TokenRepositoryPort, TOKEN_REPOSITORY } from '@token/domin/ports/token.repository.port';
 
 @Injectable()
 export class TokenService {
@@ -30,10 +27,7 @@ export class TokenService {
       hash?: boolean;
     },
   ): Promise<{ token: string; expiredAt: Date | null }> {
-    const plainToken = this.generator.generate(
-      type,
-      options?.generatorOptions,
-    );
+    const plainToken = this.generator.generate(type, options?.generatorOptions);
 
     let expiredAt: Date | null = null;
 
@@ -45,9 +39,7 @@ export class TokenService {
 
     const shouldHash = options?.hash ?? false;
 
-    const tokenToStore = shouldHash
-      ? createHash('sha256').update(plainToken).digest('hex')
-      : plainToken;
+    const tokenToStore = shouldHash ? createHash('sha256').update(plainToken).digest('hex') : plainToken;
 
     const user = await this.userRepository.findOneById(ownerId);
 
@@ -55,13 +47,7 @@ export class TokenService {
       throw new Error('User not found');
     }
 
-    const token = new Token(
-      tokenToStore,
-      new Date(),
-      expiredAt,
-      shouldHash,
-      user,
-    );
+    const token = new Token(tokenToStore, new Date(), expiredAt, shouldHash, user);
 
     await this.tokenRepository.save(token);
 
@@ -71,10 +57,7 @@ export class TokenService {
     };
   }
 
-  async validate(
-    token: string,
-    ownerId?: string,
-  ): Promise<{ valid: boolean; reason?: 'NOT_FOUND' | 'EXPIRED' }> {
+  async validate(token: string, ownerId?: string): Promise<{ valid: boolean; reason?: 'NOT_FOUND' | 'EXPIRED' }> {
     let stored = await this.tokenRepository.findByToken(token, ownerId);
 
     if (!stored) {

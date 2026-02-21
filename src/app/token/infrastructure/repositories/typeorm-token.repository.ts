@@ -14,19 +14,19 @@ export class TypeOrmTokenRepository implements TokenRepositoryPort {
     private readonly repository: Repository<TokenSchema>,
   ) {}
 
-async save(token: Token): Promise<void> {
-  const entity = TokenMapper.toEntity(token);
-  await this.repository.save(entity);
-}
+  async save(token: Token): Promise<void> {
+    const entity = TokenMapper.toEntity(token);
+    await this.repository.save(entity);
+  }
 
-async findByToken(token: string, ownerId?: string): Promise<Token | null> {
-  const entity = await this.repository.findOne({
-    where: { token, ...(ownerId && { ownerId }) },
-    relations: ['owner'],
-  });
+  async findByToken(token: string, ownerId?: string): Promise<Token | null> {
+    const entity = await this.repository.findOne({
+      where: { token, ...(ownerId && { ownerId }) },
+      relations: ['owner'],
+    });
 
-  if (!entity) return null;
+    if (!entity) return null;
 
-  return TokenMapper.toDomain(entity);
-}
+    return TokenMapper.toDomain(entity);
+  }
 }
