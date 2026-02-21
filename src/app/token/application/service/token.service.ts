@@ -4,7 +4,7 @@ import { TokenGeneratorService } from './token-generator.service';
 import { TokenGeneratorType } from '@token/domin/enums/token-generator-type.enum';
 import { Token } from '@token/domin/entities/token.entity';
 import { TokenRepositoryPort, TOKEN_REPOSITORY } from '@token/domin/ports/token.repository.port';
-
+import { IUserRepository } from '@user/domain/ports/iuser.repository';
 @Injectable()
 export class TokenService {
   constructor(
@@ -14,7 +14,7 @@ export class TokenService {
     private readonly tokenRepository: TokenRepositoryPort,
 
     @Inject('IUserRepository')
-    private readonly userRepository: any, // match your user repo interface
+    private readonly userRepository: IUserRepository, // match your user repo interface
   ) {}
 
   async issue(
