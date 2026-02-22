@@ -31,4 +31,8 @@ export class User {
       UserStatus.BLOCKED,
     ].includes(this.status);
   }
+
+  public isPhoneVerified(): boolean {
+    return [UserStatus.WAITING_OPERATOR_VALIDATION, UserStatus.ACTIVE, UserStatus.BLOCKED].includes(this.status);
+  }
 }
