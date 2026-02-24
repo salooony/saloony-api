@@ -26,6 +26,8 @@ import { RequestEmailVerificationUseCase } from '@user/application/usecases/requ
 import { RequestPhoneVerificationUseCase } from '@user/application/usecases/request-phone-verification.usecase';
 import { ConfirmEmailVerificationUseCase } from '@user/application/usecases/confirm-email-verification.usecase';
 import { NotificationModule } from '@notification/infrastructure/modules/notification.module';
+import { TokensModule } from '@token/infrastructure/modules/token.module';
+import { TemplateModule } from '@notification/infrastructure/modules/template.module';
 
 @Module({
   imports: [
@@ -61,6 +63,8 @@ import { NotificationModule } from '@notification/infrastructure/modules/notific
       }),
     }),
     NotificationModule,
+    TokensModule,
+    TemplateModule,
   ],
 
   controllers: [UserController, AuthController],

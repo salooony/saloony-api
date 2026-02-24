@@ -9,7 +9,7 @@ import { NotificationModule } from '@notification/infrastructure/modules/notific
 import jwtConfig from '@config/jwt.config';
 import { APP_GUARD } from '@nestjs/core';
 import { TokenGuard } from '@user/infrastructure/guards/token.guard';
-import { TokenModule } from '@token/infrastructure/modules/token.module';
+import { TokensModule } from '@token/infrastructure/modules/token.module';
 import { AuthorizationGuard } from '@app/shared/guards/authorization.guard';
 
 const ENV = process.env.NODE_ENV;
@@ -48,7 +48,7 @@ const ENV = process.env.NODE_ENV;
     UserModule,
     AddressModule,
     NotificationModule,
-    TokenModule,
+    TokensModule,
   ],
   providers: [
     {

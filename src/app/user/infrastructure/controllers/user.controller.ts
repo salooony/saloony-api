@@ -162,7 +162,6 @@ export class UserController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Request phone verification code' })
   @ApiBearerAuth()
-  @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Verification code request accepted.' })
   @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Verification code sent.' })
   @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Phone already verified.' })
   @ApiResponse({ status: HttpStatus.SERVICE_UNAVAILABLE, description: 'Notification service unavailable.' })
