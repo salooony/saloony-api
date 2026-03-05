@@ -15,4 +15,19 @@ export class CountryRepository implements ICountryRepository {
     const saved = await this.repository.save(schema);
     return CountryMapper.map(saved);
   }
+
+  async findOneById(id: string): Promise<Country | null> {
+    const country = await this.repository.findOne({ where: { id } });
+
+    if (!country) {
+      return null;
+    }
+
+    return CountryMapper.map(country);
+  }
+
+  async update(country: Country): Promise<Country> {
+    const countryEntity = CountryMapper.toSchema(country);
+    return CountryMapper.map(await this.repository.save(countryEntity));
+  }
 }

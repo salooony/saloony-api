@@ -1,17 +1,20 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
-export class CreateCountryRequestDto {
+export class UpdateCountryRequestDto {
   @ApiProperty({
-    description: 'ISO country code (like TN, PS).',
+    description: 'ISO country code (1-3 letters, like TN, PSE).',
     type: String,
     required: true,
-    example: 'TN',
-    maxLength: 5,
+    example: 'PSE',
+    minLength: 1,
+    maxLength: 3,
+    pattern: '^[A-Z]{1,3}$',
   })
-  @IsNotEmpty()
   @IsString()
-  @MaxLength(5)
+  @MinLength(1)
+  @MaxLength(3)
+  @Matches(/^[A-Z]{1,3}$/)
   public code: string;
 
   @ApiProperty({
@@ -27,7 +30,7 @@ export class CreateCountryRequestDto {
   @ApiProperty({
     description: 'Country flag icon (like emoji).',
     type: String,
-    example: '🇹🇳',
+    example: 'ً🇹🇳',
   })
   @IsNotEmpty()
   @IsString()
@@ -36,7 +39,6 @@ export class CreateCountryRequestDto {
   @ApiPropertyOptional({
     description: 'Whether the country is active.',
     type: Boolean,
-    default: true,
   })
   @IsOptional()
   @IsBoolean()
