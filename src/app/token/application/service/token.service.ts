@@ -3,18 +3,20 @@ import { createHash } from 'crypto';
 import { TokenGeneratorService } from './token-generator.service';
 import { TokenGeneratorType } from '@token/domin/enums/token-generator-type.enum';
 import { Token } from '@token/domin/entities/token.entity';
-import { TokenRepositoryPort, TOKEN_REPOSITORY } from '@token/domin/ports/token.repository.port';
+import { ITokenRepository, TOKEN_REPOSITORY } from '@app/token/domin/ports/itoken.repository';
 import { IUserRepository } from '@user/domain/ports/iuser.repository';
+import { TokenValidationReason } from '@token/domin/enums/tokenValidationreason-enum';
+
 @Injectable()
 export class TokenService {
   constructor(
     private readonly generator: TokenGeneratorService,
 
     @Inject(TOKEN_REPOSITORY)
-    private readonly tokenRepository: TokenRepositoryPort,
+    private readonly tokenRepository: ITokenRepository,
 
     @Inject('IUserRepository')
-    private readonly userRepository: IUserRepository, // match your user repo interface
+    private readonly userRepository: IUserRepository,
   ) {}
 
   async issue(
@@ -27,6 +29,7 @@ export class TokenService {
       hash?: boolean;
     },
   ): Promise<{ token: string; expiredAt: Date | null }> {
+
     const plainToken = this.generator.generate(type, options?.generatorOptions);
 
     let expiredAt: Date | null = null;
@@ -39,15 +42,27 @@ export class TokenService {
 
     const shouldHash = options?.hash ?? false;
 
-    const tokenToStore = shouldHash ? createHash('sha256').update(plainToken).digest('hex') : plainToken;
+    const tokenToStore = shouldHash
+      ? createHash('sha256').update(plainToken).digest('hex')
+      : plainToken;
 
     const user = await this.userRepository.findOneById(ownerId);
 
     if (!user) {
-      throw new Error('User not found');
+      throw new Error('User does not exist.');
     }
 
-    const token = new Token(tokenToStore, new Date(), expiredAt, shouldHash, user);
+    if (user.status !== 'ACTIVE') {
+      throw new Error('User is not active.');
+    }
+
+    const token = new Token(
+      tokenToStore,
+      new Date(),
+      expiredAt,
+      shouldHash,
+      user,
+    );
 
     await this.tokenRepository.save(token);
 
@@ -57,7 +72,11 @@ export class TokenService {
     };
   }
 
-  async validate(token: string, ownerId?: string): Promise<{ valid: boolean; reason?: 'NOT_FOUND' | 'EXPIRED' }> {
+  async validate(
+    token: string,
+    ownerId?: string,
+  ): Promise<{ valid: boolean; reason?: TokenValidationReason }> {
+
     let stored = await this.tokenRepository.findByToken(token, ownerId);
 
     if (!stored) {
@@ -66,11 +85,11 @@ export class TokenService {
     }
 
     if (!stored) {
-      return { valid: false, reason: 'NOT_FOUND' };
+      return { valid: false, reason: TokenValidationReason.NOT_FOUND };
     }
 
     if (stored.isExpired()) {
-      return { valid: false, reason: 'EXPIRED' };
+      return { valid: false, reason: TokenValidationReason.EXPIRED };
     }
 
     return { valid: true };

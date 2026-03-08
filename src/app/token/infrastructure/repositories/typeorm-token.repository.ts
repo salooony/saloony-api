@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { TokenRepositoryPort } from '@app/token/domin/ports/token.repository.port';
+import { ITokenRepository } from '@app/token/domin/ports/itoken.repository';
 import { Token } from '@token/domin/entities/token.entity';
 import { TokenSchema } from '../schemas/token.schema';
 import { TokenMapper } from '../mappers/token.mapper';
 
 @Injectable()
-export class TypeOrmTokenRepository implements TokenRepositoryPort {
+export class TokenRepository implements ITokenRepository {
   constructor(
     @InjectRepository(TokenSchema)
     private readonly repository: Repository<TokenSchema>,

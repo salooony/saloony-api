@@ -3,8 +3,8 @@ import { TokenGeneratorService } from '@app/token/application/service/token-gene
 import { TokenGeneratorRegistry, TOKEN_GENERATORS } from '@token/application/token-generator.registry';
 import { NumericTokenGenerator } from '@token/generators/numeric-token.generator';
 import { UrlSafeStringTokenGenerator } from '@token/generators/url-safe-string-token.generator';
-import { TypeOrmTokenRepository } from '@token/infrastructure/repositories/typeorm-token.repository';
-import { TOKEN_REPOSITORY } from '@token/domin/ports/token.repository.port';
+import { TokenRepository } from '@token/infrastructure/repositories/typeorm-token.repository';
+import { TOKEN_REPOSITORY } from '@app/token/domin/ports/itoken.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TokenSchema } from '@token/infrastructure/schemas/token.schema';
 import { TokenService } from '@token/application/service/token.service';
@@ -26,9 +26,9 @@ import { TokenService } from '@token/application/service/token.service';
 
     {
       provide: TOKEN_REPOSITORY,
-      useClass: TypeOrmTokenRepository,
+      useClass: TokenRepository,
     },
   ],
-  exports: [TokenGeneratorService, TokenService],
+  exports: [TokenService],
 })
 export class TokensModule {}

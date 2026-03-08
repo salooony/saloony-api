@@ -14,7 +14,6 @@ export class TokenMapper {
     entity.createdAt = domain.createdAt;
     entity.expiredAt = domain.expiredAt;
     entity.isHashed = domain.isHashed;
-    entity.owner = UserMapper.toEntity(domain.owner);
     entity.ownerId = domain.owner.id;
 
     return entity;
