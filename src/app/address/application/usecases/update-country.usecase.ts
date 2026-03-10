@@ -31,6 +31,7 @@ export class UpdateCountryUsecase {
       if (error instanceof Error && error.message.includes('duplicate key')) {
         throw new ConflictException('A country with the same code already exists.');
       }
+      
 
       throw new InternalServerErrorException('Failed to update country.');
     }
