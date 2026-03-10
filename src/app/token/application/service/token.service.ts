@@ -6,7 +6,7 @@ import { Token } from '@token/domin/entities/token.entity';
 import { ITokenRepository, TOKEN_REPOSITORY } from '@app/token/domin/ports/itoken.repository';
 import { IUserRepository } from '@user/domain/ports/iuser.repository';
 import { TokenValidationReason } from '@token/domin/enums/tokenValidationreason-enum';
-
+import { UserStatus } from '@user/domain/enums/user-status.enum';
 @Injectable()
 export class TokenService {
   constructor(
@@ -49,7 +49,7 @@ export class TokenService {
       throw new Error('User does not exist.');
     }
 
-    if (user.status !== 'ACTIVE') {
+    if (user.status !== UserStatus.ACTIVE) {
       throw new Error('User is not active.');
     }
 
