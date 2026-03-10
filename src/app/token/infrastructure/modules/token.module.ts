@@ -6,7 +6,7 @@ import { UrlSafeStringTokenGenerator } from '@token/generators/url-safe-string-t
 import { TokenRepository } from '@token/infrastructure/repositories/typeorm-token.repository';
 import { TOKEN_REPOSITORY } from '@app/token/domin/ports/itoken.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TokenSchema } from '@token/infrastructure/schemas/token.schema';
+import { TokenSchema } from '@token/infrastructure/schemas/token.entity';
 import { TokenService } from '@token/application/service/token.service';
 
 @Module({
