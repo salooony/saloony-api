@@ -29,7 +29,6 @@ export class TokenService {
       hash?: boolean;
     },
   ): Promise<{ token: string; expiredAt: Date | null }> {
-
     const plainToken = this.generator.generate(type, options?.generatorOptions);
 
     let expiredAt: Date | null = null;
@@ -42,9 +41,7 @@ export class TokenService {
 
     const shouldHash = options?.hash ?? false;
 
-    const tokenToStore = shouldHash
-      ? createHash('sha256').update(plainToken).digest('hex')
-      : plainToken;
+    const tokenToStore = shouldHash ? createHash('sha256').update(plainToken).digest('hex') : plainToken;
 
     const user = await this.userRepository.findOneById(ownerId);
 
@@ -56,13 +53,7 @@ export class TokenService {
       throw new Error('User is not active.');
     }
 
-    const token = new Token(
-      tokenToStore,
-      new Date(),
-      expiredAt,
-      shouldHash,
-      user,
-    );
+    const token = new Token(tokenToStore, new Date(), expiredAt, shouldHash, user);
 
     await this.tokenRepository.save(token);
 
@@ -72,11 +63,7 @@ export class TokenService {
     };
   }
 
-  async validate(
-    token: string,
-    ownerId?: string,
-  ): Promise<{ valid: boolean; reason?: TokenValidationReason }> {
-
+  async validate(token: string, ownerId?: string): Promise<{ valid: boolean; reason?: TokenValidationReason }> {
     let stored = await this.tokenRepository.findByToken(token, ownerId);
 
     if (!stored) {
