@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ITokenRepository } from '../../domain/ports/itoken.repository';
+import { Token } from '../../domain/entities/token.entity';
+import { Token as TokenSchema } from '../schemas/token.schema';
 
-import { ITokenRepository } from '@app/token/domin/ports/itoken.repository';
-import { Token } from '@token/domin/entities/token.entity';
-import { TokenSchema } from '../schemas/token.entity';
 import { TokenMapper } from '../mappers/token.mapper';
 
 @Injectable()

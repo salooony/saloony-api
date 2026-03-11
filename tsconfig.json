@@ -39,6 +39,6 @@
     "noUncheckedIndexedAccess": true,
     "useUnknownInCatchVariables": true
   },
-  "include": ["src/**/*.ts", "test/**/*.ts"],
+  "include": ["src/**/*.ts", "test/**/*.ts", "src/app/token/infrastructure/repositories/token.repository.ts"],
   "exclude": ["node_modules", "dist"]
 }

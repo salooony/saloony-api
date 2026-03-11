@@ -1,11 +1,11 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { createHash } from 'crypto';
-import { TokenGeneratorService } from './token-generator.service';
-import { TokenGeneratorType } from '@token/domin/enums/token-generator-type.enum';
-import { Token } from '@token/domin/entities/token.entity';
-import { ITokenRepository, TOKEN_REPOSITORY } from '@app/token/domin/ports/itoken.repository';
+import { TokenGeneratorService } from '@token/application/service/token-generator.service';
+import { TokenGeneratorType } from '@token/domain/enums/token-generator-type.enum';
+import { Token } from '@app/token/domain/entities/token.entity';
+import { ITokenRepository, TOKEN_REPOSITORY } from '@app/token/domain/ports/itoken.repository';
 import { IUserRepository } from '@user/domain/ports/iuser.repository';
-import { TokenValidationReason } from '@token/domin/enums/tokenValidationreason-enum';
+import { TokenValidationReason } from '@app/token/domain/enums/tokenValidationreason-enum';
 import { UserStatus } from '@user/domain/enums/user-status.enum';
 @Injectable()
 export class TokenService {

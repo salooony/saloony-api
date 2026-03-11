@@ -1,5 +1,5 @@
-import { Token } from '@token/domin/entities/token.entity';
-import { TokenSchema } from '../schemas/token.entity';
+import { Token } from '@app/token/domain/entities/token.entity';
+import { Token as TokenSchema } from '@app/token/infrastructure/schemas/token.schema';
 import { UserMapper } from '@user/infrastructure/mappers/user.mapper';
 
 export class TokenMapper {
