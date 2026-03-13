@@ -1,31 +1,20 @@
-import { CurrentUser } from '@app/user/application/decorators/current-user.decorator';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from '@app/shared/decorators/roles.decorator';
-import { UserRole } from '@app/user/domain/enums/user-role.enum';
+import { CurrentUser } from '@app/user/application/decorators/current-user.decorator';
 import { Public } from '@app/user/application/decorators/public.decorator';
+import { ConfirmEmailVerificationRequestDto } from '@app/user/application/dtos/requests/confirm-email-verification.request.dto';
 import { UserRequestDto } from '@app/user/application/dtos/requests/user.request.dto';
+import { ConfirmEmailVerificationResponseDto } from '@app/user/application/dtos/responses/confirm-email-verification.response.dto';
 import { UserResponseDto } from '@app/user/application/dtos/responses/user.response.dto';
 import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase';
 import { DeleteUserAccountUseCase } from '@app/user/application/usecases/delete-user-account.usecase';
+import { ConfirmEmailVerificationUseCase } from '@app/user/application/usecases/confirm-email-verification.usecase';
 import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
 import { RequestEmailVerificationUseCase } from '@app/user/application/usecases/request-email-verification.usecase';
 import { RequestPhoneVerificationUseCase } from '@app/user/application/usecases/request-phone-verification.usecase';
-import { ConfirmEmailVerificationUseCase } from '@app/user/application/usecases/confirm-email-verification.usecase';
-import { ConfirmEmailVerificationRequestDto } from '@app/user/application/dtos/requests/confirm-email-verification.request.dto';
-import { ConfirmEmailVerificationResponseDto } from '@app/user/application/dtos/responses/confirm-email-verification.response.dto';
 import { User } from '@app/user/domain/entities/user';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Header,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Post,
-  ValidationPipe,
-} from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { UserRole } from '@app/user/domain/enums/user-role.enum';
 
 @ApiTags('Users')
 @Controller('users')
@@ -60,12 +49,11 @@ export class UserController {
   })
   @Public()
   @Post()
-  @Header('Content-Type', 'application/json')
-  async create(@Body(new ValidationPipe()) userRequest: UserRequestDto): Promise<UserResponseDto> {
+  async create(@Body() userRequest: UserRequestDto): Promise<UserResponseDto> {
     return await this.createUsecase.execute(userRequest);
   }
 
-  @ApiOperation({ summary: 'Get personla information' })
+  @ApiOperation({ summary: 'Get personal information' })
   @ApiBearerAuth()
   @ApiResponse({
     status: HttpStatus.OK,
@@ -81,25 +69,15 @@ export class UserController {
     description: 'Something went wrong, try again.',
   })
   @Get('/me')
-  @Header('Content-Type', 'application/json')
-  async getPeronalInfo(@CurrentUser() user: User): Promise<UserResponseDto> {
+  async getPersonalInfo(@CurrentUser() user: User): Promise<UserResponseDto> {
     return await this.getUserInfoUsecase.execute(user.id);
   }
 
   @ApiOperation({ summary: 'Delete current user account.' })
   @ApiBearerAuth()
-  @ApiResponse({
-    status: HttpStatus.NO_CONTENT,
-    description: 'Account deleted successfully.',
-  })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'User should be logged in.',
-  })
-  @ApiResponse({
-    status: HttpStatus.INTERNAL_SERVER_ERROR,
-    description: 'Something went wrong, try again.',
-  })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Account deleted successfully.' })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User should be logged in.' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Something went wrong, try again.' })
   @Delete('/me')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteMe(@CurrentUser() user: User): Promise<void> {
@@ -108,18 +86,9 @@ export class UserController {
 
   @ApiOperation({ summary: 'Delete user account (Admin).' })
   @ApiBearerAuth()
-  @ApiResponse({
-    status: HttpStatus.NO_CONTENT,
-    description: 'Account deleted successfully.',
-  })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'User should be logged in.',
-  })
-  @ApiResponse({
-    status: HttpStatus.INTERNAL_SERVER_ERROR,
-    description: 'Something went wrong, try again.',
-  })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Account deleted successfully.' })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User should be logged in.' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Something went wrong, try again.' })
   @Roles(UserRole.ADMIN)
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)

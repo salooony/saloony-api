@@ -1,10 +1,14 @@
-import { ConflictException, Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { GetTemplateByKeyUseCase } from '@notification/application/usecases/get-template-by-key.usecase';
 import { NotifierService } from '@notification/application/services/notifier.service';
-import { User } from '@user/domain/entities/user';
+import { TemplateKey } from '@notification/domain/enums/template-key.enum';
+import { EmailMessage } from '@notification/domain/message/email.message';
 import { TokenGeneratorService } from '@token/application/token-generator.service';
 import { TokenGeneratorType } from '@token/domin/enums/token-generator-type.enum';
-import { GetTemplateByKeyUseCase } from '@notification/application/usecases/get-template-by-key.usecase';
-import { EmailMessage } from '@notification/domain/message/email.message';
+import { TokenPurpose } from '@token/domin/enums/token-purpose.enum';
+import { ITokenRepository } from '@token/domin/ports/token.repository.interface';
+import { User } from '@user/domain/entities/user';
 
 @Injectable()
 export class RequestEmailVerificationUseCase {
@@ -14,43 +18,37 @@ export class RequestEmailVerificationUseCase {
     private readonly notifierService: NotifierService,
     private readonly tokenGeneratorService: TokenGeneratorService,
     private readonly getTemplateByKeyUseCase: GetTemplateByKeyUseCase,
+    private readonly configService: ConfigService,
+    @Inject('ITokenRepository')
+    private readonly tokenRepository: ITokenRepository,
   ) {}
 
-  /**
-   * Generates and sends an email verification code to the user
-   * @param user - The user requesting email verification
-   * @throws ConflictException - If email is already verified
-   * @throws ServiceUnavailableException - If notification service unavailable
-   */
   async execute(user: User): Promise<void> {
-    // Check if email already verified
     if (user.isEmailVerified()) {
       throw new ConflictException('Email already verified');
     }
 
     try {
-      // Generate 6-digit verification token using Token module
       const verificationCode = this.tokenGeneratorService.generate(TokenGeneratorType.NUMBER, { digits: 6 });
+      const ttlMs = Number(this.configService.get<string>('EMAIL_VERIFICATION_TOKEN_TTL_MS') ?? '900000');
 
-      // TODO: Store verification token in database using Token repository (token storage service under development)
-      // const tokenRecord = await this.tokenRepository.create({
-      //   userId: user.id,
-      //   token: verificationCode,
-      //   type: 'EMAIL_VERIFICATION',
-      //   expiresIn: 15 * 60 * 1000, // 15 minutes
-      // });
+      // Keep only one active email verification token per user.
+      await this.tokenRepository.deleteByOwnerAndType(user.id, TokenPurpose.EMAIL_VERIFICATION);
+      await this.tokenRepository.create({
+        ownerId: user.id,
+        token: verificationCode,
+        isHashed: false,
+        expiredAt: new Date(Date.now() + ttlMs),
+        type: TokenPurpose.EMAIL_VERIFICATION,
+      });
 
-      // Fetch email template
-      const template = await this.getTemplateByKeyUseCase.execute('email_verification');
-
-      // Hydrate template with verification code
+      const template = await this.getTemplateByKeyUseCase.execute(TemplateKey.EMAIL_VERIFICATION);
       const messageContent = template.message
         .replace('{{code}}', verificationCode)
         .replace('{{firstName}}', user.firstname);
 
-      // Send verification email
       const message = new EmailMessage(user.email, 'Email Verification', messageContent);
-      this.notifierService.notify(message);
+      await this.notifierService.notify(message);
 
       this.logger.log(`Email verification code sent to ${user.email}`);
     } catch (error) {

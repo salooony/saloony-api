@@ -1,9 +1,18 @@
-import { BadRequestException, ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
-import { User } from '@user/domain/entities/user';
-import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
+import {
+  BadRequestException,
+  ConflictException,
+  GoneException,
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { ConfirmEmailVerificationResponseDto } from '@user/application/dtos/responses/confirm-email-verification.response.dto';
+import { User } from '@user/domain/entities/user';
 import { VerificationChannel } from '@app/user/domain/enums/verification-channel.enum';
-import { VerificationStatus } from '@app/user/domain/enums/verification-status.enum';
+import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
+import { TokenPurpose } from '@token/domin/enums/token-purpose.enum';
+import { ITokenRepository } from '@token/domin/ports/token.repository.interface';
 
 @Injectable()
 export class ConfirmEmailVerificationUseCase {
@@ -12,65 +21,50 @@ export class ConfirmEmailVerificationUseCase {
   constructor(
     @Inject('UsersRepository')
     private readonly userRepository: IUserRepository,
+    @Inject('ITokenRepository')
+    private readonly tokenRepository: ITokenRepository,
   ) {}
 
   /**
-   * Confirms email verification by validating the provided code
-   * @param user - The authenticated user
-   * @param code - The verification code provided by the user
-   * @returns ConfirmEmailVerificationResponseDto with verification status
-   * @throws ConflictException - If email is already verified
-   * @throws BadRequestException - If verification code format is invalid
-   * @throws NotFoundException - If no active verification token found
-   * @throws GoneException - If verification code has expired
+   * Confirms email verification by validating the provided code.
+   * DTO handles format validation, and this use case verifies ownership/expiry/single-use.
    */
   async execute(user: User, code: string): Promise<ConfirmEmailVerificationResponseDto> {
-    // Check if email already verified
     if (user.isEmailVerified()) {
       throw new ConflictException('Email already verified');
     }
 
-    // Validate code format (must be 6 digits)
-    if (!code || typeof code !== 'string' || !/^\d{6}$/.test(code.trim())) {
-      throw new BadRequestException('Invalid verification code format. Code must be 6 digits.');
+    const normalizedCode = code?.trim();
+    if (!normalizedCode) {
+      throw new BadRequestException('Verification code is required');
     }
 
-    // TODO: Verify token/code using Token repository (token storage service under development)
-    // Implementation pattern:
-    // const tokenRecord = await this.tokenRepository.findByCodeAndUserId(user.id, code);
-    //
-    // if (!tokenRecord) {
-    //   throw new NotFoundException('No active verification token found');
-    // }
-    //
-    // if (this.isTokenExpired(tokenRecord.expiredAt)) {
-    //   throw new GoneException('Verification code has expired');
-    // }
-    //
-    // // Mark token as used (single-use enforcement)
-    // await this.tokenRepository.markAsUsed(tokenRecord.id);
+    const tokenRecord = await this.tokenRepository.findByOwnerTokenAndType(
+      user.id,
+      normalizedCode,
+      TokenPurpose.EMAIL_VERIFICATION,
+    );
 
-    // Mark email as verified
+    if (!tokenRecord) {
+      throw new NotFoundException('No active verification token found');
+    }
+
+    if (tokenRecord.expiredAt && new Date() > tokenRecord.expiredAt) {
+      await this.tokenRepository.deleteById(tokenRecord.id);
+      throw new GoneException('Verification code has expired');
+    }
+
+    // Single-use: invalidate token first, then apply state transition.
+    await this.tokenRepository.deleteById(tokenRecord.id);
+
     user.verifyEmail();
-
-    // Persist changes
     await this.userRepository.save(user);
 
     this.logger.log(`Email verified for user ${user.id}`);
 
     return {
-      status: VerificationStatus.VERIFIED,
+      status: true,
       channel: VerificationChannel.EMAIL,
     };
-  }
-
-  /**
-   * Helper method to check if token has expired
-   * @param expiredAt - Token expiration date
-   * @returns boolean indicating if token is expired
-   */
-  private isTokenExpired(expiredAt: Date | null): boolean {
-    if (!expiredAt) return false;
-    return new Date() > expiredAt;
   }
 }

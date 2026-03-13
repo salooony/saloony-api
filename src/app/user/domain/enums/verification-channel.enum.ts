@@ -1,4 +1,4 @@
 export enum VerificationChannel {
-  EMAIL = 'EMAIL',
-  PHONE = 'PHONE',
+  EMAIL = 'email',
+  PHONE = 'phone',
 }

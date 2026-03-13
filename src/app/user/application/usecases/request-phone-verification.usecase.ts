@@ -1,10 +1,17 @@
-import { BadRequestException, ConflictException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  Logger,
+  ServiceUnavailableException,
+} from '@nestjs/common';
+import { GetTemplateByKeyUseCase } from '@notification/application/usecases/get-template-by-key.usecase';
 import { NotifierService } from '@notification/application/services/notifier.service';
-import { User } from '@user/domain/entities/user';
+import { TemplateKey } from '@notification/domain/enums/template-key.enum';
 import { SmsMessage } from '@notification/domain/message/sms.message';
 import { TokenGeneratorService } from '@token/application/token-generator.service';
 import { TokenGeneratorType } from '@token/domin/enums/token-generator-type.enum';
-import { GetTemplateByKeyUseCase } from '@notification/application/usecases/get-template-by-key.usecase';
+import { User } from '@user/domain/entities/user';
 
 @Injectable()
 export class RequestPhoneVerificationUseCase {
@@ -17,30 +24,28 @@ export class RequestPhoneVerificationUseCase {
   ) {}
 
   async execute(user: User): Promise<void> {
-    // Ensure user has a phone number
     if (!user.mobileNumber) {
       throw new BadRequestException('User does not have a phone number');
     }
 
-    // If phone already verified → return 409 Conflict
     if (user.isPhoneVerified()) {
       throw new ConflictException('Phone already verified');
     }
 
-    // Generate verification token using Token module
-    const token = this.tokenGeneratorService.generate(TokenGeneratorType.NUMBER, { digits: 6 });
+    try {
+      const token = this.tokenGeneratorService.generate(TokenGeneratorType.NUMBER, { digits: 6 });
+      const template = await this.getTemplateByKeyUseCase.execute(TemplateKey.PHONE_VERIFICATION);
+      const messageContent = template.message.replace('{{code}}', token);
 
-    // Fetch SMS template
-    const template = await this.getTemplateByKeyUseCase.execute('phone_verification');
+      const message = new SmsMessage(user.mobileNumber, messageContent);
+      await this.notifierService.notify(message);
 
-    // Hydrate template message with token
-    const messageContent = template.message.replace('{{code}}', token);
-
-    // Send notification via Notification.Notifier
-    // Channel: PHONE (SMS)
-    const message = new SmsMessage(user.mobileNumber, messageContent);
-
-    this.notifierService.notify(message);
-    this.logger.log(`Phone verification SMS sent to ${user.mobileNumber}`);
+      this.logger.log(`Phone verification SMS sent to ${user.mobileNumber}`);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorStack = error instanceof Error ? error.stack : undefined;
+      this.logger.error(`Failed to send phone verification SMS: ${errorMessage}`, errorStack);
+      throw new ServiceUnavailableException('Failed to send verification SMS. Please try again later.');
+    }
   }
 }

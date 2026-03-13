@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { TokenPurpose } from '@token/domin/enums/token-purpose.enum';
 import { User } from '@user/infrastructure/schemas/user.schema';
 
 @Entity('tokens')
@@ -20,6 +21,9 @@ export class TokenSchema {
 
   @Column({ name: 'owner_id', type: 'uuid' })
   ownerId!: string;
+
+  @Column({ name: 'type', type: 'varchar' })
+  type!: TokenPurpose;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'owner_id' })

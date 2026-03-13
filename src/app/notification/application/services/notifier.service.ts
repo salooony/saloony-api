@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IMessage } from '../../domain/message/message.interface';
-import { INotifierChannel } from '../../domain/ports/notifier-channel.interface';
 import { UnsupportedMessageException } from '../../domain/exception/unsupported-message.exception';
+import { INotifierChannel } from '../../domain/ports/notifier-channel.interface';
 
 @Injectable()
 export class NotifierService {
@@ -10,11 +10,12 @@ export class NotifierService {
     private readonly channels: INotifierChannel[],
   ) {}
 
-  notify(message: IMessage): void {
+  async notify(message: IMessage): Promise<void> {
     const channel = this.channels.find((c) => c.supports(message));
     if (!channel) {
       throw new UnsupportedMessageException(message.constructor.name);
     }
-    channel.notify(message);
+
+    await channel.notify(message);
   }
 }
