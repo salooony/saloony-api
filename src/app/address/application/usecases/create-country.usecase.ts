@@ -1,5 +1,5 @@
 import { ConflictException, Inject, InternalServerErrorException } from '@nestjs/common';
-import { ICountryRepository } from '@address/domain/ports/icountry.repository';
+import { COUNTRY_REPOSITORY, ICountryRepository } from '@address/domain/ports/icountry.repository';
 import { Country } from '@address/domain/entities/country.entity';
 import { CreateCountryRequestDto } from '../dtos/requests/create-country.request.dto';
 import { CountryResponseDto } from '../dtos/responses/country.response.dto';
@@ -7,7 +7,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class CreateCountryUsecase {
-  constructor(@Inject('ICountryRepository') private readonly countryRepository: ICountryRepository) {}
+  constructor(@Inject(COUNTRY_REPOSITORY) private readonly countryRepository: ICountryRepository) {}
 
   async execute(dto: CreateCountryRequestDto): Promise<CountryResponseDto> {
     const country = new Country('', dto.code.toUpperCase().slice(0, 5), dto.icon ?? '', dto.name, dto.isActive ?? true);
