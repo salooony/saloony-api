@@ -1,20 +1,20 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from '@app/shared/decorators/roles.decorator';
-import { CurrentUser } from '@app/user/application/decorators/current-user.decorator';
-import { Public } from '@app/user/application/decorators/public.decorator';
-import { ConfirmEmailVerificationRequestDto } from '@app/user/application/dtos/requests/confirm-email-verification.request.dto';
-import { UserRequestDto } from '@app/user/application/dtos/requests/user.request.dto';
-import { ConfirmEmailVerificationResponseDto } from '@app/user/application/dtos/responses/confirm-email-verification.response.dto';
-import { UserResponseDto } from '@app/user/application/dtos/responses/user.response.dto';
-import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase';
-import { DeleteUserAccountUseCase } from '@app/user/application/usecases/delete-user-account.usecase';
-import { ConfirmEmailVerificationUseCase } from '@app/user/application/usecases/confirm-email-verification.usecase';
-import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
-import { RequestEmailVerificationUseCase } from '@app/user/application/usecases/request-email-verification.usecase';
-import { RequestPhoneVerificationUseCase } from '@app/user/application/usecases/request-phone-verification.usecase';
-import { User } from '@app/user/domain/entities/user';
-import { UserRole } from '@app/user/domain/enums/user-role.enum';
+import { CurrentUser } from '@user/application/decorators/current-user.decorator';
+import { Public } from '@user/application/decorators/public.decorator';
+import { CodeVerificationRequestDto } from '@user/application/dtos/requests/code-verification.request.dto';
+import { UserRequestDto } from '@user/application/dtos/requests/user.request.dto';
+import { CodeVerificationResponseDto } from '@user/application/dtos/responses/code-verification.response.dto';
+import { UserResponseDto } from '@user/application/dtos/responses/user.response.dto';
+import { CreateUserUsecase } from '@user/application/usecases/create.usecase';
+import { DeleteUserAccountUseCase } from '@user/application/usecases/delete-user-account.usecase';
+import { VerifyEmailUseCase } from '@user/application/usecases/verify-email.usecase';
+import { GetUserInfoUsecase } from '@user/application/usecases/get-user-info.usecase';
+import { GetCodeVerificationUseCase } from '@user/application/usecases/get-code-verification.usecase';
+import { RequestPhoneVerificationUseCase } from '@user/application/usecases/request-phone-verification.usecase';
+import { User } from '@user/domain/entities/user';
+import { UserRole } from '@user/domain/enums/user-role.enum';
 
 @ApiTags('Users')
 @Controller('users')
@@ -23,9 +23,9 @@ export class UserController {
     private readonly createUsecase: CreateUserUsecase,
     private readonly getUserInfoUsecase: GetUserInfoUsecase,
     private readonly deleteUserUseCase: DeleteUserAccountUseCase,
-    private readonly requestEmailVerificationUseCase: RequestEmailVerificationUseCase,
+    private readonly requestEmailVerificationUseCase: GetCodeVerificationUseCase,
     private readonly requestPhoneVerificationUseCase: RequestPhoneVerificationUseCase,
-    private readonly confirmEmailVerificationUseCase: ConfirmEmailVerificationUseCase,
+    private readonly verifyEmailUseCase: VerifyEmailUseCase,
   ) {}
 
   @ApiOperation({ summary: 'Register a new user' })
@@ -106,24 +106,23 @@ export class UserController {
     await this.requestEmailVerificationUseCase.execute(user);
   }
 
-  @Post('email/validate/confirm')
+  @Post('verify/email')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Confirm email verification code' })
   @ApiBearerAuth()
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Email verified successfully.',
-    type: ConfirmEmailVerificationResponseDto,
+    type: CodeVerificationResponseDto,
   })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid verification code format.' })
-  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'No active verification token found.' })
-  @ApiResponse({ status: HttpStatus.GONE, description: 'Verification code has expired.' })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Invalid verification code.' })
   @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Email already verified.' })
   async confirmEmailVerification(
     @CurrentUser() user: User,
-    @Body() dto: ConfirmEmailVerificationRequestDto,
-  ): Promise<ConfirmEmailVerificationResponseDto> {
-    return await this.confirmEmailVerificationUseCase.execute(user, dto.code);
+    @Body() dto: CodeVerificationRequestDto,
+  ): Promise<CodeVerificationResponseDto> {
+    return await this.verifyEmailUseCase.execute(user, dto.code);
   }
 
   // TODO: Add rate limiting (@Throttle decorator) when rate limiting module is implemented

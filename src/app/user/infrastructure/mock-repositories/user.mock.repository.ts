@@ -1,4 +1,5 @@
 import { User } from '@app/user/domain/entities/user';
+import { UserStatus } from '@app/user/domain/enums/user-status.enum';
 import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
 import { Injectable } from '@nestjs/common';
 
@@ -39,6 +40,17 @@ export class MockUsersReporitory implements IUserRepository {
     }
 
     return Promise.resolve(user);
+  }
+
+  async verifyEmail(email: string): Promise<void> {
+    const user = MockUsersReporitory.users.find((u) => u.email === email);
+    if (!user) {
+      return Promise.resolve();
+    }
+
+    user.status = UserStatus.WAITING_PHONE_VERIFICATION;
+    user.updatedAt = new Date();
+    return Promise.resolve();
   }
 
   async update(user: User): Promise<User> {

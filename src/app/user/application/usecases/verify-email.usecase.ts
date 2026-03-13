@@ -1,22 +1,21 @@
 import {
   BadRequestException,
   ConflictException,
-  GoneException,
   Inject,
   Injectable,
   Logger,
-  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { ConfirmEmailVerificationResponseDto } from '@user/application/dtos/responses/confirm-email-verification.response.dto';
+import { CodeVerificationResponseDto } from '@user/application/dtos/responses/code-verification.response.dto';
 import { User } from '@user/domain/entities/user';
-import { VerificationChannel } from '@app/user/domain/enums/verification-channel.enum';
-import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
+import { IUserRepository } from '@user/domain/ports/iuser.repository';
+import { VerificationChannel } from '@user/domain/enums/verification-channel.enum';
 import { TokenPurpose } from '@token/domin/enums/token-purpose.enum';
 import { ITokenRepository } from '@token/domin/ports/token.repository.interface';
 
 @Injectable()
-export class ConfirmEmailVerificationUseCase {
-  private readonly logger = new Logger(ConfirmEmailVerificationUseCase.name);
+export class VerifyEmailUseCase {
+  private readonly logger = new Logger(VerifyEmailUseCase.name);
 
   constructor(
     @Inject('UsersRepository')
@@ -29,7 +28,7 @@ export class ConfirmEmailVerificationUseCase {
    * Confirms email verification by validating the provided code.
    * DTO handles format validation, and this use case verifies ownership/expiry/single-use.
    */
-  async execute(user: User, code: string): Promise<ConfirmEmailVerificationResponseDto> {
+  async execute(user: User, code: string): Promise<CodeVerificationResponseDto> {
     if (user.isEmailVerified()) {
       throw new ConflictException('Email already verified');
     }
@@ -46,12 +45,12 @@ export class ConfirmEmailVerificationUseCase {
     );
 
     if (!tokenRecord) {
-      throw new NotFoundException('No active verification token found');
+      throw new UnauthorizedException('Invalid verification code');
     }
 
     if (tokenRecord.expiredAt && new Date() > tokenRecord.expiredAt) {
       await this.tokenRepository.deleteById(tokenRecord.id);
-      throw new GoneException('Verification code has expired');
+      throw new UnauthorizedException('Invalid verification code');
     }
 
     // Single-use: invalidate token first, then apply state transition.

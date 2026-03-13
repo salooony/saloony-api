@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { User as UserEntity } from '../schemas/user.schema';
 import { User } from '@user/domain/entities/user';
 import { UserMapper } from '../mappers/user.mapper';
+import { UserStatus } from '@user/domain/enums/user-status.enum';
 
 @Injectable()
 export class UsersRepository implements IUserRepository {
@@ -14,6 +15,15 @@ export class UsersRepository implements IUserRepository {
     const savedUser = await this.repository.save(UserMapper.toEntity(user));
 
     return UserMapper.map(savedUser);
+  }
+
+  async verifyEmail(email: string): Promise<void> {
+    await this.repository.update(
+      { email },
+      {
+        status: UserStatus.WAITING_PHONE_VERIFICATION,
+      },
+    );
   }
 
   async findOneById(id: string): Promise<User | null> {

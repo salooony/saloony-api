@@ -11,8 +11,8 @@ import { ITokenRepository } from '@token/domin/ports/token.repository.interface'
 import { User } from '@user/domain/entities/user';
 
 @Injectable()
-export class RequestEmailVerificationUseCase {
-  private readonly logger = new Logger(RequestEmailVerificationUseCase.name);
+export class GetCodeVerificationUseCase {
+  private readonly logger = new Logger(GetCodeVerificationUseCase.name);
 
   constructor(
     private readonly notifierService: NotifierService,

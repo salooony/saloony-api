@@ -8,7 +8,9 @@ import { ForgotPasswordUseCase } from '@app/user/application/usecases/forgot-pas
 import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
 import { LoginUsecase } from '@app/user/application/usecases/login.usecase';
 import { ResetPasswordUseCase } from '@app/user/application/usecases/reset-password.usecase';
-import { RequestEmailVerificationUseCase } from '@app/user/application/usecases/request-email-verification.usecase';
+import { GetCodeVerificationUseCase } from '@app/user/application/usecases/get-code-verification.usecase';
+import { RequestPhoneVerificationUseCase } from '@app/user/application/usecases/request-phone-verification.usecase';
+import { VerifyEmailUseCase } from '@app/user/application/usecases/verify-email.usecase';
 import { NotifierService } from '@app/notification/application/services/notifier.service';
 import { User } from '@app/user/domain/entities/user';
 import { UserRole } from '@app/user/domain/enums/user-role.enum';
@@ -48,7 +50,24 @@ describe('UserController', () => {
       controllers: [UserController, AuthController],
       providers: [
         DeleteUserAccountUseCase,
-        RequestEmailVerificationUseCase,
+        {
+          provide: GetCodeVerificationUseCase,
+          useValue: {
+            execute: jest.fn(),
+          },
+        },
+        {
+          provide: RequestPhoneVerificationUseCase,
+          useValue: {
+            execute: jest.fn(),
+          },
+        },
+        {
+          provide: VerifyEmailUseCase,
+          useValue: {
+            execute: jest.fn(),
+          },
+        },
         CreateUserUsecase,
         GetUserInfoUsecase,
         ForgotPasswordUseCase,
