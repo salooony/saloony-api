@@ -1,12 +1,9 @@
 import { Body, Controller, Header, HttpStatus, Post, ValidationPipe } from '@nestjs/common';
-
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-
 import { Roles } from '@shared/decorators/roles.decorator';
 import { UserRole } from '@user/domain/enums/user-role.enum';
-
 import { CreateCityUsecase } from '@address/application/usecases/create-city.usecase';
-import { CreateCityRequestDto } from '../../application/dtos/requests/create-city.request.dto';
+import { CreateCityRequestDto } from '@address/application/dtos/requests/create-city.request.dto';
 import { CityResponseDto } from '@address/application/dtos/responses/city.response.dto';
 
 @ApiTags('Cities')
@@ -15,7 +12,7 @@ import { CityResponseDto } from '@address/application/dtos/responses/city.respon
 export class CityController {
   constructor(private readonly createCityUsecase: CreateCityUsecase) {}
 
-  @ApiOperation({ summary: 'Create city (ADMIN only).' })
+  @ApiOperation({ summary: 'Create city (ADMIN only)' })
   @ApiBody({ type: CreateCityRequestDto })
   @ApiResponse({
     status: HttpStatus.CREATED,
@@ -41,6 +38,7 @@ export class CityController {
   @ApiResponse({
     status: HttpStatus.CONFLICT,
     description: 'City already exists',
+
   })
   @Roles(UserRole.ADMIN)
   @Post()
@@ -52,3 +50,5 @@ export class CityController {
     return await this.createCityUsecase.execute(request);
   }
 }
+
+

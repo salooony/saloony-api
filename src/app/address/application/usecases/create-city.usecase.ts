@@ -1,11 +1,10 @@
-import { Inject, Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-
+import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CITY_REPOSITORY, ICityRepository } from '@address/domain/ports/icity.repository';
-
+import { COUNTRY_REPOSITORY, ICountryRepository } from '@address/domain/ports/icountry.repository';
 import { City } from '@address/domain/entities/city.entity';
 import { CreateCityRequestDto } from '../dtos/requests/create-city.request.dto';
 import { CityResponseDto } from '../dtos/responses/city.response.dto';
-import { COUNTRY_REPOSITORY, ICountryRepository } from '@address/domain/ports/icountry.repository';
+
 @Injectable()
 export class CreateCityUsecase {
   constructor(
@@ -27,9 +26,10 @@ export class CreateCityUsecase {
     }
 
     const city = new City('', dto.name, country);
-
     const created = await this.cityRepository.save(city);
 
     return CityResponseDto.createFromEntity(created);
   }
 }
+
+   

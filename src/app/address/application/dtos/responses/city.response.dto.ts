@@ -34,4 +34,5 @@ export class CityResponseDto {
 
     return dto;
   }
+
 }

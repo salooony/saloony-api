@@ -8,3 +8,4 @@ export interface ICityRepository {
   save(city: City): Promise<City>;
   findOne(criteria: FindOptionsWhere<CitySchema>): Promise<City | null>;
 }
+

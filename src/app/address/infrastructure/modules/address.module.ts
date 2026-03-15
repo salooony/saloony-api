@@ -13,14 +13,16 @@ import { UpdateCountryUsecase } from '@address/application/usecases/update-count
 import { CreateCityUsecase } from '@address/application/usecases/create-city.usecase';
 import { ListCountriesUsecase } from '@address/application/usecases/list-countries.usecase';
 
+
 @Module({
-  imports: [TypeOrmModule.forFeature([Country, City])],
-  controllers: [CountryController, CityController],
+  imports: [TypeOrmModule.forFeature([Country ,  City])],
+  controllers: [CountryController ,  CityController],
   providers: [
     CreateCountryUsecase,
     UpdateCountryUsecase,
     CreateCityUsecase,
     ListCountriesUsecase,
+  
     {
       provide: COUNTRY_REPOSITORY,
       useClass: CountryRepository,
