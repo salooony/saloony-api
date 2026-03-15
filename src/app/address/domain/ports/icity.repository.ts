@@ -1,4 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export const CITY_REPOSITORY = 'CITY_REPOSITORY';
+
+import { City } from '../entities/city.entity';
+
 export interface ICityRepository {
-  // to be implemented later
+  save(city: City): Promise<City>;
+
+  findCountryById(id: string): Promise<any>;
 }
