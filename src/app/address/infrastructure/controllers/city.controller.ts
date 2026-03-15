@@ -1,19 +1,6 @@
-import {
-  Body,
-  Controller,
-  Header,
-  HttpStatus,
-  Post,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Header, HttpStatus, Post, ValidationPipe } from '@nestjs/common';
 
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { Roles } from '@app/shared/decorators/roles.decorator';
 import { UserRole } from '@app/user/domain/enums/user-role.enum';
@@ -26,9 +13,7 @@ import { CityResponseDto } from '@address/application/dtos/responses/city.respon
 @ApiBearerAuth()
 @Controller('cities')
 export class CityController {
-  constructor(
-    private readonly createCityUsecase: CreateCityUsecase,
-  ) {}
+  constructor(private readonly createCityUsecase: CreateCityUsecase) {}
 
   @ApiOperation({ summary: 'Create city (ADMIN only)' })
   @ApiBody({ type: CreateCityRequestDto })

@@ -1,14 +1,6 @@
-import {
-  ConflictException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
-import {
-  CITY_REPOSITORY,
-  ICityRepository,
-} from '@address/domain/ports/icity.repository';
+import { CITY_REPOSITORY, ICityRepository } from '@address/domain/ports/icity.repository';
 
 import { City } from '@address/domain/entities/city.entity';
 import { CreateCityRequestDto } from '../dtos/requests/create-city.request.dto';
@@ -22,19 +14,13 @@ export class CreateCityUsecase {
   ) {}
 
   async execute(dto: CreateCityRequestDto): Promise<CityResponseDto> {
-    const country = await this.cityRepository.findCountryById(
-      dto.countryId,
-    );
+    const country = await this.cityRepository.findCountryById(dto.countryId);
 
     if (!country) {
       throw new NotFoundException('Country not found');
     }
 
-    const city = new City(
-      '',
-      dto.name,
-      country,
-    );
+    const city = new City('', dto.name, country);
 
     const created = await this.cityRepository.save(city);
 

@@ -5,5 +5,5 @@ import { City } from '../entities/city.entity';
 export interface ICityRepository {
   save(city: City): Promise<City>;
 
-  findCountryById(id: string): Promise<any>;
+    findCountryById(id: string): Promise<Country | null>;
 }
