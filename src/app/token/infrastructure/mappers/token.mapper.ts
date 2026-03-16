@@ -1,12 +1,10 @@
+import { Token } from '@app/token/domain/entities/token.entity';
+import { Token as TokenSchema } from '../schemas/token.schema';
+import { UserMapper } from '@app/user/infrastructure/mappers/user.mapper';
+
 export class TokenMapper {
   static toDomain(entity: TokenSchema): Token {
-    return new Token(
-      entity.token,
-      entity.createdAt,
-      entity.expiredAt,
-      entity.isHashed,
-      UserMapper.toDomain(entity.owner),
-    );
+    return new Token(entity.token, entity.createdAt, entity.expiredAt, entity.isHashed, UserMapper.map(entity.owner));
   }
 
   static toEntity(domain: Token): TokenSchema {
