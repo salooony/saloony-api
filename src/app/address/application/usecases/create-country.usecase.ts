@@ -1,5 +1,6 @@
 import { ConflictException, Inject, InternalServerErrorException } from '@nestjs/common';
 import { COUNTRY_REPOSITORY, ICountryRepository } from '@address/domain/ports/icountry.repository';
+import { normalizeCountryCode } from '@address/domain/constants/country-code.constants';
 import { Country } from '@address/domain/entities/country.entity';
 import { CreateCountryRequestDto } from '../dtos/requests/create-country.request.dto';
 import { CountryResponseDto } from '../dtos/responses/country.response.dto';
@@ -10,7 +11,7 @@ export class CreateCountryUsecase {
   constructor(@Inject(COUNTRY_REPOSITORY) private readonly countryRepository: ICountryRepository) {}
 
   async execute(dto: CreateCountryRequestDto): Promise<CountryResponseDto> {
-    const country = new Country('', dto.code.toUpperCase().slice(0, 5), dto.icon ?? '', dto.name, dto.isActive ?? true);
+    const country = new Country('', normalizeCountryCode(dto.code), dto.icon ?? '', dto.name, dto.isActive ?? true);
 
     try {
       const created = await this.countryRepository.save(country);

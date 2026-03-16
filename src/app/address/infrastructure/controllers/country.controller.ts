@@ -33,7 +33,9 @@ export class CountryController {
   })
   @Public()
   @Get()
-  async list(@Query(new ValidationPipe()) query: ListCountriesRequestDto): Promise<CountryResponseDto[]> {
+  async list(
+    @Query(new ValidationPipe({ transform: true })) query: ListCountriesRequestDto,
+  ): Promise<CountryResponseDto[]> {
     return await this.listCountriesUsecase.execute(query);
   }
 

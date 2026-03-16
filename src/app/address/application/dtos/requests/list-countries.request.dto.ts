@@ -1,4 +1,12 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
+import { booleanTransform } from '@app/shared/application/transformers/boolean.transform';
+import {
+  COUNTRY_CODE_EXAMPLE,
+  COUNTRY_CODE_LENGTH,
+  COUNTRY_CODE_PATTERN,
+  COUNTRY_CODE_REGEX,
+} from '@address/domain/constants/country-code.constants';
 import { IsBoolean, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
 export class ListCountriesRequestDto {
@@ -8,6 +16,7 @@ export class ListCountriesRequestDto {
     example: true,
   })
   @IsOptional()
+  @Transform(booleanTransform)
   @IsBoolean()
   public isActive?: boolean;
 
@@ -21,17 +30,17 @@ export class ListCountriesRequestDto {
   public name?: string;
 
   @ApiPropertyOptional({
-    description: 'Filter by ISO country code (exact match).',
+    description: 'Filter by ISO 3166-1 alpha-3 country code (exact match).',
     type: String,
-    minLength: 1,
-    maxLength: 3,
-    pattern: '^[A-Z]{1,3}$',
-    example: 'TN',
+    minLength: COUNTRY_CODE_LENGTH,
+    maxLength: COUNTRY_CODE_LENGTH,
+    pattern: COUNTRY_CODE_PATTERN,
+    example: COUNTRY_CODE_EXAMPLE,
   })
   @IsOptional()
   @IsString()
-  @MinLength(1)
-  @MaxLength(3)
-  @Matches(/^[A-Z]{1,3}$/)
+  @MinLength(COUNTRY_CODE_LENGTH)
+  @MaxLength(COUNTRY_CODE_LENGTH)
+  @Matches(COUNTRY_CODE_REGEX)
   public code?: string;
 }

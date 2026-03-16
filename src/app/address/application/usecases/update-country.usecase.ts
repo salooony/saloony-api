@@ -1,5 +1,6 @@
 import { ConflictException, Inject, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { COUNTRY_REPOSITORY, ICountryRepository } from '@address/domain/ports/icountry.repository';
+import { normalizeCountryCode } from '@address/domain/constants/country-code.constants';
 import { Country } from '@address/domain/entities/country.entity';
 import { UpdateCountryRequestDto } from '../dtos/requests/update-country.request.dto';
 import { CountryResponseDto } from '../dtos/responses/country.response.dto';
@@ -18,7 +19,7 @@ export class UpdateCountryUsecase {
 
     const country = new Country(
       existing.id,
-      dto.code.toUpperCase().slice(0, 5),
+      normalizeCountryCode(dto.code),
       dto.icon ?? existing.icon,
       dto.name,
       dto.isActive ?? existing.isActive,
