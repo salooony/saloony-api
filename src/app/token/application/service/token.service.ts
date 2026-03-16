@@ -39,7 +39,6 @@ export class TokenService {
       expiredAt = new Date(Date.now() + options.expiresInSeconds * 1000);
     }
 
-
     const tokenToStore = options?.hash ? createHash('sha256').update(plainToken).digest('hex') : plainToken;
 
     const user = await this.userRepository.findOneById(ownerId);
@@ -52,13 +51,7 @@ export class TokenService {
       throw new Error('User is not active.');
     }
 
-    const token = new Token(
-      tokenToStore,
-      new Date(),
-      expiredAt,
-      options?.hash ?? false,
-      user,
-    );
+    const token = new Token(tokenToStore, new Date(), expiredAt, options?.hash ?? false, user);
     await this.tokenRepository.save(token);
 
     return {
