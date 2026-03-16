@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { TokenGeneratorType } from '@app/token/domain/enums/token-generator-type.enum';
+import { TokenGeneratorType } from '@token/domain/enums/token-generator-type.enum';
 import { TokenGeneratorRegistry } from '@token/application/token-generator.registry';
 
 @Injectable()

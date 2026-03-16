@@ -9,11 +9,7 @@ import { TokenMapper } from '../mappers/token.mapper';
 
 @Injectable()
 export class TokenRepository implements ITokenRepository {
-  constructor(
-    @InjectRepository(TokenSchema)
-    private readonly repository: Repository<TokenSchema>,
-  ) {}
-
+  constructor(@InjectRepository(TokenSchema) private readonly repository: Repository<TokenSchema>) {}
   async save(token: Token): Promise<void> {
     const entity = TokenMapper.toEntity(token);
     await this.repository.save(entity);
