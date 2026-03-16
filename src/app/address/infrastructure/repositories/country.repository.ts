@@ -22,7 +22,7 @@ export class CountryRepository implements ICountryRepository {
   async findAll(filters: ListCountriesFilters): Promise<Country[]> {
     const queryBuilder = this.repository.createQueryBuilder('country');
 
-    if (typeof filters.isActive === 'boolean') {
+    if (filters.isActive !== undefined) {
       queryBuilder.andWhere('country.is_active = :isActive', {
         isActive: filters.isActive,
       });
