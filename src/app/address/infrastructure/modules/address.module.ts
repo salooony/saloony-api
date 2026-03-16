@@ -5,6 +5,7 @@ import { CountryController } from '../controllers/country.controller';
 import { CountryRepository } from '../repositories/country.repository';
 import { COUNTRY_REPOSITORY } from '@address/domain/ports/icountry.repository';
 import { CreateCountryUsecase } from '@address/application/usecases/create-country.usecase';
+import { ListCountriesUsecase } from '@address/application/usecases/list-countries.usecase';
 import { UpdateCountryUsecase } from '@address/application/usecases/update-country.usecase';
 
 @Module({
@@ -12,6 +13,7 @@ import { UpdateCountryUsecase } from '@address/application/usecases/update-count
   controllers: [CountryController],
   providers: [
     CreateCountryUsecase,
+    ListCountriesUsecase,
     UpdateCountryUsecase,
     {
       provide: COUNTRY_REPOSITORY,
