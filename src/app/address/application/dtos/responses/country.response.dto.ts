@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Country } from '@address/domain/entities/country.entity';
+import { COUNTRY_CODE_EXAMPLE } from '@address/domain/constants/country-code.constants';
 
 export class CountryResponseDto {
   @ApiProperty({
@@ -9,9 +10,9 @@ export class CountryResponseDto {
   public id: string;
 
   @ApiProperty({
-    description: 'ISO country code.',
+    description: 'ISO 3166-1 alpha-3 country code.',
     type: String,
-    example: 'TN',
+    example: COUNTRY_CODE_EXAMPLE,
   })
   public code: string;
 

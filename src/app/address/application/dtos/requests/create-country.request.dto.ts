@@ -1,17 +1,27 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  COUNTRY_CODE_EXAMPLE,
+  COUNTRY_CODE_LENGTH,
+  COUNTRY_CODE_PATTERN,
+  COUNTRY_CODE_REGEX,
+} from '@address/domain/constants/country-code.constants';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
 export class CreateCountryRequestDto {
   @ApiProperty({
-    description: 'ISO country code (like TN, PS).',
+    description: 'ISO 3166-1 alpha-3 country code (like TUN, PSE).',
     type: String,
     required: true,
-    example: 'TN',
-    maxLength: 5,
+    example: COUNTRY_CODE_EXAMPLE,
+    minLength: COUNTRY_CODE_LENGTH,
+    maxLength: COUNTRY_CODE_LENGTH,
+    pattern: COUNTRY_CODE_PATTERN,
   })
   @IsNotEmpty()
   @IsString()
-  @MaxLength(5)
+  @MinLength(COUNTRY_CODE_LENGTH)
+  @MaxLength(COUNTRY_CODE_LENGTH)
+  @Matches(COUNTRY_CODE_REGEX)
   public code: string;
 
   @ApiProperty({
