@@ -2,63 +2,70 @@ import { Injectable, Inject } from '@nestjs/common';
 import { createHash } from 'crypto';
 import { TokenGeneratorService } from '@token/application/service/token-generator.service';
 import { TokenGeneratorType } from '@token/domain/enums/token-generator-type.enum';
-import { Token } from '@app/token/domain/entities/token.entity';
-import { ITokenRepository, TOKEN_REPOSITORY } from '@app/token/domain/ports/itoken.repository';
+import { Token } from '@token/domain/entities/token.entity';
+import { ITokenRepository, TOKEN_REPOSITORY } from '@token/domain/ports/itoken.repository';
 import { IUserRepository } from '@user/domain/ports/iuser.repository';
-import { TokenValidationReason } from '@app/token/domain/enums/tokenValidationreason-enum';
+import { TokenValidationReason } from '@token/domain/enums/tokenValidationreason-enum';
 import { UserStatus } from '@user/domain/enums/user-status.enum';
 @Injectable()
 export class TokenService {
   constructor(
     private readonly generator: TokenGeneratorService,
-
-    @Inject(TOKEN_REPOSITORY)
-    private readonly tokenRepository: ITokenRepository,
-
-    @Inject('IUserRepository')
-    private readonly userRepository: IUserRepository,
+    @Inject(TOKEN_REPOSITORY) private readonly tokenRepository: ITokenRepository,
+    @Inject('IUserRepository') private readonly userRepository: IUserRepository,
   ) {}
 
-  async issue(
-    ownerId: string,
-    type: TokenGeneratorType,
-    options?: {
-      generatorOptions?: Record<string, unknown>;
-      expiresAt?: Date;
-      expiresInSeconds?: number;
-      hash?: boolean;
-    },
-  ): Promise<{ token: string; expiredAt: Date | null }> {
-    const plainToken = this.generator.generate(type, options?.generatorOptions);
+async issue(
+  ownerId: string,
+  type: TokenGeneratorType,
+  options?: {
+    generatorOptions?: Record<string, unknown>;
+    expiresAt?: Date;
+    expiresInSeconds?: number;
+    hash?: boolean;
+  },
+): Promise<{ token: string; expiredAt: Date | null }> {
 
-    let expiredAt: Date | null = null;
+  let token = this.generator.generate(type, options?.generatorOptions);
+  const plainToken = token;
 
-    if (options?.expiresAt) {
-      expiredAt = options.expiresAt;
-    } else if (options?.expiresInSeconds) {
-      expiredAt = new Date(Date.now() + options.expiresInSeconds * 1000);
-    }
+  let expiredAt: Date | null = null;
 
-    const tokenToStore = options?.hash ? createHash('sha256').update(plainToken).digest('hex') : plainToken;
-
-    const user = await this.userRepository.findOneById(ownerId);
-
-    if (!user) {
-      throw new Error('User does not exist.');
-    }
-
-    if (user.status !== UserStatus.ACTIVE) {
-      throw new Error('User is not active.');
-    }
-
-    const token = new Token(tokenToStore, new Date(), expiredAt, options?.hash ?? false, user);
-    await this.tokenRepository.save(token);
-
-    return {
-      token: plainToken,
-      expiredAt,
-    };
+  if (options?.expiresAt) {
+    expiredAt = options.expiresAt;
+  } else if (options?.expiresInSeconds) {
+    expiredAt = new Date(Date.now() + options.expiresInSeconds * 1000);
   }
+
+  if (options?.hash) {
+    token = createHash('sha256').update(token).digest('hex');
+  }
+
+  const user = await this.userRepository.findOneById(ownerId);
+
+  if (!user) {
+    throw new Error('User does not exist.');
+  }
+
+  if (user.status !== UserStatus.ACTIVE) {
+    throw new Error('User is not active.');
+  }
+
+  const tokenEntity = new Token(
+    token,
+    new Date(),
+    expiredAt,
+    options?.hash ?? false,
+    user,
+  );
+
+  await this.tokenRepository.save(tokenEntity);
+
+  return {
+    token: plainToken,
+    expiredAt,
+  };
+}
 
   async validate(token: string, ownerId?: string): Promise<{ valid: boolean; reason?: TokenValidationReason }> {
     let stored = await this.tokenRepository.findByToken(token, ownerId);

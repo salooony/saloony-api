@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { TokenGenerator } from '@token/generators/token-generator.interface';
-import { TokenGeneratorType } from '@app/token/domain/enums/token-generator-type.enum';
-import { UnsupportedTokenGeneratorException } from '@app/token/domain/exceptions/unsupported-token-generator.exception';
+import { TokenGeneratorType } from '@token/domain/enums/token-generator-type.enum';
+import { UnsupportedTokenGeneratorException } from '@token/domain/exceptions/unsupported-token-generator.exception';
 
 export const TOKEN_GENERATORS = 'TOKEN_GENERATORS';
 

@@ -10,11 +10,14 @@ import { TokenMapper } from '../mappers/token.mapper';
 @Injectable()
 export class TokenRepository implements ITokenRepository {
   constructor(@InjectRepository(TokenSchema) private readonly repository: Repository<TokenSchema>) {}
-  async save(token: Token): Promise<void> {
-    const entity = TokenMapper.toEntity(token);
-    await this.repository.save(entity);
-  }
 
+  async save(token: Token): Promise<Token> {
+    const entity = TokenMapper.toEntity(token);
+
+    const saved = await this.repository.save(entity);
+
+    return TokenMapper.toDomain(saved);
+  }
   async findByToken(token: string, ownerId?: string): Promise<Token | null> {
     const entity = await this.repository.findOne({
       where: { token, ...(ownerId && { ownerId }) },
