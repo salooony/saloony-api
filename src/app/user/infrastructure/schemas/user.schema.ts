@@ -50,7 +50,7 @@ export class User {
   @Column({
     type: 'enum',
     enum: UserStatus,
-    default: UserStatus.DRAFT,
+    default: UserStatus.PENDING,
   })
   @Index()
   status: UserStatus;
