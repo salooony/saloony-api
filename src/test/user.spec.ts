@@ -48,7 +48,6 @@ describe('UserController', () => {
       controllers: [UserController, AuthController],
       providers: [
         DeleteUserAccountUseCase,
-
         CreateUserUsecase,
         GetUserInfoUsecase,
         ForgotPasswordUseCase,
