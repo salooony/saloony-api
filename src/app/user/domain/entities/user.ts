@@ -17,7 +17,8 @@ export class User {
   public acl: string[] = [];
   public deletedAt?: Date;
 
-  public status: UserStatus = UserStatus.DRAFT;
+  // Kept to avoid breaking unit tests that use a Mock Repository without schema support.
+  public status: UserStatus = UserStatus.PENDING;
 
   public block(): void {
     this.status = UserStatus.BLOCKED;
