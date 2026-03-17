@@ -25,7 +25,6 @@ export class TokenService {
       hash?: boolean;
     },
   ): Promise<{ token: string; expiredAt: Date | null }> {
-
     let token = this.generator.generate(type, options?.generatorOptions);
 
     let expiredAt: Date | null = null;
