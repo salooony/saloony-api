@@ -17,7 +17,7 @@ export class User {
   public acl: string[] = [];
   public deletedAt?: Date;
 
-  public status: UserStatus = UserStatus.DRAFT;
+  public status: UserStatus = UserStatus.PENDING;
 
   public block(): void {
     this.status = UserStatus.BLOCKED;
