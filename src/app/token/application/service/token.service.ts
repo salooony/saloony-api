@@ -15,57 +15,51 @@ export class TokenService {
     @Inject('IUserRepository') private readonly userRepository: IUserRepository,
   ) {}
 
-async issue(
-  ownerId: string,
-  type: TokenGeneratorType,
-  options?: {
-    generatorOptions?: Record<string, unknown>;
-    expiresAt?: Date;
-    expiresInSeconds?: number;
-    hash?: boolean;
-  },
-): Promise<{ token: string; expiredAt: Date | null }> {
+  async issue(
+    ownerId: string,
+    type: TokenGeneratorType,
+    options?: {
+      generatorOptions?: Record<string, unknown>;
+      expiresAt?: Date;
+      expiresInSeconds?: number;
+      hash?: boolean;
+    },
+  ): Promise<{ token: string; expiredAt: Date | null }> {
 
-  let token = this.generator.generate(type, options?.generatorOptions);
-  const plainToken = token;
+    let token = this.generator.generate(type, options?.generatorOptions);
 
-  let expiredAt: Date | null = null;
+    let expiredAt: Date | null = null;
 
-  if (options?.expiresAt) {
-    expiredAt = options.expiresAt;
-  } else if (options?.expiresInSeconds) {
-    expiredAt = new Date(Date.now() + options.expiresInSeconds * 1000);
+    if (options?.expiresAt) {
+      expiredAt = options.expiresAt;
+    } else if (options?.expiresInSeconds) {
+      expiredAt = new Date(Date.now() + options.expiresInSeconds * 1000);
+    }
+    const plainToken = token;
+
+    if (options?.hash) {
+      token = createHash('sha256').update(token).digest('hex');
+    }
+
+    const user = await this.userRepository.findOneById(ownerId);
+
+    if (!user) {
+      throw new Error('User does not exist.');
+    }
+
+    if (user.status !== UserStatus.ACTIVE) {
+      throw new Error('User is not active.');
+    }
+
+    const tokenEntity = new Token(token, new Date(), expiredAt, options?.hash ?? false, user);
+
+    await this.tokenRepository.save(tokenEntity);
+
+    return {
+      token: plainToken,
+      expiredAt,
+    };
   }
-
-  if (options?.hash) {
-    token = createHash('sha256').update(token).digest('hex');
-  }
-
-  const user = await this.userRepository.findOneById(ownerId);
-
-  if (!user) {
-    throw new Error('User does not exist.');
-  }
-
-  if (user.status !== UserStatus.ACTIVE) {
-    throw new Error('User is not active.');
-  }
-
-  const tokenEntity = new Token(
-    token,
-    new Date(),
-    expiredAt,
-    options?.hash ?? false,
-    user,
-  );
-
-  await this.tokenRepository.save(tokenEntity);
-
-  return {
-    token: plainToken,
-    expiredAt,
-  };
-}
 
   async validate(token: string, ownerId?: string): Promise<{ valid: boolean; reason?: TokenValidationReason }> {
     let stored = await this.tokenRepository.findByToken(token, ownerId);

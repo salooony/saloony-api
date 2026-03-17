@@ -14,17 +14,20 @@ export class TokenRepository implements ITokenRepository {
   async save(token: Token): Promise<Token> {
     const entity = TokenMapper.toEntity(token);
 
-    const saved = await this.repository.save(entity);
-
-    return TokenMapper.toDomain(saved);
+    return TokenMapper.toDomain(
+      await this.repository.save(entity)
+    );
   }
+
   async findByToken(token: string, ownerId?: string): Promise<Token | null> {
     const entity = await this.repository.findOne({
       where: { token, ...(ownerId && { ownerId }) },
       relations: ['owner'],
     });
 
-    if (!entity) return null;
+    if (!entity) {
+      return null;
+    } 
 
     return TokenMapper.toDomain(entity);
   }
