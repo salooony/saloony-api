@@ -6,7 +6,7 @@ import { Roles } from '@shared/decorators/roles.decorator';
 import { UserRole } from '@user/domain/enums/user-role.enum';
 
 import { CreateCityUsecase } from '@address/application/usecases/create-city.usecase';
-import { CreateCityRequestDto } from '@address/application/dtos/requests/create-city.request.dto';
+import { CreateCityRequestDto } from '../../application/dtos/requests/create-city.request.dto';
 import { CityResponseDto } from '@address/application/dtos/responses/city.response.dto';
 
 @ApiTags('Cities')

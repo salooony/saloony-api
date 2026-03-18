@@ -1,4 +1,3 @@
-// Repository implementation to be added later
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -24,11 +23,5 @@ export class CityRepository implements ICityRepository {
     });
 
     return CityMapper.map(withRelation!);
-  }
-
-  async findCountryById(id: string) {
-    return this.countryRepository.findOne({
-      where: { id },
-    });
   }
 }
