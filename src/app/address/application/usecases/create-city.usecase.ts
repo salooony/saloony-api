@@ -6,6 +6,7 @@ import { City } from '@address/domain/entities/city.entity';
 import { CreateCityRequestDto } from '../dtos/requests/create-city.request.dto';
 import { CityResponseDto } from '../dtos/responses/city.response.dto';
 
+
 @Injectable()
 export class CreateCityUsecase {
   constructor(
@@ -14,13 +15,8 @@ export class CreateCityUsecase {
   ) {}
 
   async execute(dto: CreateCityRequestDto): Promise<CityResponseDto> {
-    const country = await this.cityRepository.findCountryById(dto.countryId);
-
-    if (!country) {
-      throw new NotFoundException('Country not found');
-    }
-
-    const city = new City('', dto.name, country);
+    const city = new City('', dto.name, country)
+    
 
     const created = await this.cityRepository.save(city);
 

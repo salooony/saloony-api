@@ -4,8 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { City as CitySchema } from '../schemas/city.schema';
-import { Country as CountrySchema } from '../schemas/country.schema';
-
 import { City } from '@address/domain/entities/city.entity';
 
 import { ICityRepository } from '@address/domain/ports/icity.repository';
@@ -13,13 +11,7 @@ import { CityMapper } from '../mappers/city.mapper';
 
 @Injectable()
 export class CityRepository implements ICityRepository {
-  constructor(
-    @InjectRepository(CitySchema)
-    private readonly repository: Repository<CitySchema>,
-
-    @InjectRepository(CountrySchema)
-    private readonly countryRepository: Repository<CountrySchema>,
-  ) {}
+  constructor(@InjectRepository(CitySchema)private readonly repository: Repository<CitySchema>) {}
 
   async save(city: City): Promise<City> {
     const schema = CityMapper.toSchema(city);

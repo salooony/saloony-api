@@ -2,13 +2,25 @@ import { ApiProperty } from '@nestjs/swagger';
 import { City } from '@address/domain/entities/city.entity';
 
 export class CityResponseDto {
-  @ApiProperty()
+    @ApiProperty({
+    description: 'City id',
+    example: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    type: String,
+  })
   id: string;
 
-  @ApiProperty()
+    @ApiProperty({
+    description: 'City id',
+    example: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    type: String,
+  })
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Parent country id',
+    example: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    type: String,
+  })
   countryId: string;
 
   private constructor() {}
