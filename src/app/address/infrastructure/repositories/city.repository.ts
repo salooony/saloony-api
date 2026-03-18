@@ -11,7 +11,7 @@ import { CityMapper } from '../mappers/city.mapper';
 
 @Injectable()
 export class CityRepository implements ICityRepository {
-  constructor(@InjectRepository(CitySchema)private readonly repository: Repository<CitySchema>) {}
+  constructor(@InjectRepository(CitySchema) private readonly repository: Repository<CitySchema>) {}
 
   async save(city: City): Promise<City> {
     const schema = CityMapper.toSchema(city);

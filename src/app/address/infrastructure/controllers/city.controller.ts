@@ -22,22 +22,21 @@ export class CityController {
     type: CityResponseDto,
   })
   @ApiResponse({
-  status: HttpStatus.BAD_REQUEST,
-  description: 'Bad request',
-})
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Bad request',
+  })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
   })
   @ApiResponse({
-  status: HttpStatus.FORBIDDEN,
-  description: 'Forbidden',
-})
-@ApiResponse({
-  status: HttpStatus.NOT_FOUND,
-  description: 'Not found',
-})
-
+    status: HttpStatus.FORBIDDEN,
+    description: 'Forbidden',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Not found',
+  })
   @Roles(UserRole.ADMIN)
   @Post()
   @Header('Content-Type', 'application/json')
