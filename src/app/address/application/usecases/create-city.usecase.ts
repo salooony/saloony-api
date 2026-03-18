@@ -9,10 +9,7 @@ import { CityResponseDto } from '../dtos/responses/city.response.dto';
 
 @Injectable()
 export class CreateCityUsecase {
-  constructor(
-    @Inject(CITY_REPOSITORY)
-    private readonly cityRepository: ICityRepository,
-  ) {}
+  constructor(@Inject(CITY_REPOSITORY)private readonly cityRepository: ICityRepository) {}
 
   async execute(dto: CreateCityRequestDto): Promise<CityResponseDto> {
     const city = new City('', dto.name, country)
