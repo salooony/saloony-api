@@ -8,14 +8,10 @@ export class TemplateMapper {
     const domain = new DomainTemplate();
     domain.id = schema.id;
     domain.key = schema.key;
-    domain.type = schema.type;
     domain.title = schema.title;
     domain.message = schema.message;
     domain.defaultParameters = schema.defaultParameters;
-    domain.metadata = schema.metadata;
-    domain.isActive = schema.isActive;
     domain.createdAt = schema.createdAt;
-    domain.updatedAt = schema.updatedAt;
 
     return domain;
   }
@@ -24,14 +20,10 @@ export class TemplateMapper {
     const schema = new SchemaTemplate();
     if (domain.id) schema.id = domain.id;
     schema.key = domain.key;
-    schema.type = domain.type;
     schema.title = domain.title;
     schema.message = domain.message;
     schema.defaultParameters = domain.defaultParameters;
-    schema.metadata = domain.metadata;
-    schema.isActive = domain.isActive;
     if (domain.createdAt) schema.createdAt = domain.createdAt;
-    if (domain.updatedAt) schema.updatedAt = domain.updatedAt;
 
     return schema;
   }

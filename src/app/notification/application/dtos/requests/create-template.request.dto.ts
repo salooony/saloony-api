@@ -1,33 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsOptional, IsString, IsObject } from 'class-validator';
-import { TemplateType } from '@notification/domain/enums/template-type.enum';
+import { IsNotEmpty, IsOptional, IsString, IsObject } from 'class-validator';
 
 export class CreateTemplateRequestDto {
   @ApiProperty({
     description: 'The unique key of the template.',
     type: String,
     required: true,
-    example: 'welcome_new_user',
+    example: 'verify_email',
   })
   @IsNotEmpty()
   @IsString()
   public key: string;
 
   @ApiProperty({
-    description: 'The type of the template.',
-    enum: TemplateType,
-    required: true,
-    example: TemplateType.SYSTEM,
-  })
-  @IsNotEmpty()
-  @IsEnum(TemplateType)
-  public type: TemplateType;
-
-  @ApiProperty({
     description: 'The title of the notification template.',
     type: String,
     required: true,
-    example: 'Welcome to Saloony!',
+    example: 'Verify your Saloony email',
   })
   @IsNotEmpty()
   @IsString()
@@ -37,7 +26,7 @@ export class CreateTemplateRequestDto {
     description: 'The message content of the template with placeholders.',
     type: String,
     required: true,
-    example: 'Hello {{name}}, welcome to our platform.',
+    example: 'Hello {{firstName}}, use this verification code to verify your email address: {{code}}',
   })
   @IsNotEmpty()
   @IsString()
@@ -47,18 +36,9 @@ export class CreateTemplateRequestDto {
     description: 'Default values for placeholders.',
     type: Object,
     required: false,
-    example: { name: 'User' },
+    example: { firstName: 'Guest', code: '000000' },
   })
   @IsOptional()
   @IsObject()
   public defaultParameters?: Record<string, any>;
-
-  @ApiProperty({
-    description: 'Metadata for the template.',
-    type: Object,
-    required: false,
-  })
-  @IsOptional()
-  @IsObject()
-  public metadata?: Record<string, any>;
 }

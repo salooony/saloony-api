@@ -4,6 +4,7 @@ import { Template } from '@notification/infrastructure/schemas/template.schema';
 import { TemplateRepository } from '@notification/infrastructure/repositories/template.repository';
 import { CreateTemplateUseCase } from '@notification/application/usecases/create-template.usecase';
 import { GetTemplateByKeyUseCase } from '@notification/application/usecases/get-template-by-key.usecase';
+import { TemplateRendererService } from '@notification/application/services/template-renderer.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Template])],
@@ -15,7 +16,8 @@ import { GetTemplateByKeyUseCase } from '@notification/application/usecases/get-
     },
     CreateTemplateUseCase,
     GetTemplateByKeyUseCase,
+    TemplateRendererService,
   ],
-  exports: [CreateTemplateUseCase, GetTemplateByKeyUseCase],
+  exports: [CreateTemplateUseCase, GetTemplateByKeyUseCase, TemplateRendererService],
 })
 export class TemplateModule {}

@@ -11,7 +11,7 @@ export class CreateTemplateUseCase {
   ) {}
 
   async execute(dto: CreateTemplateRequestDto): Promise<Template> {
-    const { key, type, title, message, defaultParameters, metadata } = dto;
+    const { key, title, message, defaultParameters } = dto;
 
     // Check if template with this key already exists
     const existingTemplate = await this.templateRepository.findByKey(key);
@@ -21,12 +21,9 @@ export class CreateTemplateUseCase {
 
     const template = new Template();
     template.key = key;
-    template.type = type;
     template.title = title;
     template.message = message;
     template.defaultParameters = defaultParameters || {};
-    template.metadata = metadata || {};
-    template.isActive = true;
 
     return await this.templateRepository.save(template);
   }
