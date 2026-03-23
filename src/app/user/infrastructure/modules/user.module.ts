@@ -14,7 +14,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from '@user/infrastructure/controllers/auth.controller';
 import { GetUserInfoUsecase } from '@user/application/usecases/get-user-info.usecase';
 import { DeleteUserAccountUseCase } from '@user/application/usecases/delete-user-account.usecase';
-import { SmtpEmailSender } from '@user/infrastructure/email/smtpEmail.sender';
 import { ForgotPasswordUseCase } from '@user/application/usecases/forgot-password.usecase';
 import { PasswordResetTokenRepository } from '@user/infrastructure/repositories/password_reset_token.repository';
 import { PasswordResetTokenEntity } from '@user/infrastructure/schemas/password-reset-token.schema';
@@ -23,8 +22,8 @@ import { ResetPasswordUseCase } from '@user/application/usecases/reset-password.
 import { Salon } from '@salon/infrastructure/schemas/salon.entity';
 import { RequestEmailVerificationUseCase } from '@user/application/usecases/request-email-verification.usecase';
 import { RequestPhoneVerificationUseCase } from '@user/application/usecases/request-phone-verification.usecase';
-import { NotificationModule } from '@notification/infrastructure/modules/notification.module';
 import { TokensModule } from '@token/infrastructure/modules/token.module';
+import { TemplateModule } from '@notification/infrastructure/modules/template.module';
 
 @Module({
   imports: [
@@ -41,8 +40,8 @@ import { TokensModule } from '@token/infrastructure/modules/token.module';
         };
       },
     }),
-    NotificationModule,
     TokensModule,
+    TemplateModule,
   ],
 
   controllers: [UserController, AuthController],
@@ -66,8 +65,6 @@ import { TokensModule } from '@token/infrastructure/modules/token.module';
     { provide: 'HashingProvider', useClass: BcryptHashingProvider },
     { provide: 'TokenGenerator', useClass: TokenGenerator },
     { provide: 'PasswordResetTokenRepository', useClass: PasswordResetTokenRepository },
-
-    { provide: 'IEmailSender', useClass: SmtpEmailSender },
     { provide: 'IUserRepository', useClass: UsersRepository },
   ],
 

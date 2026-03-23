@@ -1,10 +1,9 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { NotifierService } from '@notification/application/services/notifier.service';
 import { User } from '@user/domain/entities/user';
 
 @Injectable()
 export class RequestEmailVerificationUseCase {
-  constructor(private readonly notifierService: NotifierService) {}
+  constructor() {}
 
   execute(user: User): Promise<void> {
     if (user.isEmailVerified()) {

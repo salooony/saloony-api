@@ -9,7 +9,6 @@ import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info
 import { LoginUsecase } from '@app/user/application/usecases/login.usecase';
 import { ResetPasswordUseCase } from '@app/user/application/usecases/reset-password.usecase';
 import { RequestEmailVerificationUseCase } from '@app/user/application/usecases/request-email-verification.usecase';
-import { NotifierService } from '@app/notification/application/services/notifier.service';
 import { User } from '@app/user/domain/entities/user';
 import { UserRole } from '@app/user/domain/enums/user-role.enum';
 import { AuthController } from '@app/user/infrastructure/controllers/auth.controller';
@@ -64,18 +63,6 @@ describe('UserController', () => {
             create: jest.fn(),
             findByTokenHash: jest.fn(),
             deleteById: jest.fn(),
-          },
-        },
-        {
-          provide: 'IEmailSender',
-          useValue: {
-            sendResetEmail: jest.fn(),
-          },
-        },
-        {
-          provide: NotifierService,
-          useValue: {
-            notify: jest.fn(),
           },
         },
       ],

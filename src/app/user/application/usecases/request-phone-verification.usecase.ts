@@ -1,17 +1,12 @@
-import { BadRequestException, ConflictException, Injectable, Logger } from '@nestjs/common';
-import { NotifierService } from '@notification/application/services/notifier.service';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { User } from '@user/domain/entities/user';
-import { SmsMessage } from '@notification/domain/message/sms.message';
 import { TokenGeneratorService } from '@token/application/token-generator.service';
 import { TokenGeneratorType } from '@token/domin/enums/token-generator-type.enum';
 import { GetTemplateByKeyUseCase } from '@notification/application/usecases/get-template-by-key.usecase';
 
 @Injectable()
 export class RequestPhoneVerificationUseCase {
-  private readonly logger = new Logger(RequestPhoneVerificationUseCase.name);
-
   constructor(
-    private readonly notifierService: NotifierService,
     private readonly tokenGeneratorService: TokenGeneratorService,
     private readonly getTemplateByKeyUseCase: GetTemplateByKeyUseCase,
   ) {}
@@ -36,11 +31,7 @@ export class RequestPhoneVerificationUseCase {
     // Hydrate template message with token
     const messageContent = template.message.replace('{{code}}', token);
 
-    // Send notification via Notification.Notifier
-    // Channel: PHONE (SMS)
-    const message = new SmsMessage(user.mobileNumber, messageContent);
-
-    this.notifierService.notify(message);
-    this.logger.log(`Phone verification SMS sent to ${user.mobileNumber}`);
+    // Notification delivery is disabled while notifier integrations are removed.
+    void messageContent;
   }
 }

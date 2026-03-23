@@ -5,7 +5,6 @@ import appConfig from './config/app.config';
 import databaseConfig, { DatabaseConfig } from './config/database.config';
 import { UserModule } from '@user/infrastructure/modules/user.module';
 import { AddressModule } from '@address/infrastructure/modules/address.module';
-import { NotificationModule } from '@notification/infrastructure/modules/notification.module';
 import jwtConfig from '@config/jwt.config';
 import { APP_GUARD } from '@nestjs/core';
 import { TokenGuard } from '@user/infrastructure/guards/token.guard';
@@ -47,7 +46,6 @@ const ENV = process.env.NODE_ENV;
 
     UserModule,
     AddressModule,
-    NotificationModule,
     TokensModule,
   ],
   providers: [
