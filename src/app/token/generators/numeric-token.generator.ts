@@ -1,6 +1,6 @@
 import { randomInt } from 'crypto';
 import { TokenGenerator } from './token-generator.interface';
-import { TokenGeneratorType } from '@app/token/domain/enums/token-generator-type.enum';
+import { TokenGeneratorType } from '@token/domain/enums/token-generator-type.enum';
 import { z } from 'zod';
 
 const DEFAULT_DIGITS = 6;
