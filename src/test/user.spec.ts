@@ -6,6 +6,7 @@ import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase
 import { ForgotPasswordUseCase } from '@app/user/application/usecases/forgot-password.usecase';
 import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
 import { LoginUsecase } from '@app/user/application/usecases/login.usecase';
+import { USERS_REPOSITORY } from '@app/user/domain/ports/iuser.repository';
 import { User } from '@app/user/domain/entities/user';
 import { AuthController } from '@app/user/infrastructure/controllers/auth.controller';
 import { UserController } from '@app/user/infrastructure/controllers/user.controller';
@@ -47,7 +48,7 @@ describe('UserController', () => {
         ForgotPasswordUseCase,
         LoginUsecase,
         UserTransformer,
-        { provide: 'UsersRepository', useClass: MockUsersReporitory },
+        { provide: USERS_REPOSITORY, useClass: MockUsersReporitory },
         { provide: 'HashingProvider', useClass: BcryptHashingProvider },
         { provide: 'TokenGenerator', useClass: TokenGenerator },
       ],

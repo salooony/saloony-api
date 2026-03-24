@@ -3,11 +3,15 @@ import { createWriteStream, existsSync, mkdirSync } from 'fs';
 import { extname, join } from 'path';
 import { pipeline } from 'stream/promises';
 import { MultipartFile } from '../../domain/interfaces/multipart-file.interface';
-import { IUploadFileService } from '../../domain/ports/iupload-file.service';
+import { IUploadFile } from '../../domain/ports/iupload-file.service';
 import { FileType } from '../../domain/enums/file-type.enum';
 
 @Injectable()
-export class UploadFileService implements IUploadFileService {
+export class UploadFileService implements IUploadFile {
+  /**
+   * Stores the uploaded multipart file in the given category folder
+   * and returns the generated filename.
+   */
   async execute(type: FileType, file: MultipartFile): Promise<string> {
     const destFolder = join(process.cwd(), 'uploads', type);
 

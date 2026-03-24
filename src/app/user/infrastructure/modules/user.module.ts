@@ -2,6 +2,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserController } from '../controllers/user.controller';
 import { Module } from '@nestjs/common';
 import { UsersRepository } from '../repositories/user.repository';
+import { USERS_REPOSITORY } from '@app/user/domain/ports/iuser.repository';
 import { BcryptHashingProvider } from '../providers/bcrypt.hashing.provider';
 import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase';
 import { UserTransformer } from '@app/user/application/transformers/user.transformer';
@@ -70,7 +71,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
     UserTransformer,
 
     //  repositories & providers
-    { provide: 'UsersRepository', useClass: UsersRepository },
+    { provide: USERS_REPOSITORY, useClass: UsersRepository },
     { provide: 'HashingProvider', useClass: BcryptHashingProvider },
     { provide: 'TokenGenerator', useClass: TokenGenerator },
     { provide: 'PasswordResetTokenRepository', useClass: PasswordResetTokenRepository },
@@ -79,6 +80,6 @@ import { MailerModule } from '@nestjs-modules/mailer';
     { provide: 'IUserRepository', useClass: UsersRepository },
   ],
 
-  exports: [{ provide: 'UsersRepository', useClass: UsersRepository }],
+  exports: [{ provide: USERS_REPOSITORY, useClass: UsersRepository }],
 })
 export class UserModule {}

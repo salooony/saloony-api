@@ -6,8 +6,7 @@ import { FileType } from '../../domain/enums/file-type.enum';
 export class FilePathService {
   constructor(private readonly configService: ConfigService) {}
 
-  getFileUrl(type: FileType, filename: string): string {
-    const baseUrl = this.configService.get<string>('app.url');
-    return `${baseUrl}/uploads/${type}/${filename}`;
+  createFileUrl(filename: string, type: FileType): string {
+    return `${this.configService.get<string>('app.url')}/uploads/${type}/${filename}`;
   }
 }

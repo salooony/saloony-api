@@ -8,14 +8,14 @@ import {
 import { LoginRequestDto } from '../dtos/requests/login.request.dto';
 import { LoginResponseDto } from '../dtos/responses/login.response.dto';
 import { HashingProviderInterface } from '../providers/hashing.provider.interface';
-import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
+import { IUserRepository, USERS_REPOSITORY } from '@app/user/domain/ports/iuser.repository';
 import { ITokenGenerator } from '@app/user/domain/ports/itoken-generator.provider';
 
 @Injectable()
 export class LoginUsecase {
   constructor(
     @Inject('HashingProvider') private hashingProvider: HashingProviderInterface,
-    @Inject('UsersRepository') private readonly userRepository: IUserRepository,
+    @Inject(USERS_REPOSITORY) private readonly userRepository: IUserRepository,
     @Inject('TokenGenerator') private tokenGenerator: ITokenGenerator,
   ) {}
 

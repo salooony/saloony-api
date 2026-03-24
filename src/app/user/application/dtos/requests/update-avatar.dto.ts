@@ -6,5 +6,5 @@ export class UpdateAvatarDto {
     format: 'binary',
     description: 'The file object',
   })
-  file: any;
+  file: string;
 }

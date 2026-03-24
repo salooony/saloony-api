@@ -5,7 +5,7 @@ import { UserResponseDto } from '@app/user/application/dtos/responses/user.respo
 import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase';
 import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
 import { User } from '@app/user/domain/entities/user';
-import { Body, Controller, Get, Header, HttpStatus, Post, Req, ValidationPipe, Put } from '@nestjs/common';
+import { Body, Controller, Get, Header, HttpStatus, Post, Req, ValidationPipe, Put, HttpCode } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags, ApiConsumes } from '@nestjs/swagger';
 import { BadRequestException, Inject } from '@nestjs/common';
 import { UpdateUserAvatarUsecase } from '@app/user/application/usecases/update-user-avatar.usecase';
@@ -71,15 +71,32 @@ export class UserController {
   @Put('profile/avatar')
   @ApiOperation({ summary: 'Update user avatar' })
   @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'The user avatar was updated successfully.',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Avatar file is required.',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'User should be logged in.',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Something went wrong, try again.',
+  })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: UpdateAvatarDto })
-  public async uploadAvatar(@CurrentUser() user: User, @Req() req: FastifyRequest) {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async uploadAvatar(@CurrentUser() user: User, @Req() req: FastifyRequest): Promise<void> {
     const filePart = await req.file();
 
     if (!filePart) {
       throw new BadRequestException('Avatar file is required');
     }
 
-    return await this.updateUserAvatar.execute(filePart, user);
+    await this.updateUserAvatar.execute(filePart, user);
   }
 }
