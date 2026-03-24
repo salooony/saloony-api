@@ -9,17 +9,17 @@ import { COUNTRY_REPOSITORY, ICountryRepository } from '@address/domain/ports/ic
 
 @Injectable()
 export class CreateCityUsecase {
-  constructor
-  (@Inject(CITY_REPOSITORY) private readonly cityRepository: ICityRepository,
-  @Inject(COUNTRY_REPOSITORY)private readonly countryRepository: ICountryRepository
-) {}
+  constructor(
+    @Inject(CITY_REPOSITORY) private readonly cityRepository: ICityRepository,
+    @Inject(COUNTRY_REPOSITORY) private readonly countryRepository: ICountryRepository,
+  ) {}
 
   async execute(dto: CreateCityRequestDto): Promise<CityResponseDto> {
     const country = await this.countryRepository.findOneById(dto.countryId);
 
-      if (!country) {
-        throw new NotFoundException('Country not found');
-      }
+    if (!country) {
+      throw new NotFoundException('Country not found');
+    }
 
     const city = new City('', dto.name, country);
 
