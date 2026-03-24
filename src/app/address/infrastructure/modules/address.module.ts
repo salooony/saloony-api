@@ -5,7 +5,7 @@ import { City } from '../schemas/city.schema';
 import { CountryController } from '../controllers/country.controller';
 import { CityController } from '../controllers/city.controller';
 import { CountryRepository } from '../repositories/country.repository';
-import { CityRepository } from '../repositories/city.repository';
+import { CityRepository } from '@address/infrastructure/repositories/city.repository';
 import { COUNTRY_REPOSITORY } from '@address/domain/ports/icountry.repository';
 import { CITY_REPOSITORY } from '@address/domain/ports/icity.repository';
 import { CreateCountryUsecase } from '@address/application/usecases/create-country.usecase';

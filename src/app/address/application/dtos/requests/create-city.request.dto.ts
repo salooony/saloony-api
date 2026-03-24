@@ -3,18 +3,22 @@ import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateCityRequestDto {
   @ApiProperty({
-    example: 'Nablus',
     description: 'City name',
+    example: 'Gaza',
+    required: true,
+    type: String,
   })
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   name: string;
 
   @ApiProperty({
-    example: '65f1c2e8a1b2c3d4e5f6g7h8',
-    description: 'Country ID',
+    description: 'Country id',
+    example: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    required: true,
+    type: String,
   })
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   countryId: string;
 }
