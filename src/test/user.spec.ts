@@ -61,7 +61,7 @@ describe('UserController', () => {
         LoginUsecase,
         ResetPasswordUseCase,
         UserTransformer,
-        { provide: 'UsersRepository', useClass: MockUsersReporitory },
+        { provide: USERS_REPOSITORY, useClass: MockUsersReporitory },
         { provide: 'HashingProvider', useClass: BcryptHashingProvider },
         { provide: 'TokenGenerator', useClass: TokenGenerator },
         {

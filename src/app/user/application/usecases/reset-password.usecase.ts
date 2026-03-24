@@ -2,7 +2,7 @@ import { Injectable, Inject, BadRequestException } from '@nestjs/common';
 import * as crypto from 'crypto';
 import * as bcrypt from 'bcryptjs';
 import { IPasswordResetTokenRepository } from '../../domain/ports/ipassword-reset-token.repository';
-import { IUserRepository } from '../../domain/ports/iuser.repository';
+import { IUserRepository, USERS_REPOSITORY } from '../../domain/ports/iuser.repository';
 // import { User } from '../../domain/entities/user';
 type ResetPasswordCommand = { token: string; newPassword: string };
 
@@ -12,7 +12,7 @@ export class ResetPasswordUseCase {
     @Inject('PasswordResetTokenRepository')
     private readonly tokenRepository: IPasswordResetTokenRepository,
 
-    @Inject('UsersRepository')
+    @Inject(USERS_REPOSITORY)
     private readonly userRepository: IUserRepository,
   ) {}
 

@@ -9,20 +9,7 @@ import { DeleteUserAccountUseCase } from '@app/user/application/usecases/delete-
 import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
 
 import { User } from '@app/user/domain/entities/user';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Header,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Post,
-  ValidationPipe,
-  Put,
-  Req,
-} from '@nestjs/common';
+import { Body, Controller, Get, Header, HttpStatus, Post, Req, ValidationPipe, Put, HttpCode, Delete, Param } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags, ApiConsumes } from '@nestjs/swagger';
 import { BadRequestException, Inject } from '@nestjs/common';
 import { UpdateAvatarDto } from '../../application/dtos/requests/update-avatar.dto';
@@ -127,6 +114,7 @@ export class UserController {
   async deleteUser(@Param('id') userId: string): Promise<void> {
     await this.deleteUserUseCase.execute(userId);
   }
+  
   @Put('profile/avatar')
   @ApiOperation({ summary: 'Update user avatar' })
   @ApiBearerAuth()
