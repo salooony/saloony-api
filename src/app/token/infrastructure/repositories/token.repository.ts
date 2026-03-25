@@ -27,6 +27,6 @@ export class TokenRepository implements ITokenRepository {
       return null;
     }
 
-    return TokenMapper.toDomain(entity);
+    return TokenMapper.toDomain(await this.repository.save(TokenMapper.toEntity(token)));
   }
 }
