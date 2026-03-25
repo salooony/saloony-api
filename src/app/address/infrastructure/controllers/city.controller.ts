@@ -20,22 +20,27 @@ export class CityController {
   @ApiResponse({
     status: HttpStatus.CREATED,
     type: CityResponseDto,
+    description: 'City was added successfully.',
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
-    description: 'Bad request',
+    description: 'One or more of the submitted properties is invalid.',
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized',
+    description: 'User should be logged in.',
   })
   @ApiResponse({
     status: HttpStatus.FORBIDDEN,
-    description: 'Forbidden',
+    description: 'Requires ADMIN role.',
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: 'Not found',
+    description: 'Country not found.',
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: 'City already exists',
   })
   @Roles(UserRole.ADMIN)
   @Post()
