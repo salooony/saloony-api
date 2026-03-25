@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 
 import { CITY_REPOSITORY, ICityRepository } from '@address/domain/ports/icity.repository';
 
@@ -19,6 +19,11 @@ export class CreateCityUsecase {
 
     if (!country) {
       throw new NotFoundException('Country not found');
+    }
+    const existingCity = await this.cityRepository.findByNameAndCountry(dto.name, dto.countryId);
+
+    if (existingCity) {
+      throw new ConflictException('City already exists in this country');
     }
 
     const city = new City('', dto.name, country);

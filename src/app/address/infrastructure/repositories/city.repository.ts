@@ -24,4 +24,22 @@ export class CityRepository implements ICityRepository {
 
     return CityMapper.map(withRelation!);
   }
+
+  async findByNameAndCountry(name: string, countryId: string): Promise<City | null> {
+    const found = await this.repository.findOne({
+      where: {
+        name,
+        country: {
+          id: countryId,
+        },
+      },
+      relations: ['country'],
+    });
+
+    if (!found) {
+      return null;
+    }
+
+    return CityMapper.map(found);
+  }
 }
