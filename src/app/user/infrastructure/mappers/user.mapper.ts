@@ -41,8 +41,15 @@ export class UserMapper {
     entity.password = user.password;
     entity.language = user.language;
     entity.acl = user.acl;
-    entity.deletedAt = user.deletedAt;
-    entity.status = user.status;
+
+    if (user.createdAt) {
+      entity.createdAt = user.createdAt;
+    }
+
+    if (user.updatedAt) {
+      entity.updatedAt = user.updatedAt;
+    }
+
     return entity;
   }
 }

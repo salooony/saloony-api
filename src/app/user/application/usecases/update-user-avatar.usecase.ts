@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { IUserRepository, USERS_REPOSITORY } from '@app/user/domain/ports/iuser.repository';
-import { User } from '@app/user/domain/entities/user';
-import { IUploadFile, UPLOAD_FILE } from '@app/shared/uploads/domain/ports/iupload-file.service';
-import { FilePathService } from '@app/shared/uploads/application/services/file-path.service';
-import { FileType } from '@app/shared/uploads/domain/enums/file-type.enum';
-import { MultipartFile } from '@app/shared/uploads/domain/interfaces/multipart-file.interface';
+import { IUserRepository, USERS_REPOSITORY } from '@user/domain/ports/iuser.repository';
+import { User } from '@user/domain/entities/user';
+import { IUploadFile, UPLOAD_FILE } from '@shared/uploads/domain/ports/iupload-file.service';
+import { FilePathService } from '@shared/uploads/application/services/file-path.service';
+import { FileType } from '@shared/uploads/domain/enums/file-type.enum';
+import { MultipartFile } from '@shared/uploads/domain/interfaces/multipart-file.interface';
 
 @Injectable()
 export class UpdateUserAvatarUsecase {

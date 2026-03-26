@@ -2,7 +2,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserController } from '../controllers/user.controller';
 import { Module } from '@nestjs/common';
 import { UsersRepository } from '../repositories/user.repository';
-import { USERS_REPOSITORY } from '@app/user/domain/ports/iuser.repository';
+import { USERS_REPOSITORY } from '@user/domain/ports/iuser.repository';
 import { BcryptHashingProvider } from '../providers/bcrypt.hashing.provider';
 import { CreateUserUsecase } from '@user/application/usecases/create.usecase';
 import { UserTransformer } from '@user/application/transformers/user.transformer';

@@ -61,6 +61,9 @@ export class User {
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
 
+  @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at', nullable: true })
+  deletedAt: Date | null;
+
   @Column({ type: 'varchar', array: true })
   acl: string[];
 
