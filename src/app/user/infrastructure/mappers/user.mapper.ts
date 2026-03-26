@@ -27,7 +27,7 @@ export class UserMapper {
 
     // preserve id for updates so TypeORM performs an UPDATE instead of INSERT
     if (user.id) {
-      (entity as any).id = user.id;
+      entity.id = user.id;
     }
 
     entity.firstname = user.firstname;
@@ -44,6 +44,7 @@ export class UserMapper {
     if (user.createdAt) {
       entity.createdAt = user.createdAt;
     }
+
     if (user.updatedAt) {
       entity.updatedAt = user.updatedAt;
     }

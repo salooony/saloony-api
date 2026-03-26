@@ -1,16 +1,16 @@
-import { CurrentUser } from '@app/user/application/decorators/current-user.decorator';
+import { CurrentUser } from '@user/application/decorators/current-user.decorator';
 import { FastifyRequest } from 'fastify';
-import { UserRequestDto } from '@app/user/application/dtos/requests/user.request.dto';
-import { UserResponseDto } from '@app/user/application/dtos/responses/user.response.dto';
-import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase';
-import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
-import { User } from '@app/user/domain/entities/user';
+import { UserRequestDto } from '@user/application/dtos/requests/user.request.dto';
+import { UserResponseDto } from '@user/application/dtos/responses/user.response.dto';
+import { CreateUserUsecase } from '@user/application/usecases/create.usecase';
+import { GetUserInfoUsecase } from '@user/application/usecases/get-user-info.usecase';
+import { User } from '@user/domain/entities/user';
 import { Body, Controller, Get, Header, HttpStatus, Post, Req, ValidationPipe, Put, HttpCode } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags, ApiConsumes } from '@nestjs/swagger';
 import { BadRequestException, Inject } from '@nestjs/common';
-import { UpdateUserAvatarUsecase } from '@app/user/application/usecases/update-user-avatar.usecase';
+import { UpdateUserAvatarUsecase } from '@user/application/usecases/update-user-avatar.usecase';
 import { UpdateAvatarDto } from '../../application/dtos/requests/update-avatar.dto';
-import { Public } from '@app/user/application/decorators/public.decorator';
+import { Public } from '@user/application/decorators/public.decorator';
 
 @ApiTags('Users')
 @Controller('users')
