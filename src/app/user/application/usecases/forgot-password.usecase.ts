@@ -19,7 +19,7 @@ export class ForgotPasswordUseCase {
 
     @Inject('IEmailSender')
     private readonly emailSender: IEmailSender,
-  ) { }
+  ) {}
   async execute(forgotPasswordRequest: ForgotPasswordRequestDto): Promise<void> {
     const email = forgotPasswordRequest.email.toLowerCase().trim();
 

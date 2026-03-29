@@ -22,4 +22,3 @@ declare module 'fastify' {
     file: () => Promise<FastifyMultipartFile | undefined>;
   }
 }
-
