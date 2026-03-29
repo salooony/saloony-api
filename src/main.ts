@@ -12,14 +12,17 @@ async function bootstrap() {
     new FastifyAdapter({ ignoreTrailingSlash: true }),
   );
 
-  const fastify = app.getHttpAdapter().getInstance();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const fastify = app.getHttpAdapter().getInstance() as any;
 
   // Register fastify plugins for static assets and multipart handling
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
   await fastify.register(fastifyStatic, {
     root: join(__dirname, '..', 'uploads'),
     prefix: '/uploads/',
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
   await fastify.register(fastifyMultipart, {
     limits: {
       fileSize: 2 * 1024 * 1024,
