@@ -19,7 +19,7 @@ export class UserMapper {
     user.language = createdUser.language;
     user.acl = createdUser.acl;
     user.status = createdUser.status;
-    user.deletedAt = createdUser.deletedAt;
+    user.deletedAt = createdUser.deletedAt ?? undefined;
     return user;
   }
 

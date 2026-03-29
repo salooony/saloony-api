@@ -3,7 +3,6 @@ import { UserController } from '../controllers/user.controller';
 import { Module } from '@nestjs/common';
 import { UsersRepository } from '../repositories/user.repository';
 import { USERS_REPOSITORY } from '@user/domain/ports/iuser.repository';
-import { USERS_REPOSITORY } from '@user/domain/ports/iuser.repository';
 import { BcryptHashingProvider } from '../providers/bcrypt.hashing.provider';
 import { CreateUserUsecase } from '@user/application/usecases/create.usecase';
 import { UserTransformer } from '@user/application/transformers/user.transformer';
@@ -96,7 +95,6 @@ import { UpdateAvatarUsecase } from '@user/application/usecases/update-avatar.us
     { provide: 'IUserRepository', useClass: UsersRepository },
   ],
 
-  exports: [{ provide: USERS_REPOSITORY, useClass: UsersRepository }],
   exports: [{ provide: USERS_REPOSITORY, useClass: UsersRepository }],
 })
 export class UserModule {}

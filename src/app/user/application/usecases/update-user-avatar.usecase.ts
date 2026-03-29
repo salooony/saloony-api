@@ -15,8 +15,8 @@ export class UpdateUserAvatarUsecase {
   ) {}
 
   async execute(file: MultipartFile, user: User): Promise<void> {
-    const filename = await this.uploadFile.execute(FileType.AVATAR, file);
-    const avatarUrl = this.filePathService.createFileUrl(filename, FileType.AVATAR);
+    const filename = await this.uploadFile.execute(FileType.IMAGE, file);
+    const avatarUrl = this.filePathService.createFileUrl(filename, FileType.IMAGE);
 
     user.avatar = avatarUrl;
     user.updatedAt = new Date();

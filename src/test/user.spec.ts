@@ -9,6 +9,7 @@ import { GetUserInfoUsecase } from '@user/application/usecases/get-user-info.use
 import { LoginUsecase } from '@user/application/usecases/login.usecase';
 import { ResetPasswordUseCase } from '@user/application/usecases/reset-password.usecase';
 import { UpdateAvatarUsecase } from '@user/application/usecases/update-avatar.usecase';
+import { USERS_REPOSITORY } from '@user/domain/ports/iuser.repository';
 
 import { NotifierService } from '@notification/application/services/notifier.service';
 import { User } from '@user/domain/entities/user';
