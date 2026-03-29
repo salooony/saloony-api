@@ -8,7 +8,7 @@ import {
 import { LoginRequestDto } from '../dtos/requests/login.request.dto';
 import { LoginResponseDto } from '../dtos/responses/login.response.dto';
 import { HashingProviderInterface } from '../providers/hashing.provider.interface';
-import { IUserRepository, USERS_REPOSITORY } from '@user/domain/ports/iuser.repository';
+import { IUserRepository, USERS_REPOSITORY } from '@app/user/domain/ports/iuser.repository';
 import { ITokenGenerator } from '@app/user/domain/ports/itoken-generator.provider';
 
 @Injectable()

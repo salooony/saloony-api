@@ -9,13 +9,25 @@ import { DeleteUserAccountUseCase } from '@app/user/application/usecases/delete-
 import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
 
 import { User } from '@app/user/domain/entities/user';
-import { Body, Controller, Get, Header, HttpStatus, Post, Req, ValidationPipe, Put, HttpCode, Delete, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Header,
+  HttpStatus,
+  Post,
+  Req,
+  ValidationPipe,
+  Put,
+  HttpCode,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags, ApiConsumes } from '@nestjs/swagger';
 import { BadRequestException, Inject } from '@nestjs/common';
 import { UpdateAvatarDto } from '../../application/dtos/requests/update-avatar.dto';
 import { FastifyRequest } from 'fastify';
 import { UpdateAvatarUsecase } from '@app/user/application/usecases/update-avatar.usecase';
-
 
 @ApiTags('Users')
 @Controller('users')
@@ -24,7 +36,7 @@ export class UserController {
     private readonly createUsecase: CreateUserUsecase,
     private readonly getUserInfoUsecase: GetUserInfoUsecase,
     private readonly deleteUserUseCase: DeleteUserAccountUseCase,
-     @Inject(UpdateAvatarUsecase) private readonly updateAvatar: UpdateAvatarUsecase,
+    @Inject(UpdateAvatarUsecase) private readonly updateAvatar: UpdateAvatarUsecase,
   ) {}
 
   @ApiOperation({ summary: 'Register a new user' })
@@ -46,6 +58,7 @@ export class UserController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Something went wrong, try again.',
   })
+  @Public()
   @Public()
   @Post()
   @Header('Content-Type', 'application/json')
@@ -114,7 +127,7 @@ export class UserController {
   async deleteUser(@Param('id') userId: string): Promise<void> {
     await this.deleteUserUseCase.execute(userId);
   }
-  
+
   @Put('profile/avatar')
   @ApiOperation({ summary: 'Update user avatar' })
   @ApiBearerAuth()

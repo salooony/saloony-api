@@ -3,6 +3,7 @@ import { UserController } from '../controllers/user.controller';
 import { Module } from '@nestjs/common';
 import { UsersRepository } from '../repositories/user.repository';
 import { USERS_REPOSITORY } from '@user/domain/ports/iuser.repository';
+import { USERS_REPOSITORY } from '@user/domain/ports/iuser.repository';
 import { BcryptHashingProvider } from '../providers/bcrypt.hashing.provider';
 import { CreateUserUsecase } from '@user/application/usecases/create.usecase';
 import { UserTransformer } from '@user/application/transformers/user.transformer';
@@ -29,7 +30,6 @@ import { TokensModule } from '@token/infrastructure/modules/token.module';
 import { TemplateModule } from '@notification/infrastructure/modules/template.module';
 import { FileModule } from '@app/shared/uploads/infrastructure/modules/file.module';
 import { UpdateAvatarUsecase } from '@user/application/usecases/update-avatar.usecase';
-
 
 @Module({
   imports: [
@@ -87,6 +87,7 @@ import { UpdateAvatarUsecase } from '@user/application/usecases/update-avatar.us
 
     //  repositories & providers
     { provide: USERS_REPOSITORY, useClass: UsersRepository },
+    { provide: USERS_REPOSITORY, useClass: UsersRepository },
     { provide: 'HashingProvider', useClass: BcryptHashingProvider },
     { provide: 'TokenGenerator', useClass: TokenGenerator },
     { provide: 'PasswordResetTokenRepository', useClass: PasswordResetTokenRepository },
@@ -95,6 +96,7 @@ import { UpdateAvatarUsecase } from '@user/application/usecases/update-avatar.us
     { provide: 'IUserRepository', useClass: UsersRepository },
   ],
 
+  exports: [{ provide: USERS_REPOSITORY, useClass: UsersRepository }],
   exports: [{ provide: USERS_REPOSITORY, useClass: UsersRepository }],
 })
 export class UserModule {}

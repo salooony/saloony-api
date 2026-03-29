@@ -1,6 +1,6 @@
 import { ConflictException, Inject, InternalServerErrorException } from '@nestjs/common';
 import { UserTransformer } from '../transformers/user.transformer';
-import { IUserRepository, USERS_REPOSITORY } from '@user/domain/ports/iuser.repository';
+import { IUserRepository, USERS_REPOSITORY } from '@app/user/domain/ports/iuser.repository';
 import { UserResponseDto } from '../dtos/responses/user.response.dto';
 import { HashingProviderInterface } from '../providers/hashing.provider.interface';
 import { UserRequestDto } from '../dtos/requests/user.request.dto';
