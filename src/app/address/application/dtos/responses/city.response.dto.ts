@@ -6,7 +6,6 @@ export class CityResponseDto {
     description: 'City id',
     example: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     type: String,
-    required: true,
   })
   id: string;
 
@@ -14,7 +13,6 @@ export class CityResponseDto {
     description: 'City name',
     example: 'Gaza',
     type: String,
-    required: true,
   })
   name: string;
 
@@ -22,7 +20,6 @@ export class CityResponseDto {
     description: 'Parent country id',
     example: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     type: String,
-    required: true,
   })
   countryId: string;
 

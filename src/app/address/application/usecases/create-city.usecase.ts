@@ -18,12 +18,15 @@ export class CreateCityUsecase {
     const country = await this.countryRepository.findOneById(dto.countryId);
 
     if (!country) {
-      throw new NotFoundException('Country not found');
+      throw new NotFoundException('Country does not exist.');
     }
-    const existingCity = await this.cityRepository.findByNameAndCountry(dto.name, dto.countryId);
+    const existingCity = await this.cityRepository.findOne({
+     name: dto.name,
+       country: { id: dto.countryId }
+    });
 
     if (existingCity) {
-      throw new ConflictException('City already exists in this country');
+      throw new ConflictException('City already exists in this country.');
     }
 
     const city = new City('', dto.name, country);
