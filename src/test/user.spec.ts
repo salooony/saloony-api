@@ -12,6 +12,7 @@ import { ResetPasswordUseCase } from '@app/user/application/usecases/reset-passw
 import { NotifierService } from '@app/notification/application/services/notifier.service';
 import { User } from '@app/user/domain/entities/user';
 import { UserRole } from '@app/user/domain/enums/user-role.enum';
+import { UserStatus } from '@app/user/domain/enums/user-status.enum';
 import { AuthController } from '@app/user/infrastructure/controllers/auth.controller';
 import { UserController } from '@app/user/infrastructure/controllers/user.controller';
 import { MockUsersReporitory } from '@app/user/infrastructure/mock-repositories/user.mock.repository';
@@ -237,6 +238,28 @@ describe('UserController', () => {
 
       await expect(authController.login(loginRequest)).rejects.toEqual(
         new UnauthorizedException('Invalid credentials.'),
+      );
+    });
+
+    it('Should respond with unauthorized for blocked user', async () => {
+      // First, create a user
+      const blockedRequest = { ...request, email: 'blocked@email.com' };
+      await userController.create(blockedRequest);
+
+      // Manually set status to BLOCKED in mock repository
+      const user = MockUsersReporitory.users.find((u) => u.email === 'blocked@email.com');
+      if (user) {
+        user.status = UserStatus.BLOCKED;
+      }
+
+      // Assert that login throws UnauthorizedException
+      const loginRequest = { email: 'blocked@email.com', password: request.password };
+      const dto = plainToInstance(LoginRequestDto, loginRequest);
+      const errors = await validate(dto);
+      expect(errors).toHaveLength(0);
+
+      await expect(authController.login(loginRequest)).rejects.toEqual(
+        new UnauthorizedException('Your account has been blocked. Please contact support.'),
       );
     });
   });
