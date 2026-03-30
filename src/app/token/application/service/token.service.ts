@@ -26,6 +26,7 @@ export class TokenService {
     },
   ): Promise<Token> {
     let plainToken = this.generator.generate(type, options?.generatorOptions);
+
     let expiredAt: Date | null = null;
     if (options?.expiresAt) {
       expiredAt = options.expiresAt;
