@@ -21,8 +21,8 @@ export class CreateCityUsecase {
       throw new NotFoundException('Country does not exist.');
     }
     const existingCity = await this.cityRepository.findOne({
-     name: dto.name,
-       country: { id: dto.countryId }
+      name: dto.name,
+      country: { id: dto.countryId },
     });
 
     if (existingCity) {

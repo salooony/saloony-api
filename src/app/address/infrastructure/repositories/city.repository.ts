@@ -26,14 +26,14 @@ export class CityRepository implements ICityRepository {
     return CityMapper.map(withRelation!);
   }
 
-async findOne(criteria: FindOptionsWhere<CitySchema>,): Promise<City | null> {
-  const city = await this.repository.findOne({
-    where: criteria,
-    relations: ['country'],
-  });
+  async findOne(criteria: FindOptionsWhere<CitySchema>): Promise<City | null> {
+    const city = await this.repository.findOne({
+      where: criteria,
+      relations: ['country'],
+    });
 
-  if (!city) return null;
+    if (!city) return null;
 
-  return CityMapper.map(city);
-}
+    return CityMapper.map(city);
+  }
 }
