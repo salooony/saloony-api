@@ -1,15 +1,16 @@
-import { CurrentUser } from '@app/user/application/decorators/current-user.decorator';
-import { Roles } from '@app/shared/decorators/roles.decorator';
-import { UserRole } from '@app/user/domain/enums/user-role.enum';
-import { Public } from '@app/user/application/decorators/public.decorator';
-import { UserRequestDto } from '@app/user/application/dtos/requests/user.request.dto';
-import { UserResponseDto } from '@app/user/application/dtos/responses/user.response.dto';
-import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase';
-import { DeleteUserAccountUseCase } from '@app/user/application/usecases/delete-user-account.usecase';
-import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
+import { CurrentUser } from '@user/application/decorators/current-user.decorator';
+import { Roles } from '@shared/decorators/roles.decorator';
+import { UserRole } from '@user/domain/enums/user-role.enum';
+import { Public } from '@user/application/decorators/public.decorator';
+import { UserRequestDto } from '@user/application/dtos/requests/user.request.dto';
+import { UserResponseDto } from '@user/application/dtos/responses/user.response.dto';
+import { CreateUserUsecase } from '@user/application/usecases/create.usecase';
+import { DeleteUserAccountUseCase } from '@user/application/usecases/delete-user-account.usecase';
+import { GetUserInfoUsecase } from '@user/application/usecases/get-user-info.usecase';
 
-import { User } from '@app/user/domain/entities/user';
+import { User } from '@user/domain/entities/user';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -17,11 +18,18 @@ import {
   Header,
   HttpCode,
   HttpStatus,
+  Inject,
   Param,
   Post,
+  Put,
+  Req,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { UpdateAvatarUsecase } from '@user/application/usecases/update-avatar.usecase';
+import { UpdateAvatarDto } from '@user/application/dtos/requests/update-avatar.dto';
+import { FastifyRequest } from 'fastify';
+import type { MultipartFile as FastifyMultipartFile } from '@fastify/multipart';
 
 @ApiTags('Users')
 @Controller('users')
@@ -30,6 +38,7 @@ export class UserController {
     private readonly createUsecase: CreateUserUsecase,
     private readonly getUserInfoUsecase: GetUserInfoUsecase,
     private readonly deleteUserUseCase: DeleteUserAccountUseCase,
+    @Inject(UpdateAvatarUsecase) private readonly updateAvatar: UpdateAvatarUsecase,
   ) {}
 
   @ApiOperation({ summary: 'Register a new user' })
@@ -118,5 +127,40 @@ export class UserController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteUser(@Param('id') userId: string): Promise<void> {
     await this.deleteUserUseCase.execute(userId);
+  }
+
+  @Put('profile/avatar')
+  @ApiOperation({ summary: 'Update user avatar' })
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'The user avatar was updated successfully.',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Avatar file is required.',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'User should be logged in.',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Something went wrong, try again.',
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: UpdateAvatarDto })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async uploadAvatar(
+    @CurrentUser() user: User,
+    @Req() req: FastifyRequest & { file: () => Promise<FastifyMultipartFile | undefined> },
+  ): Promise<void> {
+    const filePart = await req.file();
+
+    if (!filePart) {
+      throw new BadRequestException('Avatar file is required');
+    }
+
+    await this.updateAvatar.execute(filePart, user);
   }
 }
