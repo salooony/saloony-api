@@ -1,3 +1,4 @@
+import { NOTIFICATION_TEMPLATE_KEYS } from '@app/notification/domain/enums/template-key.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString, IsObject } from 'class-validator';
 
@@ -6,7 +7,7 @@ export class CreateTemplateRequestDto {
     description: 'The unique key of the template.',
     type: String,
     required: true,
-    example: 'verify_email',
+    example: NOTIFICATION_TEMPLATE_KEYS[0],
   })
   @IsNotEmpty()
   @IsString()
