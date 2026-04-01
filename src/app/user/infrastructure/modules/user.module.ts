@@ -22,10 +22,12 @@ import { PasswordResetTokenEntity } from '@user/infrastructure/schemas/password-
 import { SalonMembership } from '@user/infrastructure/schemas/salon-membership.schema';
 import { ResetPasswordUseCase } from '@user/application/usecases/reset-password.usecase';
 import { Salon } from '@salon/infrastructure/schemas/salon.entity';
+import { UpdateAvatarUsecase } from '@user/application/usecases/update-avatar.usecase';
 
 import { NotificationModule } from '@notification/infrastructure/modules/notification.module';
 import { TokensModule } from '@token/infrastructure/modules/token.module';
 import { TemplateModule } from '@notification/infrastructure/modules/template.module';
+import { FileModule } from '@shared/uploads/infrastructure/modules/file.module';
 
 @Module({
   imports: [
@@ -63,6 +65,7 @@ import { TemplateModule } from '@notification/infrastructure/modules/template.mo
     NotificationModule,
     TokensModule,
     TemplateModule,
+    FileModule,
   ],
 
   controllers: [UserController, AuthController],
@@ -75,6 +78,7 @@ import { TemplateModule } from '@notification/infrastructure/modules/template.mo
     DeleteUserAccountUseCase,
     ForgotPasswordUseCase,
     ResetPasswordUseCase,
+    UpdateAvatarUsecase,
 
     //  helpers
     UserTransformer,
