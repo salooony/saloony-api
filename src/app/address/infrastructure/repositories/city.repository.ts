@@ -7,7 +7,7 @@ import { City } from '@address/domain/entities/city.entity';
 
 import { ICityRepository } from '@address/domain/ports/icity.repository';
 import { CityMapper } from '@address/infrastructure/mappers/city.mapper';
-import { FindOptionsWhere } from 'typeorm';
+import { FindCityCriteria } from '@address/domain/criteria/find-city.criteria';
 
 @Injectable()
 export class CityRepository implements ICityRepository {
@@ -26,13 +26,18 @@ export class CityRepository implements ICityRepository {
     return CityMapper.map(withRelation!);
   }
 
-  async findOne(criteria: FindOptionsWhere<CitySchema>): Promise<City | null> {
+  async findOne(criteria: FindCityCriteria): Promise<City | null> {
     const city = await this.repository.findOne({
-      where: criteria,
+      where: {
+        name: criteria.name,
+        country: { id: criteria.countryId },
+      },
       relations: ['country'],
     });
 
-    if (!city) return null;
+    if (!city) {
+      return null;
+    }
 
     return CityMapper.map(city);
   }
