@@ -1,22 +1,21 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { ITemplateRepository } from '@notification/domain/ports/template.repository.interface';
-import { Template } from '@notification/domain/entities/template';
 import { NotificationType } from '@notification/domain/enums/notification-type.enum';
 
 @Injectable()
-export class GetTemplateByKeyUseCase {
+export class DeleteTemplateUseCase {
   constructor(
     @Inject('ITemplateRepository')
     private readonly templateRepository: ITemplateRepository,
   ) {}
 
-  async execute(key: string, type: NotificationType): Promise<Template> {
+  async execute(key: string, type: NotificationType): Promise<void> {
     const template = await this.templateRepository.findByKey(key, type);
 
     if (!template) {
-      throw new NotFoundException(`Template with key ${key} not found`);
+      throw new NotFoundException(`Template with key ${key} and type ${type} not found`);
     }
 
-    return template;
+    await this.templateRepository.deleteByKey(key, type);
   }
 }

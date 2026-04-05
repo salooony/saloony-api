@@ -8,6 +8,7 @@ export class TemplateMapper {
     const domain = new DomainTemplate();
     domain.id = schema.id;
     domain.key = schema.key;
+    domain.type = schema.type;
     domain.title = schema.title;
     domain.message = schema.message;
     domain.defaultParameters = schema.defaultParameters;
@@ -20,6 +21,7 @@ export class TemplateMapper {
     const schema = new SchemaTemplate();
     if (domain.id) schema.id = domain.id;
     schema.key = domain.key;
+    schema.type = domain.type;
     schema.title = domain.title;
     schema.message = domain.message;
     schema.defaultParameters = domain.defaultParameters;

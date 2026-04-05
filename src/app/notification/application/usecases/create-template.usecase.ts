@@ -11,16 +11,17 @@ export class CreateTemplateUseCase {
   ) {}
 
   async execute(dto: CreateTemplateRequestDto): Promise<Template> {
-    const { key, title, message, defaultParameters } = dto;
+    const { key, type, title, message, defaultParameters } = dto;
 
-    // Check if template with this key already exists
-    const existingTemplate = await this.templateRepository.findByKey(key);
+    // Check if template with this key and type already exists
+    const existingTemplate = await this.templateRepository.findByKey(key, type);
     if (existingTemplate) {
-      throw new ConflictException(`Template with key ${key} already exists`);
+      throw new ConflictException(`Template with key ${key} and type ${type} already exists`);
     }
 
     const template = new Template();
     template.key = key;
+    template.type = type;
     template.title = title;
     template.message = message;
     template.defaultParameters = defaultParameters || {};

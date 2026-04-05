@@ -1,53 +1,53 @@
 import { NotificationType } from '@app/notification/domain/enums/notification-type.enum';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, IsObject, IsEnum } from 'class-validator';
+import { IsOptional, IsString, IsObject, IsEnum } from 'class-validator';
 
-export class CreateTemplateRequestDto {
+export class UpdateTemplateRequestDto {
   @ApiProperty({
     description: 'The unique key of the template.',
     type: String,
-    required: true,
-    example: 'welcome_email',
+    required: false,
+    example: 'welcome_email_v2',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  public key: string;
+  public key?: string;
 
   @ApiProperty({
     description: 'The type of the notification.',
     enum: NotificationType,
-    required: true,
+    required: false,
     example: NotificationType.EMAIL,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsEnum(NotificationType)
-  public type: NotificationType;
+  public type?: NotificationType;
 
   @ApiProperty({
     description: 'The title of the notification template.',
     type: String,
-    required: true,
-    example: 'Verify your Saloony email',
+    required: false,
+    example: 'Welcome to our platform',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  public title: string;
+  public title?: string;
 
   @ApiProperty({
-    description: 'The message content of the template with placeholders.',
+    description: 'The message content of the template.',
     type: String,
-    required: true,
-    example: 'Hello {{firstName}}, use this verification code to verify your email address: {{code}}',
+    required: false,
+    example: 'Hello {{firstName}}, we are glad to have you!',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  public message: string;
+  public message?: string;
 
   @ApiProperty({
     description: 'Default values for placeholders.',
     type: Object,
     required: false,
-    example: { firstName: 'Guest', code: '000000' },
+    example: { firstName: 'Guest' },
   })
   @IsOptional()
   @IsObject()
