@@ -33,18 +33,22 @@ export class TokenService {
     } else if (options?.expiresInSeconds) {
       expiredAt = new Date(Date.now() + options.expiresInSeconds * 1000);
     }
+
     if (options?.hash) {
       plainToken = createHash('sha256').update(plainToken).digest('hex');
     }
+
     const user = await this.userRepository.findOneById(ownerId);
+
     if (!user) {
       throw new Error('User does not exist.');
     }
+
     if (user.status !== UserStatus.ACTIVE) {
       throw new Error('User is not active.');
     }
-    const token = new Token(plainToken, new Date(), expiredAt, options?.hash ?? false, user);
-    return await this.tokenRepository.save(token);
+
+    return await this.tokenRepository.save(new Token(plainToken, new Date(), expiredAt, options?.hash ?? false, user));
   }
 
   async validate(token: string, ownerId?: string): Promise<{ valid: boolean; reason?: TokenValidationReason }> {
