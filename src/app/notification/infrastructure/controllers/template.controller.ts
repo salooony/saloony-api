@@ -1,5 +1,7 @@
-import { Controller, Post, Body, Get, Param, Put, Delete } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Controller, Post, Body, Get, Param, Put, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { Roles } from '@shared/decorators/roles.decorator';
+import { UserRole } from '@user/domain/enums/user-role.enum';
 import { CreateTemplateUseCase } from '@notification/application/usecases/create-template.usecase';
 import { GetAllTemplatesUseCase } from '@notification/application/usecases/get-all-templates.usecase';
 import { GetTemplateByKeyUseCase } from '@notification/application/usecases/get-template-by-key.usecase';
@@ -22,32 +24,40 @@ export class TemplateController {
   ) {}
 
   @Post()
+  @Roles(UserRole.ADMIN)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new notification template' })
-  @ApiResponse({ status: 201, description: 'Template created successfully', type: Template })
-  @ApiResponse({ status: 409, description: 'Template with key and type already exists' })
+  @ApiResponse({ status: HttpStatus.CREATED, description: 'Template created successfully', type: Template })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden - Admin only' })
+  @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Template with key and type already exists' })
   async create(@Body() dto: CreateTemplateRequestDto): Promise<Template> {
     return await this.createTemplateUseCase.execute(dto);
   }
 
   @Get()
   @ApiOperation({ summary: 'Get all notification templates' })
-  @ApiResponse({ status: 200, description: 'All templates retrieved successfully', type: [Template] })
+  @ApiResponse({ status: HttpStatus.OK, description: 'All templates retrieved successfully', type: [Template] })
   async findAll(): Promise<Template[]> {
     return await this.getAllTemplatesUseCase.execute();
   }
 
   @Get(':type/:key')
   @ApiOperation({ summary: 'Get a notification template by type and key' })
-  @ApiResponse({ status: 200, description: 'Template retrieved successfully', type: Template })
-  @ApiResponse({ status: 404, description: 'Template not found' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Template retrieved successfully', type: Template })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Template not found' })
   async findOne(@Param('type') type: NotificationType, @Param('key') key: string): Promise<Template> {
     return await this.getTemplateByKeyUseCase.execute(key, type);
   }
 
   @Put(':type/:key')
+  @Roles(UserRole.ADMIN)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update a notification template' })
-  @ApiResponse({ status: 200, description: 'Template updated successfully', type: Template })
-  @ApiResponse({ status: 404, description: 'Template not found' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Template updated successfully', type: Template })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden - Admin only' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Template not found' })
   async update(
     @Param('type') type: NotificationType,
     @Param('key') key: string,
@@ -57,9 +67,14 @@ export class TemplateController {
   }
 
   @Delete(':type/:key')
+  @Roles(UserRole.ADMIN)
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a notification template' })
-  @ApiResponse({ status: 204, description: 'Template deleted successfully' })
-  @ApiResponse({ status: 404, description: 'Template not found' })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Template deleted successfully' })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden - Admin only' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Template not found' })
   async delete(@Param('type') type: NotificationType, @Param('key') key: string): Promise<void> {
     await this.deleteTemplateUseCase.execute(key, type);
   }

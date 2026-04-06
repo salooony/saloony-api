@@ -6,12 +6,11 @@ export class UpdateTemplateRequestDto {
   @ApiProperty({
     description: 'The unique key of the template.',
     type: String,
-    required: false,
-    example: 'welcome_email_v2',
+    required: true,
+    example: 'welcome_email',
   })
-  @IsOptional()
   @IsString()
-  public key?: string;
+  public key: string;
 
   @ApiProperty({
     description: 'The type of the notification.',

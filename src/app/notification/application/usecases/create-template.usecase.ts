@@ -1,12 +1,12 @@
 import { Injectable, Inject, ConflictException } from '@nestjs/common';
-import { ITemplateRepository } from '@notification/domain/ports/template.repository.interface';
+import { ITemplateRepository, TEMPLATE_REPOSITORY } from '@notification/domain/ports/template.repository.interface';
 import { Template } from '@notification/domain/entities/template';
 import { CreateTemplateRequestDto } from '@notification/application/dtos/requests/create-template.request.dto';
 
 @Injectable()
 export class CreateTemplateUseCase {
   constructor(
-    @Inject('ITemplateRepository')
+    @Inject(TEMPLATE_REPOSITORY)
     private readonly templateRepository: ITemplateRepository,
   ) {}
 

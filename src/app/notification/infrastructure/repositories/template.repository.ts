@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Template as SchemaTemplate } from '../schemas/template.schema';
@@ -15,22 +15,25 @@ export class TemplateRepository implements ITemplateRepository {
   ) {}
 
   async findAll(): Promise<DomainTemplate[]> {
-    const schemas = await this.repository.find();
-    return schemas.map((schema) => TemplateMapper.toDomain(schema)!);
+    const templates = await this.repository.find();
+    return templates.map((template) => TemplateMapper.toDomain(template)!);
   }
 
   async findByKey(key: string, type: NotificationType): Promise<DomainTemplate | null> {
-    const schema = await this.repository.findOne({ where: { key, type } });
-    return TemplateMapper.toDomain(schema);
+    const template = await this.repository.findOne({ where: { key, type } });
+    return TemplateMapper.toDomain(template);
   }
 
   async save(domain: DomainTemplate): Promise<DomainTemplate> {
-    const schema = TemplateMapper.toSchema(domain);
-    const savedSchema = await this.repository.save(schema);
-    return TemplateMapper.toDomain(savedSchema)!;
+    const template = TemplateMapper.toSchema(domain);
+    const savedTemplate = await this.repository.save(template);
+    return TemplateMapper.toDomain(savedTemplate)!;
   }
 
   async deleteByKey(key: string, type: NotificationType): Promise<void> {
-    await this.repository.delete({ key, type });
+    const result = await this.repository.delete({ key, type });
+    if (result.affected === 0) {
+      throw new NotFoundException(`Template with key ${key} and type ${type} not found`);
+    }
   }
 }

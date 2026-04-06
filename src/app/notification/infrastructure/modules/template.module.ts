@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Template } from '@notification/infrastructure/schemas/template.schema';
 import { TemplateRepository } from '@notification/infrastructure/repositories/template.repository';
+import { TEMPLATE_REPOSITORY } from '@notification/domain/ports/template.repository.interface';
 import { CreateTemplateUseCase } from '@notification/application/usecases/create-template.usecase';
 import { GetAllTemplatesUseCase } from '@notification/application/usecases/get-all-templates.usecase';
 import { GetTemplateByKeyUseCase } from '@notification/application/usecases/get-template-by-key.usecase';
@@ -16,17 +17,9 @@ import { TemplateController } from '@notification/infrastructure/controllers/tem
   providers: [
     TemplateRepository,
     {
-      provide: 'ITemplateRepository',
+      provide: TEMPLATE_REPOSITORY,
       useClass: TemplateRepository,
     },
-    CreateTemplateUseCase,
-    GetAllTemplatesUseCase,
-    GetTemplateByKeyUseCase,
-    UpdateTemplateUseCase,
-    DeleteTemplateUseCase,
-    TemplateRendererService,
-  ],
-  exports: [
     CreateTemplateUseCase,
     GetAllTemplatesUseCase,
     GetTemplateByKeyUseCase,

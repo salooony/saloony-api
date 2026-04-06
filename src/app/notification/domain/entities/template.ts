@@ -8,4 +8,11 @@ export class Template {
   public message: string;
   public defaultParameters: Record<string, any>;
   public createdAt: Date;
+  update(data: Partial<Pick<this, 'key' | 'type' | 'title' | 'message' | 'defaultParameters'>>): void {
+    if (data.key) this.key = data.key;
+    if (data.type) this.type = data.type;
+    if (data.title) this.title = data.title;
+    if (data.message) this.message = data.message;
+    if (data.defaultParameters) this.defaultParameters = data.defaultParameters;
+  }
 }

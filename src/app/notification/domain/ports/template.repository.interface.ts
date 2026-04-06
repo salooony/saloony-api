@@ -1,6 +1,8 @@
 import { Template } from '../entities/template';
 import { NotificationType } from '../enums/notification-type.enum';
 
+export const TEMPLATE_REPOSITORY = 'ITemplateRepository';
+
 export interface ITemplateRepository {
   findAll(): Promise<Template[]>;
 

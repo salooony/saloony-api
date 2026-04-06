@@ -35,6 +35,6 @@ export class ForgotPasswordUseCase {
     });
 
     await this.passwordResetTokenRepository.create(tokenEntity);
-    // Email delivery is disabled while the mailer integration is removed.
+    // TODO: [TICKET] Re-enable email delivery once the mailer integration is implemented.
   }
 }
