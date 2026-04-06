@@ -35,7 +35,6 @@ export class CityRepository implements ICityRepository {
     if (criteria.countryId) {
       where.country = { id: criteria.countryId };
     }
-
     const city = await this.repository.findOne({
       where,
       relations: ['country'],
