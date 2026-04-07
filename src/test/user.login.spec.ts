@@ -8,7 +8,6 @@ import { ForgotPasswordUseCase } from '@app/user/application/usecases/forgot-pas
 import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
 import { LoginUsecase } from '@app/user/application/usecases/login.usecase';
 import { ResetPasswordUseCase } from '@app/user/application/usecases/reset-password.usecase';
-import { RequestEmailVerificationUseCase } from '@app/user/application/usecases/request-email-verification.usecase';
 import { User } from '@app/user/domain/entities/user';
 import { UserRole } from '@app/user/domain/enums/user-role.enum';
 import { UserStatus } from '@app/user/domain/enums/user-status.enum';
@@ -48,7 +47,6 @@ describe('UserController', () => {
       controllers: [UserController, AuthController],
       providers: [
         DeleteUserAccountUseCase,
-        RequestEmailVerificationUseCase,
         CreateUserUsecase,
         GetUserInfoUsecase,
         ForgotPasswordUseCase,

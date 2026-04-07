@@ -8,8 +8,6 @@ import { CreateUserUsecase } from '@user/application/usecases/create.usecase';
 import { DeleteUserAccountUseCase } from '@user/application/usecases/delete-user-account.usecase';
 import { GetUserInfoUsecase } from '@user/application/usecases/get-user-info.usecase';
 import { User } from '@user/domain/entities/user';
-import { RequestEmailVerificationUseCase } from '@app/user/application/usecases/request-email-verification.usecase';
-import { RequestPhoneVerificationUseCase } from '@app/user/application/usecases/request-phone-verification.usecase';
 
 import {
   BadRequestException,
@@ -41,8 +39,6 @@ export class UserController {
     private readonly getUserInfoUsecase: GetUserInfoUsecase,
     private readonly deleteUserUseCase: DeleteUserAccountUseCase,
     @Inject(UpdateAvatarUsecase) private readonly updateAvatar: UpdateAvatarUsecase,
-    private readonly requestEmailVerificationUseCase: RequestEmailVerificationUseCase,
-    private readonly requestPhoneVerificationUseCase: RequestPhoneVerificationUseCase,
   ) {}
 
   @ApiOperation({ summary: 'Register a new user' })
