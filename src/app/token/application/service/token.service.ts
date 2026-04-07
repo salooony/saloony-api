@@ -15,6 +15,31 @@ export class TokenService {
     @Inject('IUserRepository') private readonly userRepository: IUserRepository,
   ) {}
 
+  private async getActiveUserOrThrow(userId: string) {
+    const user = await this.userRepository.findOneById(userId);
+
+    if (!user) {
+      throw new Error('User does not exist.');
+    }
+
+    if (user.status !== UserStatus.ACTIVE) {
+      throw new Error('User is not active.');
+    }
+
+    return user;
+  }
+
+  private async findToken(token: string, ownerId?: string) {
+    let stored = await this.tokenRepository.findByToken(token, ownerId);
+
+    if (!stored) {
+      const hashed = createHash('sha256').update(token).digest('hex');
+      stored = await this.tokenRepository.findByToken(hashed, ownerId);
+    }
+
+    return stored;
+  }
+
   async issue(
     ownerId: string,
     type: TokenGeneratorType,
@@ -38,26 +63,13 @@ export class TokenService {
       plainToken = createHash('sha256').update(plainToken).digest('hex');
     }
 
-    const user = await this.userRepository.findOneById(ownerId);
-
-    if (!user) {
-      throw new Error('User does not exist.');
-    }
-
-    if (user.status !== UserStatus.ACTIVE) {
-      throw new Error('User is not active.');
-    }
+    const user = await this.getActiveUserOrThrow(ownerId);
 
     return await this.tokenRepository.save(new Token(plainToken, new Date(), expiredAt, options?.hash ?? false, user));
   }
 
   async validate(token: string, ownerId?: string): Promise<{ valid: boolean; reason?: TokenValidationReason }> {
-    let stored = await this.tokenRepository.findByToken(token, ownerId);
-
-    if (!stored) {
-      const hashed = createHash('sha256').update(token).digest('hex');
-      stored = await this.tokenRepository.findByToken(hashed, ownerId);
-    }
+    const stored = await this.findToken(token, ownerId);
 
     if (!stored) {
       return { valid: false, reason: TokenValidationReason.NOT_FOUND };
