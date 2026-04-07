@@ -1,4 +1,4 @@
-import { ICountryRepository } from '@address/domain/ports/icountry.repository';
+import { ICountryRepository, ListCountriesFilters } from '@address/domain/ports/icountry.repository';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -29,5 +29,22 @@ export class CountryRepository implements ICountryRepository {
   async update(country: Country): Promise<Country> {
     const countryEntity = CountryMapper.toSchema(country);
     return CountryMapper.map(await this.repository.save(countryEntity));
+  }
+  async findAll(filters: ListCountriesFilters): Promise<Country[]> {
+    const queryBuilder = this.repository.createQueryBuilder('country');
+
+    if (typeof filters.isActive === 'boolean') {
+      queryBuilder.andWhere('country.is_active = :isActive', { isActive: filters.isActive });
+    }
+
+    if (filters.name) {
+      queryBuilder.andWhere('country.name ILIKE :name', { name: `%${filters.name}%` });
+    }
+
+    if (filters.code) {
+      queryBuilder.andWhere('country.code = :code', { code: filters.code });
+    }
+
+    return (await queryBuilder.orderBy('country.name', 'ASC').getMany()).map((schema) => CountryMapper.map(schema));
   }
 }

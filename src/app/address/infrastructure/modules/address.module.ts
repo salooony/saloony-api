@@ -11,6 +11,7 @@ import { CITY_REPOSITORY } from '@address/domain/ports/icity.repository';
 import { CreateCountryUsecase } from '@address/application/usecases/create-country.usecase';
 import { UpdateCountryUsecase } from '@address/application/usecases/update-country.usecase';
 import { CreateCityUsecase } from '@address/application/usecases/create-city.usecase';
+import { ListCountriesUsecase } from '@address/application/usecases/list-countries.usecase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Country, City])],
@@ -19,7 +20,7 @@ import { CreateCityUsecase } from '@address/application/usecases/create-city.use
     CreateCountryUsecase,
     UpdateCountryUsecase,
     CreateCityUsecase,
-
+    ListCountriesUsecase,
     {
       provide: COUNTRY_REPOSITORY,
       useClass: CountryRepository,

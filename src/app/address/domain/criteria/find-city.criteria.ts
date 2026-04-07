@@ -1,4 +1,4 @@
-export interface FindCityCriteria {
+export interface CityCriteria {
   name: string;
   countryId: string;
 }

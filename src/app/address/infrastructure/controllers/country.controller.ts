@@ -1,4 +1,5 @@
-import { Body, Controller, Header, HttpStatus, Param, Post, Put, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Header, HttpStatus, Param, Post, Put, Query, ValidationPipe } from '@nestjs/common';
+import { Public } from '@user/application/decorators/public.decorator';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from '@app/shared/decorators/roles.decorator';
 import { UserRole } from '@app/user/domain/enums/user-role.enum';
@@ -7,17 +8,39 @@ import { UpdateCountryRequestDto } from '@address/application/dtos/requests/upda
 import { CountryResponseDto } from '@address/application/dtos/responses/country.response.dto';
 import { CreateCountryUsecase } from '@address/application/usecases/create-country.usecase';
 import { UpdateCountryUsecase } from '@address/application/usecases/update-country.usecase';
+import { ListCountriesRequestDto } from '@address/application/dtos/requests/list-countries.request.dto';
+import { ListCountriesUsecase } from '@address/application/usecases/list-countries.usecase';
 
 @ApiTags('Countries')
-@ApiBearerAuth()
 @Controller('countries')
 export class CountryController {
   constructor(
     private readonly createCountryUsecase: CreateCountryUsecase,
     private readonly updateCountryUsecase: UpdateCountryUsecase,
+    private readonly listCountriesUsecase: ListCountriesUsecase,
   ) {}
 
+  @ApiOperation({ summary: 'List countries (PUBLIC)' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Countries were retrieved successfully.',
+    type: CountryResponseDto,
+    isArray: true,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'One or more query parameters is invalid.',
+  })
+  @Public()
+  @Get()
+  async list(
+    @Query(new ValidationPipe({ transform: true })) query: ListCountriesRequestDto,
+  ): Promise<CountryResponseDto[]> {
+    return await this.listCountriesUsecase.execute(query);
+  }
+
   @ApiOperation({ summary: 'Create a new country (ADMIN only)' })
+  @ApiBearerAuth()
   @ApiBody({ type: CreateCountryRequestDto })
   @ApiResponse({
     status: HttpStatus.CREATED,

@@ -6,8 +6,6 @@ import { City } from '@address/domain/entities/city.entity';
 import { CreateCityRequestDto } from '../dtos/requests/create-city.request.dto';
 import { CityResponseDto } from '../dtos/responses/city.response.dto';
 import { COUNTRY_REPOSITORY, ICountryRepository } from '@address/domain/ports/icountry.repository';
-import { FindCityCriteria } from '@address/domain/criteria/find-city.criteria';
-
 @Injectable()
 export class CreateCityUsecase {
   constructor(
@@ -21,11 +19,8 @@ export class CreateCityUsecase {
     if (!country) {
       throw new NotFoundException('Country does not exist.');
     }
-    const criteria: FindCityCriteria = {
-      name: dto.name,
-      countryId: dto.countryId,
-    };
-    const existingCity = await this.cityRepository.findOne(criteria);
+
+    const existingCity = await this.cityRepository.findOne({ name: dto.name, countryId: dto.countryId });
 
     if (existingCity) {
       throw new ConflictException('City already exists in this country.');
