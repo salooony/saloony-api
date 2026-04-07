@@ -1,11 +1,11 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { ITemplateRepository } from '@notification/domain/ports/template.repository.interface';
+import { ITemplateRepository, TEMPLATE_REPOSITORY } from '@notification/domain/ports/template.repository.interface';
 import { NotificationType } from '@notification/domain/enums/notification-type.enum';
 
 @Injectable()
 export class DeleteTemplateUseCase {
   constructor(
-    @Inject('ITemplateRepository')
+    @Inject(TEMPLATE_REPOSITORY)
     private readonly templateRepository: ITemplateRepository,
   ) {}
 

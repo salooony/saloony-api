@@ -167,26 +167,4 @@ export class UserController {
 
     await this.updateAvatar.execute(filePart, user);
   }
-
-  @Post('email/validate/request')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Request email verification code' })
-  @ApiBearerAuth()
-  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Verification code sent.' })
-  @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Email already verified.' })
-  async requestEmailVerification(@CurrentUser() user: User): Promise<void> {
-    await this.requestEmailVerificationUseCase.execute(user);
-  }
-
-  // TODO: Add rate limiting (@Throttle decorator) when rate limiting module is implemented
-  @Post('phone/validate/request')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Request phone verification code' })
-  @ApiBearerAuth()
-  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Verification code sent.' })
-  @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Phone already verified.' })
-  @ApiResponse({ status: HttpStatus.SERVICE_UNAVAILABLE, description: 'Notification service unavailable.' })
-  async requestPhoneVerification(@CurrentUser() user: User): Promise<void> {
-    await this.requestPhoneVerificationUseCase.execute(user);
-  }
 }

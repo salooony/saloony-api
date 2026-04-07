@@ -1,4 +1,4 @@
-import { Injectable, Inject, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { ITemplateRepository, TEMPLATE_REPOSITORY } from '@notification/domain/ports/template.repository.interface';
 import { Template } from '@notification/domain/entities/template';
 import { NotificationType } from '@notification/domain/enums/notification-type.enum';
@@ -15,31 +15,25 @@ export class UpdateTemplateUseCase {
     const template = await this.templateRepository.findByKey(key, type);
 
     if (!template) {
-      throw new NotFoundException(`Template with key ${key} and type ${type} not found`);
+      throw new NotFoundException(`Template with key "${key}" and type "${type}" not found`);
     }
 
-    // Validate unique (key, type) if they are changing
-    await this.validateUniqueness(template.id, dto, template);
+    if (dto.title !== undefined || dto.message !== undefined) {
+      template.updateContent(dto.title, dto.message);
+    }
 
-    // Update entity fields using domain helper
-    template.update(dto);
+    if (dto.type !== undefined) {
+      template.updateType(dto.type);
+    }
+
+    if (dto.key !== undefined) {
+      template.updateKey(dto.key);
+    }
+
+    if (dto.defaultParameters !== undefined) {
+      template.updateParameters(dto.defaultParameters);
+    }
 
     return await this.templateRepository.save(template);
-  }
-
-  private async validateUniqueness(
-    currentId: string,
-    dto: UpdateTemplateRequestDto,
-    currentTemplate: Template,
-  ): Promise<void> {
-    const finalKey = dto.key ?? currentTemplate.key;
-    const finalType = dto.type ?? currentTemplate.type;
-
-    if (dto.key || dto.type) {
-      const existing = await this.templateRepository.findByKey(finalKey, finalType);
-      if (existing && existing.id !== currentId) {
-        throw new ConflictException(`Template with key ${finalKey} and type ${finalType} already exists`);
-      }
-    }
   }
 }

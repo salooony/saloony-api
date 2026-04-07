@@ -1,6 +1,6 @@
 import { NotificationType } from '@app/notification/domain/enums/notification-type.enum';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, IsObject, IsEnum } from 'class-validator';
+import { IsOptional, IsString, IsObject, IsEnum, IsNotEmpty } from 'class-validator';
 
 export class UpdateTemplateRequestDto {
   @ApiProperty({
@@ -9,18 +9,19 @@ export class UpdateTemplateRequestDto {
     required: true,
     example: 'welcome_email',
   })
+  @IsNotEmpty()
   @IsString()
   public key: string;
 
   @ApiProperty({
     description: 'The type of the notification.',
     enum: NotificationType,
-    required: false,
+    required: true,
     example: NotificationType.EMAIL,
   })
-  @IsOptional()
+  @IsNotEmpty()
   @IsEnum(NotificationType)
-  public type?: NotificationType;
+  public type: NotificationType;
 
   @ApiProperty({
     description: 'The title of the notification template.',
