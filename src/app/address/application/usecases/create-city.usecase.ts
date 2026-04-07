@@ -31,5 +31,3 @@ export class CreateCityUsecase {
     return CityResponseDto.createFromEntity(created);
   }
 }
-
-   
