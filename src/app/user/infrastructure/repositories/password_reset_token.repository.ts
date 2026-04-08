@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Repository, LessThan } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PasswordResetTokenEntity } from '../schemas/password-reset-token.entity';
+import { PasswordResetTokenEntity } from '../schemas/password-reset-token.schema';
 import { PasswordResetToken } from '../../domain/entities/password-reset-token';
 import { IPasswordResetTokenRepository } from '../../domain/ports/ipassword-reset-token.repository';
 
@@ -22,11 +22,22 @@ export class PasswordResetTokenRepository implements IPasswordResetTokenReposito
     return token ?? null;
   }
 
-  async invalidate(tokenId: string): Promise<void> {
-    await this.repository.update(tokenId, { usedAt: new Date() });
+  async findByTokenHash(tokenHash: string): Promise<PasswordResetToken | null> {
+    const entity = await this.repository.findOne({ where: { tokenHash } });
+    if (!entity) return null;
+
+    return new PasswordResetToken({
+      id: entity.id,
+      userId: entity.userId,
+      tokenHash: entity.tokenHash,
+      expiresAt: entity.expiresAt,
+      usedAt: entity.usedAt,
+      createdAt: entity.createdAt,
+      type: entity.type,
+    });
   }
 
-  async deleteExpired(): Promise<void> {
-    await this.repository.delete({ expiresAt: LessThan(new Date()) });
+  async deleteById(tokenId: string): Promise<void> {
+    await this.repository.delete(tokenId);
   }
 }

@@ -3,11 +3,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import appConfig from './config/app.config';
 import databaseConfig, { DatabaseConfig } from './config/database.config';
-import { UserModule } from '@app/user/infrastructure/modules/user.module';
+import { UserModule } from '@user/infrastructure/modules/user.module';
 import { AddressModule } from '@address/infrastructure/modules/address.module';
+import { NotificationModule } from '@notification/infrastructure/modules/notification.module';
 import jwtConfig from '@config/jwt.config';
 import { APP_GUARD } from '@nestjs/core';
-import { TokenGuard } from '@app/user/infrastructure/guards/token.guard';
+import { TokenGuard } from '@user/infrastructure/guards/token.guard';
+import { TokensModule } from '@token/infrastructure/modules/token.module';
+import { AuthorizationGuard } from '@app/shared/guards/authorization.guard';
 
 const ENV = process.env.NODE_ENV;
 
@@ -23,7 +26,11 @@ const ENV = process.env.NODE_ENV;
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const db = configService.getOrThrow<DatabaseConfig>('database');
+        const db = configService.get<DatabaseConfig | undefined>('database');
+
+        if (!db) {
+          throw new Error('Database configuration is missing');
+        }
 
         return {
           type: 'postgres',
@@ -40,11 +47,17 @@ const ENV = process.env.NODE_ENV;
 
     UserModule,
     AddressModule,
+    NotificationModule,
+    TokensModule,
   ],
   providers: [
     {
       provide: APP_GUARD,
       useClass: TokenGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthorizationGuard,
     },
   ],
 })

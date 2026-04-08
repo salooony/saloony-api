@@ -1,5 +1,5 @@
 import { User } from '@app/user/domain/entities/user';
-import { User as UserEntity } from '../schemas/user.entity';
+import { User as UserEntity } from '../schemas/user.schema';
 
 export class UserMapper {
   static map(createdUser: UserEntity): User {
@@ -18,7 +18,8 @@ export class UserMapper {
     user.updatedAt = createdUser.updatedAt;
     user.language = createdUser.language;
     user.acl = createdUser.acl;
-
+    user.status = createdUser.status;
+    user.deletedAt = createdUser.deletedAt;
     return user;
   }
 
@@ -35,7 +36,8 @@ export class UserMapper {
     entity.password = user.password;
     entity.language = user.language;
     entity.acl = user.acl;
-
+    entity.deletedAt = user.deletedAt;
+    entity.status = user.status;
     return entity;
   }
 }

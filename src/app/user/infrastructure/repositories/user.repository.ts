@@ -2,8 +2,8 @@ import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User as UserEntity } from '../schemas/user.entity';
-import { User } from '@app/user/domain/entities/user';
+import { User as UserEntity } from '../schemas/user.schema';
+import { User } from '@user/domain/entities/user';
 import { UserMapper } from '../mappers/user.mapper';
 import { UpdateUserCriteria } from '@app/user/domain/criteria/update-user.criteria';
 
@@ -36,5 +36,16 @@ export class UsersRepository implements IUserRepository {
 
   async updateOneById(id: string, updateCriteria: UpdateUserCriteria): Promise<void> {
     await this.repository.update(id, updateCriteria);
+  }
+
+  async delete(userId: string): Promise<void> {
+    await this.repository.softDelete(userId);
+  }
+
+  async update(user: User): Promise<User> {
+    const entity = UserMapper.toEntity(user);
+    const saved = await this.repository.save(entity);
+
+    return UserMapper.map(saved);
   }
 }
