@@ -1,4 +1,4 @@
-import { TokenGeneratorType } from '@token/domin/enums/token-generator-type.enum';
+import { TokenGeneratorType } from '@token/domain/enums/token-generator-type.enum';
 
 export interface TokenGenerator {
   supports(type: TokenGeneratorType): boolean;

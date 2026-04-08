@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, ManyToOne, Jo
 import { User } from '@user/infrastructure/schemas/user.schema';
 
 @Entity('tokens')
-export class TokenSchema {
+export class Token {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 

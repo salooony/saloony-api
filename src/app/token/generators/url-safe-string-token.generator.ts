@@ -1,6 +1,6 @@
 import { randomBytes } from 'crypto';
 import { TokenGenerator } from './token-generator.interface';
-import { TokenGeneratorType } from '@token/domin/enums/token-generator-type.enum';
+import { TokenGeneratorType } from '@token/domain/enums/token-generator-type.enum';
 import { z } from 'zod';
 
 const DEFAULT_BYTES = 32;
