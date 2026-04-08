@@ -15,31 +15,6 @@ export class TokenService {
     @Inject('IUserRepository') private readonly userRepository: IUserRepository,
   ) {}
 
-  private async getActiveUserOrThrow(userId: string) {
-    const user = await this.userRepository.findOneById(userId);
-
-    if (!user) {
-      throw new Error('User does not exist.');
-    }
-
-    if (user.status !== UserStatus.ACTIVE) {
-      throw new Error('User is not active.');
-    }
-
-    return user;
-  }
-
-  private async findToken(token: string, ownerId?: string) {
-    let stored = await this.tokenRepository.findByToken(token, ownerId);
-
-    if (!stored) {
-      const hashed = createHash('sha256').update(token).digest('hex');
-      stored = await this.tokenRepository.findByToken(hashed, ownerId);
-    }
-
-    return stored;
-  }
-
   async issue(
     ownerId: string,
     type: TokenGeneratorType,
@@ -80,5 +55,26 @@ export class TokenService {
     }
 
     return { valid: true };
+  }
+
+  private async getActiveUserOrThrow(userId: string) {
+    const user = await this.userRepository.findOneById(userId);
+
+    if (!user || user.status !== UserStatus.ACTIVE) {
+      throw new Error('User is not allowed to login.');
+    }
+
+    return user;
+  }
+
+  private async findToken(token: string, ownerId?: string) {
+    let stored = await this.tokenRepository.findByToken(token, ownerId);
+
+    if (!stored) {
+      const hashed = createHash('sha256').update(token).digest('hex');
+      stored = await this.tokenRepository.findByToken(hashed, ownerId);
+    }
+
+    return stored;
   }
 }
