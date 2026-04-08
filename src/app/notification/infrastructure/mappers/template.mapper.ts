@@ -6,13 +6,15 @@ export class TemplateMapper {
     if (!schema) return null;
 
     const domain = new DomainTemplate();
-    domain.id = schema.id;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    (domain as any).id = schema.id;
     domain.key = schema.key;
     domain.type = schema.type;
     domain.title = schema.title;
     domain.message = schema.message;
     domain.defaultParameters = schema.defaultParameters;
-    domain.createdAt = schema.createdAt;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    (domain as any).createdAt = schema.createdAt;
 
     return domain;
   }
