@@ -19,6 +19,7 @@ import {
   HttpCode,
   HttpStatus,
   Inject,
+  Patch,
   Param,
   Post,
   Put,
@@ -28,8 +29,10 @@ import {
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UpdateAvatarUsecase } from '@user/application/usecases/update-avatar.usecase';
 import { UpdateAvatarDto } from '@user/application/dtos/requests/update-avatar.dto';
+import { PatchUserProfileUseCase } from '@user/application/usecases/patch-user-profile.usecase';
+import { PatchUserProfileRequestDto } from '@user/application/dtos/requests/patch-user-profile.request.dto';
+import { MultipartFile } from '@shared/uploads/domain/interfaces/multipart-file.interface';
 import { FastifyRequest } from 'fastify';
-import type { MultipartFile as FastifyMultipartFile } from '@fastify/multipart';
 
 @ApiTags('Users')
 @Controller('users')
@@ -39,6 +42,7 @@ export class UserController {
     private readonly getUserInfoUsecase: GetUserInfoUsecase,
     private readonly deleteUserUseCase: DeleteUserAccountUseCase,
     @Inject(UpdateAvatarUsecase) private readonly updateAvatar: UpdateAvatarUsecase,
+    private readonly patchUserProfileUseCase: PatchUserProfileUseCase,
   ) {}
 
   @ApiOperation({ summary: 'Register a new user' })
@@ -129,6 +133,44 @@ export class UserController {
     await this.deleteUserUseCase.execute(userId);
   }
 
+  @ApiOperation({ summary: 'Partially update current user profile.' })
+  @ApiBearerAuth()
+  @ApiBody({
+    type: PatchUserProfileRequestDto,
+    examples: {
+      patchNameAndLanguage: {
+        summary: 'Update only first name and language',
+        value: {
+          firstname: 'Jane',
+          language: 'English',
+          emailReminders: true,
+          smsReminders: false,
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Profile updated successfully.',
+    type: UserResponseDto,
+  })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Validation failed.' })
+  @ApiResponse({
+    status: HttpStatus.UNPROCESSABLE_ENTITY,
+    description: 'Patch payload is empty or has no effective change.',
+  })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User should be logged in.' })
+  @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Email and/or mobile number already in use.' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Something went wrong, try again.' })
+  @Patch('/me')
+  @Header('Content-Type', 'application/json')
+  async patchProfile(
+    @CurrentUser() user: User,
+    @Body(new ValidationPipe({ transform: true })) request: PatchUserProfileRequestDto,
+  ): Promise<UserResponseDto> {
+    return await this.patchUserProfileUseCase.execute(user.id, request);
+  }
+
   @Put('profile/avatar')
   @ApiOperation({ summary: 'Update user avatar' })
   @ApiBearerAuth()
@@ -153,7 +195,7 @@ export class UserController {
   @HttpCode(HttpStatus.NO_CONTENT)
   public async uploadAvatar(
     @CurrentUser() user: User,
-    @Req() req: FastifyRequest & { file: () => Promise<FastifyMultipartFile | undefined> },
+    @Req() req: FastifyRequest & { file: () => Promise<MultipartFile | undefined> },
   ): Promise<void> {
     const filePart = await req.file();
 

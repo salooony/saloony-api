@@ -41,6 +41,12 @@ export class User {
   @Column({ type: 'varchar', length: 50 })
   language: string;
 
+  @Column({ type: 'boolean', name: 'email_reminders', default: true })
+  emailReminders: boolean;
+
+  @Column({ type: 'boolean', name: 'sms_reminders', default: true })
+  smsReminders: boolean;
+
   @Column({ type: 'enum', enum: UserRole, default: UserRole.CLIENT }) // defaulting to CLIENT for safety
   role: UserRole;
 

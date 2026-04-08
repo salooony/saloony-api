@@ -74,6 +74,20 @@ export class UserResponseDto {
   public language: string;
 
   @ApiProperty({
+    description: 'Whether the user receives reminders by email.',
+    type: Boolean,
+    example: true,
+  })
+  public emailReminders: boolean;
+
+  @ApiProperty({
+    description: 'Whether the user receives reminders by SMS.',
+    type: Boolean,
+    example: true,
+  })
+  public smsReminders: boolean;
+
+  @ApiProperty({
     description: 'The saloons the user has access to.',
     type: [String],
     example: ['a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11-Owner', 'a0eebc95-9c0b-4ef8-bb6d-6bb9bd380a11-Owner'],
@@ -95,6 +109,8 @@ export class UserResponseDto {
     userResponse.createdAt = user.createdAt;
     userResponse.updatedAt = user.updatedAt;
     userResponse.language = user.language;
+    userResponse.emailReminders = user.emailReminders;
+    userResponse.smsReminders = user.smsReminders;
 
     userResponse.saloons = user.acl;
 
