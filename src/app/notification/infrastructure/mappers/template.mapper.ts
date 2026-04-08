@@ -1,26 +1,24 @@
-import { Template as DomainTemplate } from '../../domain/entities/template';
-import { Template as SchemaTemplate } from '../schemas/template.schema';
+import { Template } from '../../domain/entities/template';
+import { Template as TemplateSchema } from '../schemas/template.schema';
 
 export class TemplateMapper {
-  public static toDomain(schema: SchemaTemplate | null): DomainTemplate | null {
+  public static toDomain(schema: TemplateSchema | null): Template | null {
     if (!schema) return null;
 
-    const domain = new DomainTemplate();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    (domain as any).id = schema.id;
+    const domain = new Template();
+    domain.id = schema.id;
     domain.key = schema.key;
     domain.type = schema.type;
     domain.title = schema.title;
     domain.message = schema.message;
     domain.defaultParameters = schema.defaultParameters;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    (domain as any).createdAt = schema.createdAt;
+    domain.createdAt = schema.createdAt;
 
     return domain;
   }
 
-  public static toSchema(domain: DomainTemplate): SchemaTemplate {
-    const schema = new SchemaTemplate();
+  public static toSchema(domain: Template): TemplateSchema {
+    const schema = new TemplateSchema();
     if (domain.id) schema.id = domain.id;
     schema.key = domain.key;
     schema.type = domain.type;
