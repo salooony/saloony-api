@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
 import { createHash } from 'crypto';
 import { TokenGeneratorService } from '@token/application/service/token-generator.service';
 import { TokenGeneratorType } from '@token/domain/enums/token-generator-type.enum';
@@ -61,7 +61,7 @@ export class TokenService {
     const user = await this.userRepository.findOneById(userId);
 
     if (!user || user.status !== UserStatus.ACTIVE) {
-      throw new Error('User is not allowed to login.');
+      throw new UnauthorizedException('User is not allowed to login.');
     }
 
     return user;
