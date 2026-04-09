@@ -5,10 +5,7 @@ import { NotificationType } from '@notification/domain/enums/notification-type.e
 
 @Injectable()
 export class GetTemplateByKeyUseCase {
-  constructor(
-    @Inject(TEMPLATE_REPOSITORY)
-    private readonly templateRepository: ITemplateRepository,
-  ) {}
+  constructor(@Inject(TEMPLATE_REPOSITORY) private readonly templateRepository: ITemplateRepository) {}
 
   async execute(key: string, type: NotificationType): Promise<Template> {
     const template = await this.templateRepository.findByKey(key, type);

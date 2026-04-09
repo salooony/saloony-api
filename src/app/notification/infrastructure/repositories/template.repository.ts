@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Template as TemplateSchema } from '../schemas/template.schema';
@@ -9,10 +9,7 @@ import { NotificationType } from '../../domain/enums/notification-type.enum';
 
 @Injectable()
 export class TemplateRepository implements ITemplateRepository {
-  constructor(
-    @InjectRepository(TemplateSchema)
-    private readonly repository: Repository<TemplateSchema>,
-  ) {}
+  constructor(@InjectRepository(TemplateSchema) private readonly repository: Repository<TemplateSchema>) {}
 
   async findAll(): Promise<Template[]> {
     const templates = await this.repository.find();
@@ -25,6 +22,7 @@ export class TemplateRepository implements ITemplateRepository {
     if (!template) {
       return null;
     }
+
     return TemplateMapper.toDomain(template);
   }
 
@@ -36,7 +34,7 @@ export class TemplateRepository implements ITemplateRepository {
     const result = await this.repository.delete({ key, type });
 
     if (result.affected === 0) {
-      throw new NotFoundException(`Template with key ${key} and type ${type} not found`);
+      throw new Error('Template not found');
     }
   }
 }

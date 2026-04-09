@@ -4,10 +4,7 @@ import { Template } from '@notification/domain/entities/template';
 
 @Injectable()
 export class GetAllTemplatesUseCase {
-  constructor(
-    @Inject(TEMPLATE_REPOSITORY)
-    private readonly templateRepository: ITemplateRepository,
-  ) {}
+  constructor(@Inject(TEMPLATE_REPOSITORY) private readonly templateRepository: ITemplateRepository) {}
 
   async execute(): Promise<Template[]> {
     return await this.templateRepository.findAll();

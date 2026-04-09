@@ -3,13 +3,6 @@ import { NotificationType } from '@notification/domain/enums/notification-type.e
 
 export class TemplateResponseDto {
   @ApiProperty({
-    description: 'The unique identifier of the template.',
-    type: String,
-    example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
-  })
-  public id: string;
-
-  @ApiProperty({
     description: 'The unique key of the template.',
     type: String,
     example: 'welcome_email',
@@ -50,4 +43,11 @@ export class TemplateResponseDto {
     example: '2026-04-07T09:00:00.000Z',
   })
   public createdAt: Date;
+
+  @ApiProperty({
+    description: 'The date when the template was last updated.',
+    type: Date,
+    example: '2026-04-09T12:00:00.000Z',
+  })
+  public updatedAt?: Date;
 }

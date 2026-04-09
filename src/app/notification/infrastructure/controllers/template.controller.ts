@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, Put, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, Get, Put, Delete, HttpCode, HttpStatus, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { Roles } from '@shared/decorators/roles.decorator';
 import { UserRole } from '@user/domain/enums/user-role.enum';
@@ -37,7 +37,10 @@ export class TemplateController {
 
   @Get()
   @Roles(UserRole.ADMIN)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all notification templates.' })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User should be logged in.' })
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden - Admin only.' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'All templates retrieved successfully.',
@@ -47,16 +50,19 @@ export class TemplateController {
     return await this.getAllTemplatesUseCase.execute();
   }
 
-  @Get(':type/:key')
+  @Get('detail')
   @Roles(UserRole.ADMIN)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get a notification template by type and key.' })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User should be logged in.' })
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden - Admin only.' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Template retrieved successfully.', type: TemplateResponseDto })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Template not found.' })
-  async findOne(@Param('type') type: NotificationType, @Param('key') key: string): Promise<TemplateResponseDto> {
+  async findOne(@Query('key') key: string, @Query('type') type: NotificationType): Promise<TemplateResponseDto> {
     return await this.getTemplateByKeyUseCase.execute(key, type);
   }
 
-  @Put(':type/:key')
+  @Put('single')
   @Roles(UserRole.ADMIN)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update a notification template.' })
@@ -65,14 +71,14 @@ export class TemplateController {
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden - Admin only.' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Template not found.' })
   async update(
-    @Param('type') type: NotificationType,
-    @Param('key') key: string,
+    @Query('key') key: string,
+    @Query('type') type: NotificationType,
     @Body() dto: UpdateTemplateRequestDto,
   ): Promise<TemplateResponseDto> {
     return await this.updateTemplateUseCase.execute(key, type, dto);
   }
 
-  @Delete(':type/:key')
+  @Delete('single')
   @Roles(UserRole.ADMIN)
   @ApiBearerAuth()
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -81,7 +87,7 @@ export class TemplateController {
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User should be logged in.' })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden - Admin only.' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Template not found.' })
-  async delete(@Param('type') type: NotificationType, @Param('key') key: string): Promise<void> {
+  async delete(@Query('key') key: string, @Query('type') type: NotificationType): Promise<void> {
     await this.deleteTemplateUseCase.execute(key, type);
   }
 }

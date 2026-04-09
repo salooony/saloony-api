@@ -1,19 +1,15 @@
 import { NotificationType } from '@app/notification/domain/enums/notification-type.enum';
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, Unique } from 'typeorm';
+import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('notification_templates')
-@Unique(['key', 'type'])
 export class Template {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @Column({
+  @PrimaryColumn({
     type: 'varchar',
     length: 255,
   })
   key: string;
 
-  @Column({
+  @PrimaryColumn({
     type: 'enum',
     enum: NotificationType,
   })
@@ -30,4 +26,7 @@ export class Template {
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
 }
