@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 import { User as UserEntity } from '../schemas/user.schema';
 import { User } from '@user/domain/entities/user';
 import { UserMapper } from '../mappers/user.mapper';
-import { UpdateUserCriteria } from '@app/user/domain/criteria/update-user.criteria';
 
 @Injectable()
 export class UsersRepository implements IUserRepository {
@@ -34,8 +33,12 @@ export class UsersRepository implements IUserRepository {
     return UserMapper.map(user);
   }
 
-  async updateOneById(id: string, updateCriteria: UpdateUserCriteria): Promise<void> {
-    await this.repository.update(id, updateCriteria);
+  async findOneByMobileNumber(mobileNumber: string): Promise<User | null> {
+    const user = await this.repository.findOne({ where: { mobileNumber } });
+
+    if (!user) return null;
+
+    return UserMapper.map(user);
   }
 
   async delete(userId: string): Promise<void> {

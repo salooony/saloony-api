@@ -15,7 +15,6 @@ import { AuthController } from '@user/infrastructure/controllers/auth.controller
 import { GetUserInfoUsecase } from '@user/application/usecases/get-user-info.usecase';
 import { DeleteUserAccountUseCase } from '@user/application/usecases/delete-user-account.usecase';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { UpdateUserUsecase } from '@app/user/application/usecases/update-user.usecase';
 import { SmtpEmailSender } from '@user/infrastructure/email/smtpEmail.sender';
 import { ForgotPasswordUseCase } from '@user/application/usecases/forgot-password.usecase';
 import { PasswordResetTokenRepository } from '@user/infrastructure/repositories/password_reset_token.repository';
@@ -24,6 +23,7 @@ import { SalonMembership } from '@user/infrastructure/schemas/salon-membership.s
 import { ResetPasswordUseCase } from '@user/application/usecases/reset-password.usecase';
 import { Salon } from '@salon/infrastructure/schemas/salon.entity';
 import { UpdateAvatarUsecase } from '@user/application/usecases/update-avatar.usecase';
+import { PatchUserProfileUseCase } from '@user/application/usecases/patch-user-profile.usecase';
 
 import { NotificationModule } from '@notification/infrastructure/modules/notification.module';
 import { TokensModule } from '@token/infrastructure/modules/token.module';
@@ -78,9 +78,9 @@ import { FileModule } from '@shared/uploads/infrastructure/modules/file.module';
     GetUserInfoUsecase,
     DeleteUserAccountUseCase,
     ForgotPasswordUseCase,
-    UpdateUserUsecase,
     ResetPasswordUseCase,
     UpdateAvatarUsecase,
+    PatchUserProfileUseCase,
 
     // helpers
     UserTransformer,

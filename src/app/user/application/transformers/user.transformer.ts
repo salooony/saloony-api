@@ -14,6 +14,8 @@ export class UserTransformer {
     user.mobileNumber = userRequest.mobileNumber;
     user.password = userRequest.password;
     user.language = userRequest.language;
+    user.emailReminders = true;
+    user.smsReminders = true;
 
     user.acl = [];
 

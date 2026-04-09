@@ -1,4 +1,3 @@
-import { UpdateUserCriteria } from '@app/user/domain/criteria/update-user.criteria';
 import { User } from '@app/user/domain/entities/user';
 import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
 import { Injectable } from '@nestjs/common';
@@ -9,7 +8,7 @@ export class MockUsersReporitory implements IUserRepository {
 
   async save(user: User): Promise<User> {
     MockUsersReporitory.users.map((oldUser) => {
-      if (oldUser.email === user.email) {
+      if (oldUser.email === user.email || oldUser.mobileNumber === user.mobileNumber) {
         throw new Error('duplicate key');
       }
     });
@@ -42,20 +41,14 @@ export class MockUsersReporitory implements IUserRepository {
     return Promise.resolve(user);
   }
 
-  async updateOneById(id: string, updateCriteria: UpdateUserCriteria): Promise<void> {
-    const user = MockUsersReporitory.users.find((user) => user.id === id);
-    if (!user) throw new Error();
+  async findOneByMobileNumber(mobileNumber: string): Promise<User | null> {
+    const user = MockUsersReporitory.users.find((entry) => entry.mobileNumber === mobileNumber);
 
-    // update user here
-    if (updateCriteria.firstname) user.firstname = updateCriteria.firstname;
-    if (updateCriteria.lastname) user.lastname = updateCriteria.lastname;
-    if (updateCriteria.avatar) user.avatar = updateCriteria.avatar;
-    if (updateCriteria.birthdate) user.birthdate = updateCriteria.birthdate;
-    if (updateCriteria.email) user.email = updateCriteria.email;
-    if (updateCriteria.mobileNumber) user.mobileNumber = updateCriteria.mobileNumber;
-    if (updateCriteria.language) user.language = updateCriteria.language;
+    if (!user) {
+      return null;
+    }
 
-    return Promise.resolve();
+    return Promise.resolve(user);
   }
 
   async update(user: User): Promise<User> {
