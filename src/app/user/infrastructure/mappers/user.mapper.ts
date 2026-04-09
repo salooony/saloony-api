@@ -17,6 +17,8 @@ export class UserMapper {
     user.createdAt = createdUser.createdAt;
     user.updatedAt = createdUser.updatedAt;
     user.language = createdUser.language;
+    user.emailReminders = createdUser.emailReminders;
+    user.smsReminders = createdUser.smsReminders;
     user.acl = createdUser.acl;
     user.status = createdUser.status;
     user.deletedAt = createdUser.deletedAt;
@@ -35,6 +37,8 @@ export class UserMapper {
     entity.mobileNumber = user.mobileNumber;
     entity.password = user.password;
     entity.language = user.language;
+    entity.emailReminders = user.emailReminders;
+    entity.smsReminders = user.smsReminders;
     entity.acl = user.acl;
     entity.deletedAt = user.deletedAt;
     entity.status = user.status;

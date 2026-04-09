@@ -33,9 +33,18 @@ export class UsersRepository implements IUserRepository {
     return UserMapper.map(user);
   }
 
+  async findOneByMobileNumber(mobileNumber: string): Promise<User | null> {
+    const user = await this.repository.findOne({ where: { mobileNumber } });
+
+    if (!user) return null;
+
+    return UserMapper.map(user);
+  }
+
   async delete(userId: string): Promise<void> {
     await this.repository.softDelete(userId);
   }
+
   async update(user: User): Promise<User> {
     const entity = UserMapper.toEntity(user);
     const saved = await this.repository.save(entity);

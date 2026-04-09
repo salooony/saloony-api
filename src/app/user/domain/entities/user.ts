@@ -14,6 +14,8 @@ export class User {
   public createdAt: Date;
   public updatedAt: Date;
   public language: string;
+  public emailReminders: boolean = true;
+  public smsReminders: boolean = true;
   public acl: string[] = [];
   public deletedAt?: Date;
 

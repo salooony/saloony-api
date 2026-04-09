@@ -1,14 +1,17 @@
 import { CurrentUser } from '@user/application/decorators/current-user.decorator';
-import { Roles } from '@shared/decorators/roles.decorator';
-import { UserRole } from '@user/domain/enums/user-role.enum';
 import { Public } from '@user/application/decorators/public.decorator';
+import { PatchUserProfileRequestDto } from '@user/application/dtos/requests/patch-user-profile.request.dto';
+import { UpdateAvatarDto } from '@user/application/dtos/requests/update-avatar.dto';
 import { UserRequestDto } from '@user/application/dtos/requests/user.request.dto';
 import { UserResponseDto } from '@user/application/dtos/responses/user.response.dto';
 import { CreateUserUsecase } from '@user/application/usecases/create.usecase';
 import { DeleteUserAccountUseCase } from '@user/application/usecases/delete-user-account.usecase';
 import { GetUserInfoUsecase } from '@user/application/usecases/get-user-info.usecase';
-
+import { PatchUserProfileUseCase } from '@user/application/usecases/patch-user-profile.usecase';
+import { UpdateAvatarUsecase } from '@user/application/usecases/update-avatar.usecase';
 import { User } from '@user/domain/entities/user';
+import { UserRole } from '@user/domain/enums/user-role.enum';
+import { Roles } from '@shared/decorators/roles.decorator';
 import {
   BadRequestException,
   Body,
@@ -20,14 +23,13 @@ import {
   HttpStatus,
   Inject,
   Param,
+  Patch,
   Post,
   Put,
   Req,
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UpdateAvatarUsecase } from '@user/application/usecases/update-avatar.usecase';
-import { UpdateAvatarDto } from '@user/application/dtos/requests/update-avatar.dto';
 import { FastifyRequest } from 'fastify';
 import type { MultipartFile as FastifyMultipartFile } from '@fastify/multipart';
 
@@ -37,6 +39,7 @@ export class UserController {
   constructor(
     private readonly createUsecase: CreateUserUsecase,
     private readonly getUserInfoUsecase: GetUserInfoUsecase,
+    private readonly patchUserProfileUseCase: PatchUserProfileUseCase,
     private readonly deleteUserUseCase: DeleteUserAccountUseCase,
     @Inject(UpdateAvatarUsecase) private readonly updateAvatar: UpdateAvatarUsecase,
   ) {}
@@ -67,7 +70,7 @@ export class UserController {
     return await this.createUsecase.execute(userRequest);
   }
 
-  @ApiOperation({ summary: 'Get personla information' })
+  @ApiOperation({ summary: 'Get personal information' })
   @ApiBearerAuth()
   @ApiResponse({
     status: HttpStatus.OK,
@@ -84,8 +87,52 @@ export class UserController {
   })
   @Get('/me')
   @Header('Content-Type', 'application/json')
-  async getPeronalInfo(@CurrentUser() user: User): Promise<UserResponseDto> {
+  async getPersonalInfo(@CurrentUser() user: User): Promise<UserResponseDto> {
     return await this.getUserInfoUsecase.execute(user.id);
+  }
+
+  @ApiOperation({ summary: 'Partially update current user profile.' })
+  @ApiBearerAuth()
+  @ApiBody({
+    type: PatchUserProfileRequestDto,
+    examples: {
+      patchNameAndLanguage: {
+        summary: 'Update only first name and language',
+        value: {
+          firstname: 'Jane',
+          language: 'English',
+          emailReminders: true,
+          smsReminders: false,
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Profile updated successfully.',
+    type: UserResponseDto,
+  })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'One or more of the properties is invalid.' })
+  @ApiResponse({
+    status: HttpStatus.UNPROCESSABLE_ENTITY,
+    description: 'Patch payload is empty or has no effective change.',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'User should be logged in.',
+  })
+  @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Email and/or mobile number already in use.' })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Something went wrong, try again.',
+  })
+  @Patch('/me')
+  @Header('Content-Type', 'application/json')
+  async patchProfile(
+    @CurrentUser() user: User,
+    @Body(new ValidationPipe({ transform: true })) request: PatchUserProfileRequestDto,
+  ): Promise<UserResponseDto> {
+    return await this.patchUserProfileUseCase.execute(user.id, request);
   }
 
   @ApiOperation({ summary: 'Delete current user account.' })

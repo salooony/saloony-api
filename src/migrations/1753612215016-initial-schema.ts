@@ -58,6 +58,16 @@ export class InitialSchema1753612215016 implements MigrationInterface {
             length: '50',
           },
           {
+            name: 'email_reminders',
+            type: 'boolean',
+            default: true,
+          },
+          {
+            name: 'sms_reminders',
+            type: 'boolean',
+            default: true,
+          },
+          {
             name: 'role',
             type: 'varchar',
             length: '50',

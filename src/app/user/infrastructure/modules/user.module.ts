@@ -23,6 +23,7 @@ import { SalonMembership } from '@user/infrastructure/schemas/salon-membership.s
 import { ResetPasswordUseCase } from '@user/application/usecases/reset-password.usecase';
 import { Salon } from '@salon/infrastructure/schemas/salon.entity';
 import { UpdateAvatarUsecase } from '@user/application/usecases/update-avatar.usecase';
+import { PatchUserProfileUseCase } from '@user/application/usecases/patch-user-profile.usecase';
 
 import { NotificationModule } from '@notification/infrastructure/modules/notification.module';
 import { TokensModule } from '@token/infrastructure/modules/token.module';
@@ -71,7 +72,7 @@ import { FileModule } from '@shared/uploads/infrastructure/modules/file.module';
   controllers: [UserController, AuthController],
 
   providers: [
-    //  usecases
+    // usecases
     CreateUserUsecase,
     LoginUsecase,
     GetUserInfoUsecase,
@@ -79,8 +80,9 @@ import { FileModule } from '@shared/uploads/infrastructure/modules/file.module';
     ForgotPasswordUseCase,
     ResetPasswordUseCase,
     UpdateAvatarUsecase,
+    PatchUserProfileUseCase,
 
-    //  helpers
+    // helpers
     UserTransformer,
 
     //  repositories & providers

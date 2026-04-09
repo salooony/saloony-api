@@ -8,7 +8,7 @@ export class MockUsersReporitory implements IUserRepository {
 
   async save(user: User): Promise<User> {
     MockUsersReporitory.users.map((oldUser) => {
-      if (oldUser.email === user.email) {
+      if (oldUser.email === user.email || oldUser.mobileNumber === user.mobileNumber) {
         throw new Error('duplicate key');
       }
     });
@@ -41,6 +41,16 @@ export class MockUsersReporitory implements IUserRepository {
     return Promise.resolve(user);
   }
 
+  async findOneByMobileNumber(mobileNumber: string): Promise<User | null> {
+    const user = MockUsersReporitory.users.find((entry) => entry.mobileNumber === mobileNumber);
+
+    if (!user) {
+      return null;
+    }
+
+    return Promise.resolve(user);
+  }
+
   async update(user: User): Promise<User> {
     const index = MockUsersReporitory.users.findIndex((u) => u.id === user.id);
     if (index === -1) {
@@ -59,6 +69,7 @@ export class MockUsersReporitory implements IUserRepository {
     if (user) {
       user.deletedAt = new Date();
     }
+
     return Promise.resolve();
   }
 }
