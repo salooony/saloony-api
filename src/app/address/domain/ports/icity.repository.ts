@@ -1,4 +1,10 @@
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+import { City } from '../entities/city.entity';
+import { FindOptionsWhere } from 'typeorm';
+import { City as CitySchema } from '@address/infrastructure/schemas/city.schema';
+
+export const CITY_REPOSITORY = 'CITY_REPOSITORY';
+
 export interface ICityRepository {
-  // to be implemented later
+  save(city: City): Promise<City>;
+  findOne(criteria: FindOptionsWhere<CitySchema>): Promise<City | null>;
 }
