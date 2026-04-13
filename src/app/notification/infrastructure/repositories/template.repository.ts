@@ -11,6 +11,10 @@ import { NotificationType } from '../../domain/enums/notification-type.enum';
 export class TemplateRepository implements ITemplateRepository {
   constructor(@InjectRepository(TemplateSchema) private readonly repository: Repository<TemplateSchema>) {}
 
+  async save(template: Template): Promise<Template> {
+    return TemplateMapper.map(await this.repository.save(TemplateMapper.toSchema(template)))!;
+  }
+
   async findAll(): Promise<Template[]> {
     const templates = await this.repository.find();
     return templates.map((template) => TemplateMapper.map(template)!);
@@ -24,10 +28,6 @@ export class TemplateRepository implements ITemplateRepository {
     }
 
     return TemplateMapper.map(template);
-  }
-
-  async save(template: Template): Promise<Template> {
-    return TemplateMapper.map(await this.repository.save(TemplateMapper.toSchema(template)))!;
   }
 
   async deleteByKey(key: string, type: NotificationType): Promise<void> {

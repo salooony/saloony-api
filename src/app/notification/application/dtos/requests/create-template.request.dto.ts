@@ -1,4 +1,4 @@
-import { NotificationType } from '@app/notification/domain/enums/notification-type.enum';
+import { NotificationType } from '@notification/domain/enums/notification-type.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString, IsObject, IsEnum } from 'class-validator';
 
@@ -7,7 +7,7 @@ export class CreateTemplateRequestDto {
     description: 'The identifier key for the template. Used combined with type as a composite primary key.',
     type: String,
     required: true,
-    example: 'welcome_email',
+    example: 'verify_email',
   })
   @IsNotEmpty()
   @IsString()

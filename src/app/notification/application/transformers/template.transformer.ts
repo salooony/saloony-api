@@ -22,8 +22,6 @@ export class TemplateTransformer {
 
   public static toUpdateProps(dto: UpdateTemplateRequestDto): TemplateUpdateProps {
     return {
-      key: dto.key,
-      type: dto.type,
       title: dto.title,
       message: dto.message,
       defaultParameters: dto.defaultParameters,

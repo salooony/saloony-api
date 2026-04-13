@@ -1,11 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { NotificationType } from '@notification/domain/enums/notification-type.enum';
+import { Template } from '@notification/domain/entities/template';
 
 export class TemplateResponseDto {
   @ApiProperty({
     description: 'The unique key of the template.',
     type: String,
-    example: 'welcome_email',
+    example: 'verify_email',
   })
   public key: string;
 
@@ -50,4 +51,18 @@ export class TemplateResponseDto {
     example: '2026-04-09T12:00:00.000Z',
   })
   public updatedAt: Date;
+
+  private constructor() {}
+
+  public static createFromEntity(template: Template): TemplateResponseDto {
+    const response = new TemplateResponseDto();
+    response.key = template.key;
+    response.type = template.type;
+    response.title = template.title;
+    response.message = template.message;
+    response.defaultParameters = template.defaultParameters;
+    response.createdAt = template.createdAt;
+    response.updatedAt = template.updatedAt;
+    return response;
+  }
 }
