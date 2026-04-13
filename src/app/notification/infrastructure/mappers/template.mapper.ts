@@ -2,7 +2,7 @@ import { Template } from '../../domain/entities/template';
 import { Template as TemplateSchema } from '../schemas/template.schema';
 
 export class TemplateMapper {
-  public static toDomain(schema: TemplateSchema | null): Template | null {
+  public static map(schema: TemplateSchema | null): Template | null {
     if (!schema) return null;
 
     const domain = new Template();
@@ -12,7 +12,7 @@ export class TemplateMapper {
     domain.message = schema.message;
     domain.defaultParameters = schema.defaultParameters;
     domain.createdAt = schema.createdAt;
-    domain.updatedAt = schema.updatedAt;
+    domain.updatedAt = schema.updatedAt || schema.createdAt;
 
     return domain;
   }
@@ -24,8 +24,8 @@ export class TemplateMapper {
     schema.title = domain.title;
     schema.message = domain.message;
     schema.defaultParameters = domain.defaultParameters;
-    if (domain.createdAt) schema.createdAt = domain.createdAt;
-    if (domain.updatedAt) schema.updatedAt = domain.updatedAt;
+    schema.createdAt = domain.createdAt;
+    schema.updatedAt = domain.updatedAt;
 
     return schema;
   }

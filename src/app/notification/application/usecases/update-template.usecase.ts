@@ -1,8 +1,9 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { ITemplateRepository, TEMPLATE_REPOSITORY } from '@notification/domain/ports/template.repository.interface';
+import { ITemplateRepository, TEMPLATE_REPOSITORY } from '@app/notification/domain/ports/itemplate.repository';
 import { Template } from '@notification/domain/entities/template';
 import { NotificationType } from '@notification/domain/enums/notification-type.enum';
 import { UpdateTemplateRequestDto } from '@notification/application/dtos/requests/update-template.request.dto';
+import { TemplateTransformer } from '../transformers/template.transformer';
 
 @Injectable()
 export class UpdateTemplateUseCase {
@@ -15,7 +16,8 @@ export class UpdateTemplateUseCase {
       throw new NotFoundException(`Template with key "${key}" and type "${type}" not found`);
     }
 
-    template.applyUpdates(dto);
+    const updateProps = TemplateTransformer.toUpdateProps(dto);
+    template.applyUpdates(updateProps);
 
     return await this.templateRepository.save(template);
   }

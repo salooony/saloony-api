@@ -1,7 +1,8 @@
-import { NotificationType } from '@app/notification/domain/enums/notification-type.enum';
-import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { NotificationType } from '@notification/domain/enums/notification-type.enum';
+import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, Unique } from 'typeorm';
 
 @Entity('notification_templates')
+@Unique(['key', 'type'])
 export class Template {
   @PrimaryColumn({
     type: 'varchar',

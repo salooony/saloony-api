@@ -1,5 +1,5 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { ITemplateRepository, TEMPLATE_REPOSITORY } from '@notification/domain/ports/template.repository.interface';
+import { ITemplateRepository, TEMPLATE_REPOSITORY } from '@app/notification/domain/ports/itemplate.repository';
 import { NotificationType } from '@notification/domain/enums/notification-type.enum';
 
 @Injectable()

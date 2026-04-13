@@ -4,7 +4,7 @@ import { IsNotEmpty, IsOptional, IsString, IsObject, IsEnum } from 'class-valida
 
 export class CreateTemplateRequestDto {
   @ApiProperty({
-    description: 'The unique key of the template.',
+    description: 'The identifier key for the template. Used combined with type as a composite primary key.',
     type: String,
     required: true,
     example: 'welcome_email',
@@ -14,7 +14,7 @@ export class CreateTemplateRequestDto {
   public key: string;
 
   @ApiProperty({
-    description: 'The type of the notification.',
+    description: 'The delivery channel type.',
     enum: NotificationType,
     required: true,
     example: NotificationType.EMAIL,

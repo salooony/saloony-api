@@ -1,5 +1,7 @@
 import { Template } from '@notification/domain/entities/template';
+import { TemplateUpdateProps } from '@notification/domain/types/template-update.props';
 import { CreateTemplateRequestDto } from '../dtos/requests/create-template.request.dto';
+import { UpdateTemplateRequestDto } from '../dtos/requests/update-template.request.dto';
 
 export class TemplateTransformer {
   public static toEntity(dto: CreateTemplateRequestDto): Template {
@@ -11,6 +13,20 @@ export class TemplateTransformer {
     template.message = dto.message;
     template.defaultParameters = dto.defaultParameters || {};
 
+    const now = new Date();
+    template.createdAt = now;
+    template.updatedAt = now;
+
     return template;
+  }
+
+  public static toUpdateProps(dto: UpdateTemplateRequestDto): TemplateUpdateProps {
+    return {
+      key: dto.key,
+      type: dto.type,
+      title: dto.title,
+      message: dto.message,
+      defaultParameters: dto.defaultParameters,
+    };
   }
 }

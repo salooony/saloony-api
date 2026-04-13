@@ -8,7 +8,7 @@ export class Template {
   public message: string;
   public defaultParameters: Record<string, any>;
   public createdAt: Date;
-  public updatedAt?: Date;
+  public updatedAt: Date;
 
   setContent(title?: string, message?: string): void {
     if (title !== undefined) this.title = title;

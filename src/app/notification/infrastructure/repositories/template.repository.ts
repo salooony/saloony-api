@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Template as TemplateSchema } from '../schemas/template.schema';
 import { Template } from '../../domain/entities/template';
-import { ITemplateRepository } from '../../domain/ports/template.repository.interface';
+import { ITemplateRepository } from '../../domain/ports/itemplate.repository';
 import { TemplateMapper } from '../mappers/template.mapper';
 import { NotificationType } from '../../domain/enums/notification-type.enum';
 
@@ -13,7 +13,7 @@ export class TemplateRepository implements ITemplateRepository {
 
   async findAll(): Promise<Template[]> {
     const templates = await this.repository.find();
-    return templates.map((template) => TemplateMapper.toDomain(template)!);
+    return templates.map((template) => TemplateMapper.map(template)!);
   }
 
   async findByKey(key: string, type: NotificationType): Promise<Template | null> {
@@ -23,11 +23,11 @@ export class TemplateRepository implements ITemplateRepository {
       return null;
     }
 
-    return TemplateMapper.toDomain(template);
+    return TemplateMapper.map(template);
   }
 
   async save(template: Template): Promise<Template> {
-    return TemplateMapper.toDomain(await this.repository.save(TemplateMapper.toSchema(template)))!;
+    return TemplateMapper.map(await this.repository.save(TemplateMapper.toSchema(template)))!;
   }
 
   async deleteByKey(key: string, type: NotificationType): Promise<void> {

@@ -38,16 +38,16 @@ export class TemplateResponseDto {
   public defaultParameters: Record<string, any>;
 
   @ApiProperty({
-    description: 'The date when the template was created.',
+    description: 'Timestamp of template creation.',
     type: Date,
     example: '2026-04-07T09:00:00.000Z',
   })
   public createdAt: Date;
 
   @ApiProperty({
-    description: 'The date when the template was last updated.',
+    description: 'Timestamp of last update.',
     type: Date,
     example: '2026-04-09T12:00:00.000Z',
   })
-  public updatedAt?: Date;
+  public updatedAt: Date;
 }
