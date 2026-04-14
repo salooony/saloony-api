@@ -3,6 +3,7 @@ import { CITY_REPOSITORY, ICityRepository } from '@address/domain/ports/icity.re
 import { COUNTRY_REPOSITORY, ICountryRepository } from '@address/domain/ports/icountry.repository';
 import { City } from '@address/domain/entities/city.entity';
 import { CreateCityRequestDto } from '../dtos/requests/create-city.request.dto';
+import { CityTransformer } from '../transformers/city.transformer';
 import { CityResponseDto } from '../dtos/responses/city.response.dto';
 
 @Injectable()
@@ -28,6 +29,6 @@ export class CreateCityUsecase {
     const city = new City('', dto.name, country);
     const created = await this.cityRepository.save(city);
 
-    return CityResponseDto.createFromEntity(created);
+    return CityTransformer.toResponse(created);
   }
 }
