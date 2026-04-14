@@ -10,7 +10,7 @@ import { DeleteTemplateUseCase } from '@notification/application/usecases/delete
 import { CreateTemplateRequestDto } from '@notification/application/dtos/requests/create-template.request.dto';
 import { UpdateTemplateRequestDto } from '@notification/application/dtos/requests/update-template.request.dto';
 import { TemplateResponseDto } from '@notification/application/dtos/responses/template.response.dto';
-import { GetTemplateRequestDto } from '@notification/application/dtos/requests/get-template-request.dto';
+import { TemplateIdentifierDto } from '@notification/application/dtos/requests/template-identifier.dto';
 
 @ApiTags('Notification Templates')
 @Controller('notifications/templates')
@@ -31,7 +31,7 @@ export class TemplateController {
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User should be logged in.' })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden - Admin only.' })
   @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Template with key and type already exists.' })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'One or more parameters are invalid.' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'One or more properties are invalid.' })
   async create(@Body() dto: CreateTemplateRequestDto): Promise<TemplateResponseDto> {
     return await this.createTemplateUseCase.execute(dto);
   }
@@ -59,8 +59,8 @@ export class TemplateController {
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User should be logged in.' })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden - Admin only.' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Template not found.' })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'One or more parameters are invalid.' })
-  async findOne(@Query() query: GetTemplateRequestDto): Promise<TemplateResponseDto> {
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'One or more queries are invalid.' })
+  async findOne(@Query() query: TemplateIdentifierDto): Promise<TemplateResponseDto> {
     return await this.getTemplateByKeyUseCase.execute(query.key, query.type);
   }
 
@@ -72,9 +72,9 @@ export class TemplateController {
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User should be logged in.' })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden - Admin only.' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Template not found.' })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'One or more parameters are invalid.' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'One or more parameters or properties are invalid.' })
   async update(
-    @Param() params: GetTemplateRequestDto,
+    @Param() params: TemplateIdentifierDto,
     @Body() dto: UpdateTemplateRequestDto,
   ): Promise<TemplateResponseDto> {
     return await this.updateTemplateUseCase.execute(params.key, params.type, dto);
@@ -89,8 +89,8 @@ export class TemplateController {
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User should be logged in.' })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden - Admin only.' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Template not found.' })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'One or more parameters are invalid.' })
-  async delete(@Query() query: GetTemplateRequestDto): Promise<void> {
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'One or more queries are invalid.' })
+  async delete(@Query() query: TemplateIdentifierDto): Promise<void> {
     await this.deleteTemplateUseCase.execute(query.key, query.type);
   }
 }

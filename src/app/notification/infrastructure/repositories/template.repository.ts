@@ -16,8 +16,7 @@ export class TemplateRepository implements ITemplateRepository {
   }
 
   async findAll(): Promise<Template[]> {
-    const templates = await this.repository.find();
-    return templates.map((template) => TemplateMapper.map(template)!);
+    return (await this.repository.find()).map((template) => TemplateMapper.map(template)!);
   }
 
   async findByKey(key: string, type: NotificationType): Promise<Template | null> {

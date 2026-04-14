@@ -3,9 +3,7 @@ import { ITemplateRepository, TEMPLATE_REPOSITORY } from '@notification/domain/p
 import { Template } from '@notification/domain/entities/template';
 import { NotificationType } from '@notification/domain/enums/notification-type.enum';
 import { UpdateTemplateRequestDto } from '@notification/application/dtos/requests/update-template.request.dto';
-import { TemplateTransformer } from '../transformers/template.transformer';
 import { TemplateResponseDto } from '../dtos/responses/template.response.dto';
-import { TemplateUpdateProps } from '@notification/domain/types/template-update.props';
 
 @Injectable()
 export class UpdateTemplateUseCase {
@@ -18,19 +16,17 @@ export class UpdateTemplateUseCase {
       throw new NotFoundException(`Template with key "${key}" and type "${type}" not found`);
     }
 
-    const updateProps = TemplateTransformer.toUpdateProps(dto);
-    this.applyUpdate(template, updateProps);
+    this.applyUpdate(template, dto);
 
     const updatedTemplate = await this.templateRepository.save(template);
     return TemplateResponseDto.createFromEntity(updatedTemplate);
   }
 
-  private applyUpdate(template: Template, props: TemplateUpdateProps): void {
-    if (props.title !== undefined) template.title = props.title;
-    if (props.message !== undefined) template.message = props.message;
-    if (props.defaultParameters !== undefined) {
-      template.defaultParameters = props.defaultParameters;
+  private applyUpdate(template: Template, dto: UpdateTemplateRequestDto): void {
+    if (dto.title !== undefined) template.title = dto.title;
+    if (dto.message !== undefined) template.message = dto.message;
+    if (dto.defaultParameters !== undefined) {
+      template.defaultParameters = dto.defaultParameters;
     }
-    template.updatedAt = new Date();
   }
 }

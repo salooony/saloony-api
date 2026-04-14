@@ -2,7 +2,7 @@ import { NotificationType } from '@notification/domain/enums/notification-type.e
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsEnum } from 'class-validator';
 
-export class GetTemplateRequestDto {
+export class TemplateIdentifierDto {
   @ApiProperty({
     description: 'The identifier key for the template (e.g., verify_email). Used combined with type.',
     example: 'verify_email',
