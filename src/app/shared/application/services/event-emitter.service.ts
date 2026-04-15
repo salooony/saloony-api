@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
-export class SharedEventEmitterService {
+export class EventDispatcher {
   constructor(private readonly eventEmitter: EventEmitter2) {}
 
-  emit<TPayload = unknown>(event: string, payload?: TPayload): boolean {
+  dispatch<TPayload = unknown>(event: string, payload?: TPayload): boolean {
     return this.eventEmitter.emit(event, payload);
   }
 
-  emitAsync<TPayload = unknown>(event: string, payload?: TPayload): Promise<unknown[]> {
+  dispatchAsync<TPayload = unknown>(event: string, payload?: TPayload): Promise<unknown[]> {
     return this.eventEmitter.emitAsync(event, payload);
   }
 }
