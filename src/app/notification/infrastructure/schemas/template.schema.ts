@@ -1,23 +1,20 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
-import { TemplateType } from '../../domain/enums/template-type.enum';
+import { NotificationType } from '@notification/domain/enums/notification-type.enum';
+import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, Unique } from 'typeorm';
 
 @Entity('notification_templates')
+@Unique(['key', 'type'])
 export class Template {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @Column({
+  @PrimaryColumn({
     type: 'varchar',
     length: 255,
-    unique: true,
   })
   key: string;
 
-  @Column({
+  @PrimaryColumn({
     type: 'enum',
-    enum: TemplateType,
+    enum: NotificationType,
   })
-  type: TemplateType;
+  type: NotificationType;
 
   @Column({ type: 'varchar', length: 255 })
   title: string;
@@ -28,15 +25,9 @@ export class Template {
   @Column({ type: 'jsonb', nullable: true })
   defaultParameters: Record<string, any>;
 
-  @Column({ type: 'jsonb', nullable: true })
-  metadata: Record<string, any>;
-
-  @Column({ type: 'boolean', default: true })
-  isActive: boolean;
-
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 }
