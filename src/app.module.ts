@@ -10,6 +10,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { TokenGuard } from '@user/infrastructure/guards/token.guard';
 import { TokensModule } from '@token/infrastructure/modules/token.module';
 import { AuthorizationGuard } from '@app/shared/guards/authorization.guard';
+import { NotificationModule } from '@app/notification';
 
 const ENV = process.env.NODE_ENV;
 
@@ -47,6 +48,7 @@ const ENV = process.env.NODE_ENV;
     UserModule,
     AddressModule,
     TokensModule,
+    NotificationModule,
   ],
   providers: [
     {
