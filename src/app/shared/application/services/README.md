@@ -1,42 +1,60 @@
 # Shared Event Dispatcher Guide
 
-This guide walks you through using the shared `EventDispatcher` now after setup, and then bolting on listeners later.
+Quick rundown on using `EventDispatcher` once it’s already hooked up.
 
 ## What exists now
 
-- An `EventDispatcher` service lives in `event-emitter.service.ts`
-- Only the bare dispatch methods are in place:
+- Service file: `event-dispatcher.service.ts`
+- Methods you can call:
   - `dispatch(event, payload)`
   - `dispatchAsync(event, payload)`
-- And yep, no listeners are connected yet in this phase.
 
 ## Step-by-step: use the dispatcher in a service
 
-1. Import the dispatcher:
+1. First, double-check `EventDispatcher` is available in your module’s providers.
 
 ```ts
-import { EventDispatcher } from '@shared/application/services/event-emitter.service';
+import { EventDispatcher } from '@app/shared/application/services/event-dispatcher.service';
+
+@Module({
+  providers: [EventDispatcher],
+})
+export class YourModule {}
 ```
 
-2. Inject it via your constructor:
+And if the consumer sits in a different module, export `EventDispatcher` from the module that owns it, then import that module from the consumer module. Basically: make Nest able to see it.
+
+2. Import the dispatcher in your use case/service:
+
+```ts
+import { EventDispatcher } from '@app/shared/application/services/event-dispatcher.service';
+```
+
+3. Inject it through your constructor:
 
 ```ts
 constructor(private readonly eventDispatcher: EventDispatcher) {}
 ```
 
-3. Fire an event after your domain work finishes:
+4. Define event-name constants (don’t sprinkle raw strings everywhere):
 
 ```ts
-this.eventDispatcher.dispatch('user.created', {
+export const USER_CREATED_EVENT = 'user.created' as const;
+```
+
+5. dispatch an event after your domain work is done:
+
+```ts
+this.eventDispatcher.dispatch(USER_CREATED_EVENT, {
   userId: user.id,
   email: user.email,
 });
 ```
 
-4. If your handlers need async sequencing, do this instead:
+6. If you actually need to wait for async listeners to finish, use this version:
 
 ```ts
-await this.eventDispatcher.dispatchAsync('user.created', {
+await this.eventDispatcher.dispatchAsync(USER_CREATED_EVENT, {
   userId: user.id,
   email: user.email,
 });
@@ -44,42 +62,61 @@ await this.eventDispatcher.dispatchAsync('user.created', {
 
 ## Step-by-step: add listeners later (next phase)
 
-1. Add a listener class inside the module that owns the behavior (example: notifications):
+1. Create a listener in the module that owns the behavior:
 
 ```ts
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
+export const USER_CREATED_EVENT = 'user.created' as const;
+
 @Injectable()
 export class UserCreatedListener {
-  @OnEvent('user.created')
+  @OnEvent(USER_CREATED_EVENT)
   handleUserCreated(payload: { userId: string; email: string }): void {
-    // Put side effects here (send notification, enqueue a job, etc.)
+    // Side effects here
   }
 }
 ```
 
-2. Register that listener in the module's providers:
+2. Register the listener in the module’s providers:
 
 ```ts
 providers: [UserCreatedListener];
 ```
 
-3. Keep event naming consistent as things grow:
+3. Keep event naming clean:
 
-- At first, string literals are totally fine.
-- Once you have a bunch of events, switch to shared constants/enums.
+- Use constants right away.
+- And once the list starts getting big, move the constants into a single shared file.
 
-## Replaceable example names
+## Event payload properties
 
-- Event names you can swap out:
-  - `user.created`
-  - `appointment.booked`
-  - `salon.member.invited`
-- Payload keys should change to match whatever your case needs.
+Try to describe the event using simple, readable payload fields.
+
+Common fields you might include:
+
+- Entity IDs: `userId`, `salonId`, `appointmentId`
+- Actor info: `actorId`, `actorRole`
+- Context: `occurredAt`, `requestId`, `source`
+- Business data: `email`, `status`, `reason`
+- Optional tracing: `correlationId`
+
+Example payload shape:
+
+```ts
+interface AppEventPayload {
+  userId: string;
+  actorId?: string;
+  occurredAt: string;
+  requestId?: string;
+  reason?: string;
+  correlationId?: string;
+}
+```
 
 ## Notes
 
-- This is purposely minimal.
-- There is no notification or ping coupling baked in.
-- Add listeners module by module only when the business behavior is actually ready.
+- Keep payloads small, and keep them explicit.
+- No notification/ping coupling during this phase.
+- Add listeners module-by-module as you need them.
