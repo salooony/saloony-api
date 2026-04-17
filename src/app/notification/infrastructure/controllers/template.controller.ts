@@ -51,7 +51,7 @@ export class TemplateController {
     return await this.getAllTemplatesUseCase.execute();
   }
 
-  @Get()
+  @Get('details')
   @Roles(UserRole.ADMIN)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get a notification template by type and key.' })

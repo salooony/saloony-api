@@ -1,6 +1,6 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserController } from '../controllers/user.controller';
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { UsersRepository } from '../repositories/user.repository';
 import { BcryptHashingProvider } from '../providers/bcrypt.hashing.provider';
 import { CreateUserUsecase } from '@user/application/usecases/create.usecase';
@@ -40,7 +40,7 @@ import { FileModule } from '@shared/uploads/infrastructure/modules/file.module';
         };
       },
     }),
-    TokensModule,
+    forwardRef(() => TokensModule),
     TemplateModule,
     FileModule,
   ],
