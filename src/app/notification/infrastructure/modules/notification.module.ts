@@ -1,21 +1,21 @@
 import { Module } from '@nestjs/common';
 import { TemplateModule } from './template.module';
-import { NotifierService } from '../../application/services/notifier.service';
-import { SmsChannel } from '../channels/sms.channel';
-import { EmailChannel } from '../channels/email.channel';
 
+/**
+ * NotificationModule
+ *
+ * Main module that aggregates all notification-related functionality.
+ * This module organizes and exports:
+ * - Template management (CRUD operations for notification templates)
+ * - Template rendering service
+ *
+ * The module follows a clean architecture pattern with separate layers:
+ * - Domain: Core entities, enums, interfaces, and business logic
+ * - Application: Use cases, services, DTOs, and transformers
+ * - Infrastructure: Controllers, repositories, schemas, and providers
+ */
 @Module({
   imports: [TemplateModule],
-  providers: [
-    SmsChannel,
-    EmailChannel,
-    {
-      provide: 'NOTIFIER_CHANNELS',
-      useFactory: (sms: SmsChannel, email: EmailChannel) => [sms, email],
-      inject: [SmsChannel, EmailChannel],
-    },
-    NotifierService,
-  ],
-  exports: [TemplateModule, NotifierService],
+  exports: [TemplateModule],
 })
 export class NotificationModule {}
