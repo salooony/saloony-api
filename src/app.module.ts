@@ -10,8 +10,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { TokenGuard } from '@user/infrastructure/guards/token.guard';
 import { TokensModule } from '@token/infrastructure/modules/token.module';
 import { AuthorizationGuard } from '@shared/guards/authorization.guard';
-import { EventEmitterModule } from '@nestjs/event-emitter';
 import { NotificationModule } from '@notification';
+import { EventDispatcherModule } from '@shared/event-dispatcher';
 
 const ENV = process.env.NODE_ENV;
 
@@ -45,12 +45,12 @@ const ENV = process.env.NODE_ENV;
         };
       },
     }),
-    EventEmitterModule.forRoot(),
 
     UserModule,
     AddressModule,
     TokensModule,
     NotificationModule,
+    EventDispatcherModule,
   ],
   providers: [
     {
