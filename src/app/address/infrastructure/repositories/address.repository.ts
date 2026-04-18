@@ -11,21 +11,20 @@ export class AddressRepository implements IAddressRepository {
   constructor(@InjectRepository(AddressSchema) private readonly repository: Repository<AddressSchema>) {}
 
   async create(address: Address): Promise<Address> {
-    return this.saveAddress(address);
+    return AddressMapper.toDomain(await this.repository.save(AddressMapper.toEntity(address)));
   }
 
   async update(address: Address): Promise<Address> {
-    return this.saveAddress(address);
+    return AddressMapper.toDomain(await this.repository.save(AddressMapper.toEntity(address)));
   }
 
   async findById(id: string): Promise<Address | null> {
-    const entity = await this.repository.findOne({ where: { id } });
-    return entity ? AddressMapper.toDomain(entity) : null;
-  }
+    const address = await this.repository.findOne({ where: { id } });
 
-  private async saveAddress(address: Address): Promise<Address> {
-    const entity = AddressMapper.toEntity(address);
-    const saved = await this.repository.save(entity);
-    return AddressMapper.toDomain(saved);
+    if (!address) {
+      return null;
+    }
+
+    return AddressMapper.toDomain(address);
   }
 }
