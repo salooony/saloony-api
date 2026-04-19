@@ -1,9 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TemplateModule } from './template.module';
-import { Notification } from '@notification/infrastructure/schemas/notification.schema';
-import { NotificationRepository } from '@notification/infrastructure/repositories/notification.repository';
-import { NOTIFICATION_REPOSITORY } from '@notification/domain/ports/inotification.repository';
+import { Notification, NOTIFICATION_REPOSITORY, NotificationRepository } from '@notification';
 
 /**
  * NotificationModule

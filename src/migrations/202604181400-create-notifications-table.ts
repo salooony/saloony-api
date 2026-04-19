@@ -65,9 +65,28 @@ export class CreateNotificationsTable202604181400 implements MigrationInterface 
         columnNames: ['user_id', 'is_read', 'created_at'],
       }),
     );
+
+    await queryRunner.createIndex(
+      'notifications',
+      new TableIndex({
+        name: 'idx_user_id_is_read',
+        columnNames: ['user_id', 'is_read'],
+      }),
+    );
+
+    await queryRunner.createIndex(
+      'notifications',
+      new TableIndex({
+        name: 'idx_user_id_created_at',
+        columnNames: ['user_id', 'created_at'],
+      }),
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropIndex('notifications', 'idx_user_unread_notifications');
+    await queryRunner.dropIndex('notifications', 'idx_user_id_is_read');
+    await queryRunner.dropIndex('notifications', 'idx_user_id_created_at');
     await queryRunner.dropTable('notifications');
   }
 }

@@ -3,7 +3,8 @@ import { NotificationType } from '@notification/domain/enums/notification-type.e
 
 @Entity({ name: 'notifications' })
 @Index('idx_user_unread_notifications', ['userId', 'isRead', 'createdAt'])
-@Index('idx_user_unread', ['userId', 'isRead'])
+@Index('idx_user_id_is_read', ['userId', 'isRead'])
+@Index('idx_user_id_created_at', ['userId', 'createdAt'])
 export class Notification {
   @PrimaryGeneratedColumn('uuid')
   id: string;
