@@ -1,8 +1,11 @@
 // Domain exports
 export * from './domain/entities/salon';
 export * from './domain/enums/salon-role.enum';
+export * from './domain/ports/isalon.repository';
 
 // Infrastructure exports
-export * from './infrastructure/modules/salon.module';
-export * from './infrastructure/mappers/salon.mapper';
-export * from './infrastructure/controllers/salon.controller';
+export { SalonModule } from './infrastructure/modules/salon.module';
+export { SalonMapper } from './infrastructure/mappers/salon.mapper';
+export { SalonController } from './infrastructure/controllers/salon.controller';
+export { SalonRepository } from './infrastructure/repositories/salon.repository';
+export { Salon as SalonSchema } from './infrastructure/schemas/salon.entity';
