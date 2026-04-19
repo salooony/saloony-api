@@ -12,7 +12,6 @@ export class CreateNotificationsTable202604181400 implements MigrationInterface 
             isPrimary: true,
             isGenerated: true,
             generationStrategy: 'uuid',
-            isNullable: false,
           },
           {
             name: 'user_id',
