@@ -11,7 +11,7 @@ import { TokenGuard } from '@user/infrastructure/guards/token.guard';
 import { TokensModule } from '@token/infrastructure/modules/token.module';
 import { AuthorizationGuard } from '@shared/guards/authorization.guard';
 import { NotificationModule } from '@notification';
-import { SalonModule } from '@salon/infrastructure/modules/salon.module';
+import { SalonModule } from '@salon';
 
 const ENV = process.env.NODE_ENV;
 
