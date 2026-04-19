@@ -1,10 +1,8 @@
 import { Salon } from '../../domain/entities/salon';
 import { Salon as SalonSchema } from '../schemas/salon.entity';
-
 export class SalonMapper {
   /**
    * Maps a Salon infrastructure schema to a Salon domain entity.
-   * Currently only maps the addressId until the Address module is ready.
    * @param schema The infrastructure schema.
    * @returns The domain entity or null if schema is null.
    */

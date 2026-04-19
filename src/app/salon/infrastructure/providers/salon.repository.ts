@@ -7,7 +7,7 @@ import { ISalonRepository } from '../../domain/ports/isalon.repository';
 import { SalonMapper } from '../mappers/salon.mapper';
 
 /**
- * SalonRepository
+ * Concrete implementation of salon persistence using TypeORM.
  */
 @Injectable()
 export class SalonRepository implements ISalonRepository {

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Salon } from '../schemas/salon.entity';
 import { SalonController } from '../controllers/salon.controller';
-import { SalonRepository } from '../repositories/salon.repository';
+import { SalonRepository } from '../providers/salon.repository';
 import { ISALON_REPOSITORY } from '@salon/domain/ports/isalon.repository';
 
 /**

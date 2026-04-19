@@ -7,5 +7,5 @@ export * from './domain/ports/isalon.repository';
 export { SalonModule } from './infrastructure/modules/salon.module';
 export { SalonMapper } from './infrastructure/mappers/salon.mapper';
 export { SalonController } from './infrastructure/controllers/salon.controller';
-export { SalonRepository } from './infrastructure/repositories/salon.repository';
+export { SalonRepository } from './infrastructure/providers/salon.repository';
 export { Salon as SalonSchema } from './infrastructure/schemas/salon.entity';
