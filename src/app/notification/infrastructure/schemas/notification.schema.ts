@@ -2,12 +2,13 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Index } from 
 import { NotificationType } from '@notification/domain/enums/notification-type.enum';
 
 @Entity({ name: 'notifications' })
+@Index('idx_user_unread_notifications', ['userId', 'isRead', 'createdAt'])
+@Index('idx_user_unread', ['userId', 'isRead'])
 export class Notification {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ type: 'uuid', name: 'user_id' })
-  @Index()
   userId: string;
 
   @Column({
@@ -24,20 +25,11 @@ export class Notification {
   content: string;
 
   @Column({ type: 'boolean', default: false, name: 'is_read' })
-  @Index()
   isRead: boolean;
 
   @Column({ type: 'timestamp', nullable: true, name: 'read_at' })
-  readAt?: Date;
+  readAt: Date | null;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
-  @Index()
   createdAt: Date;
-
-  public markAsRead(): void {
-    if (!this.isRead) {
-      this.isRead = true;
-      this.readAt = new Date();
-    }
-  }
 }

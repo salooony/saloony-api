@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm';
 
 export class CreateNotificationsTable202604181400 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -56,6 +56,14 @@ export class CreateNotificationsTable202604181400 implements MigrationInterface 
         ],
       }),
       true,
+    );
+
+    await queryRunner.createIndex(
+      'notifications',
+      new TableIndex({
+        name: 'idx_user_unread_notifications',
+        columnNames: ['user_id', 'is_read', 'created_at'],
+      }),
     );
   }
 

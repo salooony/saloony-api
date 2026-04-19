@@ -6,12 +6,7 @@ export class Notification {
   public type: NotificationType;
   public title: string;
   public content: string;
-  public isRead: boolean;
-  public readAt?: Date;
+  public isRead: boolean = false;
+  public readAt: Date | null = null;
   public createdAt: Date;
-
-  public markAsRead(): void {
-    this.isRead = true;
-    this.readAt = new Date();
-  }
 }

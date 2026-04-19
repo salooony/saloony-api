@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import { User } from '@user/infrastructure/schemas/user.schema';
 import { Salon } from '@salon/infrastructure/schemas/salon.entity';
 import { SalonMembership } from '@user/infrastructure/schemas/salon-membership.schema';
-import { Notification } from '@notification/infrastructure/schemas/notification.schema';
+import { Notification } from '@notification';
 
 dotenv.config();
 
