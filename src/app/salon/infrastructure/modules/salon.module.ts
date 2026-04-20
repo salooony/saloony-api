@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Salon } from '../schemas/salon.entity';
 import { SalonController } from '../controllers/salon.controller';
 import { SalonRepository } from '../providers/salon.repository';
-import { ISALON_REPOSITORY } from '@salon/domain/ports/isalon.repository';
+import { SALON_REPOSITORY } from '@salon/domain/ports/isalon.repository';
 
 /**
  * SalonModule
@@ -14,10 +14,10 @@ import { ISALON_REPOSITORY } from '@salon/domain/ports/isalon.repository';
   providers: [
     SalonRepository,
     {
-      provide: ISALON_REPOSITORY,
+      provide: SALON_REPOSITORY,
       useClass: SalonRepository,
     },
   ],
-  exports: [ISALON_REPOSITORY],
+  exports: [SALON_REPOSITORY],
 })
 export class SalonModule {}

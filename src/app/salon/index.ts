@@ -1,7 +1,7 @@
 // Domain exports
 export * from './domain/entities/salon';
 export * from './domain/enums/salon-role.enum';
-export * from './domain/ports/isalon.repository';
+export { ISalonRepository, SALON_REPOSITORY } from './domain/ports/isalon.repository';
 
 // Infrastructure exports
 export { SalonModule } from './infrastructure/modules/salon.module';

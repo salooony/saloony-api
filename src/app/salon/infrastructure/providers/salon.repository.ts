@@ -1,33 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Salon as SalonSchema } from '../schemas/salon.entity';
-import { Salon } from '../../domain/entities/salon';
-import { ISalonRepository } from '../../domain/ports/isalon.repository';
-import { SalonMapper } from '../mappers/salon.mapper';
+import { Salon as SalonSchema } from '@salon/infrastructure/schemas/salon.entity';
+import { ISalonRepository } from '@salon/domain/ports/isalon.repository';
 
 /**
  * Concrete implementation of salon persistence using TypeORM.
  */
 @Injectable()
 export class SalonRepository implements ISalonRepository {
-  constructor(
-    @InjectRepository(SalonSchema)
-    private readonly repository: Repository<SalonSchema>,
-  ) {}
+  readonly type = 'SalonRepository';
 
-  async save(salon: Salon): Promise<Salon> {
-    const savedSchema = await this.repository.save(SalonMapper.toSchema(salon));
-    return SalonMapper.map(savedSchema)!;
-  }
-
-  async findAll(): Promise<Salon[]> {
-    const schemas = await this.repository.find();
-    return schemas.map((schema) => SalonMapper.map(schema)!);
-  }
-
-  async findById(id: string): Promise<Salon | null> {
-    const schema = await this.repository.findOneBy({ id });
-    return SalonMapper.map(schema);
-  }
+  constructor(@InjectRepository(SalonSchema) private readonly repository: Repository<SalonSchema>) {}
 }
