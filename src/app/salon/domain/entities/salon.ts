@@ -9,4 +9,5 @@ export class Salon {
   public description: string;
   public deletedAt: Date | null = null;
   public address: Address | null = null;
+  public isDeleted: boolean = false;
 }

@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, TableColumn, TableForeignKey, TableIndex } from 'typeorm';
+import { MigrationInterface, QueryRunner, TableColumn, TableForeignKey } from 'typeorm';
 
 export class AddAddressIdAndSoftDeleteToSalons1770000000000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -22,6 +22,16 @@ export class AddAddressIdAndSoftDeleteToSalons1770000000000 implements Migration
       }),
     );
 
+    // Add is_deleted column for boolean flag
+    await queryRunner.addColumn(
+      'salons',
+      new TableColumn({
+        name: 'is_deleted',
+        type: 'boolean',
+        default: false,
+      }),
+    );
+
     // Add Foreign Key to addresses table
     await queryRunner.createForeignKey(
       'salons',
@@ -33,41 +43,17 @@ export class AddAddressIdAndSoftDeleteToSalons1770000000000 implements Migration
         onDelete: 'SET NULL',
       }),
     );
-
-    // Add Index for address_id
-    await queryRunner.createIndex(
-      'salons',
-      new TableIndex({
-        name: 'idx_salon_address_id',
-        columnNames: ['address_id'],
-      }),
-    );
-
-    // Add Index for name (as requested for performance)
-    await queryRunner.createIndex(
-      'salons',
-      new TableIndex({
-        name: 'idx_salon_name',
-        columnNames: ['name'],
-      }),
-    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     const table = await queryRunner.getTable('salons');
     if (table) {
-      // Drop Indexes
-      const nameIndex = table.indices.find((index) => index.name === 'idx_salon_name');
-      if (nameIndex) await queryRunner.dropIndex('salons', nameIndex);
-
-      const addressIdIndex = table.indices.find((index) => index.name === 'idx_salon_address_id');
-      if (addressIdIndex) await queryRunner.dropIndex('salons', addressIdIndex);
-
       // Drop Foreign Key
       const foreignKey = table.foreignKeys.find((fk) => fk.name === 'FK_SALONS_ADDRESS_ID');
       if (foreignKey) await queryRunner.dropForeignKey('salons', foreignKey);
 
       // Drop Columns
+      await queryRunner.dropColumn('salons', 'is_deleted');
       await queryRunner.dropColumn('salons', 'deleted_at');
       await queryRunner.dropColumn('salons', 'address_id');
     }

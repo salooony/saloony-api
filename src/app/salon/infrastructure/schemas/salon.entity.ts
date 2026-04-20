@@ -3,7 +3,6 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -12,8 +11,6 @@ import {
 import { Address } from '@address/infrastructure/schemas/address.schema';
 
 @Entity({ name: 'salons' })
-@Index('idx_salon_name', ['name'])
-@Index('idx_salon_address_id', ['addressId'])
 export class Salon {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -43,4 +40,7 @@ export class Salon {
     nullable: true,
   })
   deletedAt?: Date;
+
+  @Column({ type: 'boolean', name: 'is_deleted', default: false })
+  isDeleted: boolean;
 }

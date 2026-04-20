@@ -17,6 +17,7 @@ export class SalonMapper {
     domain.createdAt = schema.createdAt;
     domain.updatedAt = schema.updatedAt;
     domain.deletedAt = schema.deletedAt || null;
+    domain.isDeleted = schema.isDeleted;
 
     return domain;
   }
@@ -36,6 +37,7 @@ export class SalonMapper {
     schema.createdAt = domain.createdAt;
     schema.updatedAt = domain.updatedAt;
     schema.deletedAt = domain.deletedAt || undefined;
+    schema.isDeleted = domain.isDeleted;
 
     return schema;
   }
