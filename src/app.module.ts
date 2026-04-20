@@ -12,6 +12,7 @@ import { TokensModule } from '@token/infrastructure/modules/token.module';
 import { AuthorizationGuard } from '@shared/guards/authorization.guard';
 import { NotificationModule } from '@notification';
 import { SalonModule } from '@salon';
+import { EventDispatcherModule } from '@shared/event-dispatcher';
 
 const ENV = process.env.NODE_ENV;
 
@@ -51,6 +52,7 @@ const ENV = process.env.NODE_ENV;
     TokensModule,
     NotificationModule,
     SalonModule,
+    EventDispatcherModule,
   ],
   providers: [
     {
