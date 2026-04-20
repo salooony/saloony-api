@@ -72,7 +72,6 @@ Go to `/listeners` and add a new listenner to your event, note that the event li
 An example of event listener:
 
 ```ts
-@Injectable()
 export class EventListener implements IEventListener {
   @OnEvent(EventsEnum.EVENT_NAME)
   async listen(event: MockEvent): Promise<boolean> {
@@ -93,7 +92,7 @@ exports: [EventListener],
 To use the event dispatcher, use the following statement to import it:
 
 ```ts
-import { EventDispatcher } from '@app/shared/application/services/event-dispatcher.service';
+import { IEventDispatcher, EVENT_DISPATCHER, EventsEnum } from '@shared/event-dispatcher';
 ```
 
 In order to trigger your event, you first need to inject the event-dispatcher service to your usecase as follows:
@@ -113,3 +112,5 @@ or
 ```ts
 const result = await this.eventDispatcher.dispatchAsync(Events.EVENT_NAME, new MockEvent(property));
 ```
+
+Note that you need to import the EventDispatcherModule in your module first
