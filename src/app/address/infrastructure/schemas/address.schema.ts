@@ -7,8 +7,8 @@ export class Address {
 
   @Column({ type: 'jsonb' })
   location: {
-    lat: number;
-    lng: number;
+    latitude: number;
+    longitude: number;
   };
 
   @Column({ type: 'varchar', length: 10 })

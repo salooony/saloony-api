@@ -8,7 +8,7 @@ import { CreateUserUsecase } from '@user/application/usecases/create.usecase';
 import { DeleteUserAccountUseCase } from '@user/application/usecases/delete-user-account.usecase';
 import { GetUserInfoUsecase } from '@user/application/usecases/get-user-info.usecase';
 import { AddressResponseDto } from '@address/application/dtos/responses/address.response.dto';
-import { UpsertAddressRequestDto } from '@address/application/dtos/requests/upsert-address.request.dto';
+import { AddressRequestDto } from '@address/application/dtos/requests/address.request.dto';
 import { User } from '@user/domain/entities/user';
 import { UpsertAddressUsecase } from '@user/application/usecases/upsert-address.usecase';
 
@@ -168,18 +168,18 @@ export class UserController {
     await this.updateAvatar.execute(filePart, user);
   }
 
-  @Put(':id/address')
-  @ApiOperation({ summary: 'Attach address to user' })
+  @Put('me/address')
+  @ApiOperation({ summary: 'Attach address to user.' })
   @ApiBearerAuth()
   @ApiResponse({ status: HttpStatus.CREATED, type: AddressResponseDto })
   @ApiResponse({ status: HttpStatus.NO_CONTENT })
-  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'User not found.' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid request data.' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User should be logged in.' })
   async upsertAddress(
-    @Param('id') userId: string,
-    @Body(new ValidationPipe()) dto: UpsertAddressRequestDto,
+    @CurrentUser() user: User,
+    @Body(new ValidationPipe()) dto: AddressRequestDto,
   ): Promise<AddressResponseDto | void> {
-    const result = await this.upsertAddressUsecase.execute(userId, dto);
+    const result = await this.upsertAddressUsecase.execute(user, dto);
     if (result.status === 201) return result.data;
   }
 }

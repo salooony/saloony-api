@@ -1,31 +1,24 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { USERS_REPOSITORY, IUserRepository } from '@user/domain/ports/iuser.repository';
-import { UpsertAddressRequestDto } from '@address/application/dtos/requests/upsert-address.request.dto';
+import { Injectable } from '@nestjs/common';
+import { AddressRequestDto } from '@address/application/dtos/requests/address.request.dto';
 import { AddressResponseDto } from '@address/application/dtos/responses/address.response.dto';
 import { CreateAddressUsecase } from '@address/application/usecases/create-address.usecase';
 import { UpdateAddressUsecase } from '@address/application/usecases/update-address.usecase';
+import { User } from '@app/user/domain/entities/user';
 
 export type UpsertAddressResult = { status: 201; data: AddressResponseDto } | { status: 204 };
 
 @Injectable()
 export class UpsertAddressUsecase {
   constructor(
-    @Inject(USERS_REPOSITORY) private readonly userRepository: IUserRepository,
     private readonly createAddressUsecase: CreateAddressUsecase,
     private readonly updateAddressUsecase: UpdateAddressUsecase,
   ) {}
 
-  async execute(userId: string, dto: UpsertAddressRequestDto): Promise<UpsertAddressResult> {
-    const user = await this.userRepository.findOneById(userId);
-
-    if (!user) {
-      throw new NotFoundException('User not found.');
-    }
-
+  async execute(user: User, dto: AddressRequestDto): Promise<UpsertAddressResult> {
     if (user.addressId) {
-      return this.updateAddressUsecase.execute(user.addressId, dto);
+      return await this.updateAddressUsecase.execute(user, dto);
     }
 
-    return this.createAddressUsecase.execute(user, dto);
+    return await this.createAddressUsecase.execute(user, dto);
   }
 }
