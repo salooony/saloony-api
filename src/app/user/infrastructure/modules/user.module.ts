@@ -72,6 +72,9 @@ import { AddressModule } from '@address/infrastructure/modules/address.module';
     { provide: 'IUserRepository', useClass: UsersRepository },
   ],
 
-  exports: [{ provide: 'UsersRepository', useClass: UsersRepository }],
+  exports: [
+    { provide: 'IUserRepository', useClass: UsersRepository },
+    { provide: 'UsersRepository', useClass: UsersRepository },
+  ],
 })
 export class UserModule {}
