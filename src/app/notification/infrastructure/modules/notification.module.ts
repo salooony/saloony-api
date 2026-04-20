@@ -26,6 +26,5 @@ import { Notification, NOTIFICATION_REPOSITORY, NotificationRepository } from '@
       useClass: NotificationRepository,
     },
   ],
-  exports: [NOTIFICATION_REPOSITORY, TemplateModule],
 })
 export class NotificationModule {}
