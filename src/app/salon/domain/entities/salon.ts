@@ -4,7 +4,7 @@ export class Salon {
   public id: string;
   public name: string;
   public description: string;
-  public address: Address | null = null;
+  public address: Address;
   public createdAt: Date;
   public updatedAt: Date;
   public isDeleted: boolean = false;

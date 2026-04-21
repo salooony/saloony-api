@@ -21,10 +21,10 @@ export class Salon {
   @Column({ type: 'varchar', length: 1000, nullable: true })
   description: string;
 
-  @Column({ type: 'uuid', name: 'address_id', nullable: true })
-  addressId: string | null;
+  @Column({ type: 'uuid', name: 'address_id' })
+  addressId: string;
 
-  @ManyToOne(() => Address, { nullable: true })
+  @ManyToOne(() => Address)
   @JoinColumn({ name: 'address_id' })
   address: Address;
 
