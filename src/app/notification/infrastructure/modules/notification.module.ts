@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { TemplateModule } from './template.module';
+import { Notification, NOTIFICATION_REPOSITORY, NotificationRepository } from '@notification';
 
 /**
  * NotificationModule
@@ -8,6 +10,7 @@ import { TemplateModule } from './template.module';
  * This module organizes and exports:
  * - Template management (CRUD operations for notification templates)
  * - Template rendering service
+ * - Notification repository for persistence operations
  *
  * The module follows a clean architecture pattern with separate layers:
  * - Domain: Core entities, enums, interfaces, and business logic
@@ -15,7 +18,13 @@ import { TemplateModule } from './template.module';
  * - Infrastructure: Controllers, repositories, schemas, and providers
  */
 @Module({
-  imports: [TemplateModule],
-  exports: [TemplateModule],
+  imports: [TypeOrmModule.forFeature([Notification]), TemplateModule],
+  providers: [
+    NotificationRepository,
+    {
+      provide: NOTIFICATION_REPOSITORY,
+      useClass: NotificationRepository,
+    },
+  ],
 })
 export class NotificationModule {}

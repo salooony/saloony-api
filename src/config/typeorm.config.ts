@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv';
 import { User } from '@user/infrastructure/schemas/user.schema';
 import { Salon } from '@salon/infrastructure/schemas/salon.entity';
 import { SalonMembership } from '@user/infrastructure/schemas/salon-membership.schema';
+import { Notification } from '@notification';
 
 dotenv.config();
 
@@ -14,6 +15,6 @@ export const connectionSource = new DataSource({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   synchronize: false,
-  entities: [User, Salon, SalonMembership],
+  entities: [User, Salon, SalonMembership, Notification],
   migrations: ['src/migrations/*.ts'],
 });
