@@ -1,16 +1,38 @@
-import { Salon } from '../../domain/entities/salon';
-import { Salon as SalonEntity } from '../schemas/salon.entity';
+import { Salon as SalonSchema } from '@salon/infrastructure/schemas/salon.entity';
+import { Salon } from '@salon/domain/entities/salon';
 
 export class SalonMapper {
-  static map(salonEntity: SalonEntity): Salon {
-    const salon = new Salon();
+  /**
+   * Maps an infrastructure schema to a domain entity.
+   */
+  public static map(schema: SalonSchema): Salon {
+    const domain = new Salon();
+    domain.id = schema.id;
+    domain.name = schema.name;
+    domain.description = schema.description;
+    domain.address = schema.address;
+    domain.createdAt = schema.createdAt;
+    domain.updatedAt = schema.updatedAt;
+    domain.isDeleted = schema.isDeleted;
+    domain.deletedAt = schema.deletedAt || null;
 
-    salon.id = salonEntity.id;
-    salon.name = salonEntity.name;
-    salon.description = salonEntity.description;
-    salon.createdAt = salonEntity.createdAt;
-    salon.updatedAt = salonEntity.updatedAt;
+    return domain;
+  }
 
-    return salon;
+  /**
+   * Maps a domain entity to an infrastructure schema.
+   */
+  public static toSchema(domain: Salon): SalonSchema {
+    const schema = new SalonSchema();
+    schema.id = domain.id;
+    schema.name = domain.name;
+    schema.description = domain.description;
+    schema.addressId = domain.address?.id;
+    schema.createdAt = domain.createdAt;
+    schema.updatedAt = domain.updatedAt;
+    schema.isDeleted = domain.isDeleted;
+    schema.deletedAt = domain.deletedAt || undefined;
+
+    return schema;
   }
 }
