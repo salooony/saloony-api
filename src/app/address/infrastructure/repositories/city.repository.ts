@@ -14,20 +14,19 @@ export class CityRepository implements ICityRepository {
   async save(city: City): Promise<City> {
     const schema = CityMapper.toSchema(city);
     const saved = await this.repository.save(schema);
-    const withRelation = await this.repository.findOne({
-      where: { id: saved.id },
-      relations: ['country'],
-    });
-    return CityMapper.map(withRelation!);
+    return CityMapper.map(saved);
   }
 
   async findOne(criteria: CityCriteria): Promise<City | null> {
     const city = await this.repository.findOne({
       where: this.buildWhereClause(criteria),
-      relations: ['country'],
     });
 
-    return city ? CityMapper.map(city) : null;
+    if (!city) {
+      return null;
+    }
+
+    return CityMapper.map(city);
   }
 
   private buildWhereClause(criteria: CityCriteria): FindOptionsWhere<CitySchema> {
@@ -38,7 +37,7 @@ export class CityRepository implements ICityRepository {
     }
 
     if (criteria.countryId) {
-      where.country = { id: criteria.countryId };
+      where.countryId = criteria.countryId;
     }
 
     return where;

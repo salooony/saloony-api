@@ -1,7 +1,6 @@
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CITY_REPOSITORY, ICityRepository } from '@address/domain/ports/icity.repository';
 import { COUNTRY_REPOSITORY, ICountryRepository } from '@address/domain/ports/icountry.repository';
-import { City } from '@address/domain/entities/city.entity';
 import { CreateCityRequestDto } from '../dtos/requests/create-city.request.dto';
 import { CityTransformer } from '../transformers/city.transformer';
 import { CityResponseDto } from '../dtos/responses/city.response.dto';
@@ -25,10 +24,8 @@ export class CreateCityUsecase {
     if (existingCity) {
       throw new ConflictException('City already exists in this country.');
     }
-
-    const city = new City('', dto.name, country);
+    const city = CityTransformer.toDomain(dto, country);
     const created = await this.cityRepository.save(city);
-
     return CityTransformer.toResponse(created);
   }
 }
