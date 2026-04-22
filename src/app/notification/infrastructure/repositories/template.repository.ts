@@ -1,35 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Template as SchemaTemplate } from '../schemas/template.schema';
-import { Template as DomainTemplate } from '../../domain/entities/template';
-import { ITemplateRepository } from '../../domain/ports/template.repository.interface';
+import { Template as TemplateSchema } from '../schemas/template.schema';
+import { Template } from '../../domain/entities/template';
+import { ITemplateRepository } from '../../domain/ports/itemplate.repository';
 import { TemplateMapper } from '../mappers/template.mapper';
+import { NotificationType } from '../../domain/enums/notification-type.enum';
 
 @Injectable()
 export class TemplateRepository implements ITemplateRepository {
-  constructor(
-    @InjectRepository(SchemaTemplate)
-    private readonly repository: Repository<SchemaTemplate>,
-  ) {}
+  constructor(@InjectRepository(TemplateSchema) private readonly repository: Repository<TemplateSchema>) {}
 
-  async findByKey(key: string): Promise<DomainTemplate | null> {
-    const schema = await this.repository.findOne({ where: { key } });
-    return TemplateMapper.toDomain(schema);
+  async save(template: Template): Promise<Template> {
+    return TemplateMapper.map(await this.repository.save(TemplateMapper.toSchema(template)))!;
   }
 
-  async save(domain: DomainTemplate): Promise<DomainTemplate> {
-    const schema = TemplateMapper.toSchema(domain);
-    const savedSchema = await this.repository.save(schema);
-    return TemplateMapper.toDomain(savedSchema)!;
+  async findAll(): Promise<Template[]> {
+    return (await this.repository.find()).map((template) => TemplateMapper.map(template)!);
   }
 
-  async findAllActive(): Promise<DomainTemplate[]> {
-    const schemas = await this.repository.find({ where: { isActive: true } });
-    return schemas.map((schema) => TemplateMapper.toDomain(schema)!).filter(Boolean);
+  async findByKey(key: string, type: NotificationType): Promise<Template | null> {
+    const template = await this.repository.findOne({ where: { key, type } });
+
+    if (!template) {
+      return null;
+    }
+
+    return TemplateMapper.map(template);
   }
 
-  async delete(id: string): Promise<void> {
-    await this.repository.delete(id);
+  async deleteByKey(key: string, type: NotificationType): Promise<void> {
+    const result = await this.repository.delete({ key, type });
+
+    if (result.affected === 0) {
+      throw new Error('Template not found');
+    }
   }
 }

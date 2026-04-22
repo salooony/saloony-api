@@ -16,9 +16,11 @@
       "@app/*": ["src/app/*"],
       "@address/*": ["src/app/address/*"],
       "@user/*": ["src/app/user/*"],
+      "@salon": ["src/app/salon"],
       "@salon/*": ["src/app/salon/*"],
       "@test/*": ["src/test/*"],
       "@config/*": ["src/config/*"],
+      "@notification": ["src/app/notification"],
       "@notification/*": ["src/app/notification/*"],
       "@token/*": ["src/app/token/*"],
       "@shared/*": ["src/app/shared/*"]

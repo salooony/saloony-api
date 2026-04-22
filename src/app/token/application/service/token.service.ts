@@ -7,12 +7,13 @@ import { ITokenRepository, TOKEN_REPOSITORY } from '@token/domain/ports/itoken.r
 import { IUserRepository } from '@user/domain/ports/iuser.repository';
 import { TokenValidationReason } from '@token/domain/enums/tokenValidationreason-enum';
 import { UserStatus } from '@user/domain/enums/user-status.enum';
+
 @Injectable()
 export class TokenService {
   constructor(
     private readonly generator: TokenGeneratorService,
     @Inject(TOKEN_REPOSITORY) private readonly tokenRepository: ITokenRepository,
-    @Inject('IUserRepository') private readonly userRepository: IUserRepository,
+    @Inject('UsersRepository') private readonly userRepository: IUserRepository,
   ) {}
 
   async issue(

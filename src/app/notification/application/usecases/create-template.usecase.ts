@@ -1,33 +1,20 @@
 import { Injectable, Inject, ConflictException } from '@nestjs/common';
-import { ITemplateRepository } from '@notification/domain/ports/template.repository.interface';
-import { Template } from '@notification/domain/entities/template';
+import { ITemplateRepository, TEMPLATE_REPOSITORY } from '@notification/domain/ports/itemplate.repository';
 import { CreateTemplateRequestDto } from '@notification/application/dtos/requests/create-template.request.dto';
+import { TemplateTransformer } from '../transformers/template.transformer';
+import { TemplateResponseDto } from '../dtos/responses/template.response.dto';
 
 @Injectable()
 export class CreateTemplateUseCase {
-  constructor(
-    @Inject('ITemplateRepository')
-    private readonly templateRepository: ITemplateRepository,
-  ) {}
+  constructor(@Inject(TEMPLATE_REPOSITORY) private readonly templateRepository: ITemplateRepository) {}
 
-  async execute(dto: CreateTemplateRequestDto): Promise<Template> {
-    const { key, type, title, message, defaultParameters, metadata } = dto;
+  async execute(dto: CreateTemplateRequestDto): Promise<TemplateResponseDto> {
+    const template = TemplateTransformer.toEntity(dto);
 
-    // Check if template with this key already exists
-    const existingTemplate = await this.templateRepository.findByKey(key);
-    if (existingTemplate) {
-      throw new ConflictException(`Template with key ${key} already exists`);
+    if (await this.templateRepository.findByKey(template.key, template.type)) {
+      throw new ConflictException(`Template with key ${template.key} and type ${template.type} already exists`);
     }
 
-    const template = new Template();
-    template.key = key;
-    template.type = type;
-    template.title = title;
-    template.message = message;
-    template.defaultParameters = defaultParameters || {};
-    template.metadata = metadata || {};
-    template.isActive = true;
-
-    return await this.templateRepository.save(template);
+    return TemplateResponseDto.createFromEntity(await this.templateRepository.save(template));
   }
 }
