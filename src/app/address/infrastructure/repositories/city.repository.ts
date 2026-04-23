@@ -12,8 +12,7 @@ export class CityRepository implements ICityRepository {
   constructor(@InjectRepository(CitySchema) private readonly repository: Repository<CitySchema>) {}
 
   async save(city: City): Promise<City> {
-    const schema = CityMapper.toSchema(city);
-    const saved = await this.repository.save(schema);
+    const saved = await this.repository.save(CityMapper.toSchema(city));
     return CityMapper.map(saved);
   }
 

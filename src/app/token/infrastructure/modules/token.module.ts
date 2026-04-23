@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TokenGeneratorService } from '@token/application/service/token-generator.service';
 import { TokenGeneratorRegistry, TOKEN_GENERATORS } from '@token/application/token-generator.registry';
 import { NumericTokenGenerator } from '@token/generators/numeric-token.generator';

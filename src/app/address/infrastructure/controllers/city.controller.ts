@@ -46,6 +46,7 @@ export class CityController {
     @Body(new ValidationPipe())
     request: CreateCityRequestDto,
   ): Promise<CityResponseDto> {
-    return await this.createCityUsecase.execute(request);
+    const city = await this.createCityUsecase.execute(request);
+    return CityResponseDto.createFromEntity(city);
   }
 }
