@@ -7,9 +7,11 @@ import { COUNTRY_REPOSITORY } from '@address/domain/ports/icountry.repository';
 import { CreateCountryUsecase } from '@address/application/usecases/create-country.usecase';
 import { ListCountriesUsecase } from '@address/application/usecases/list-countries.usecase';
 import { UpdateCountryUsecase } from '@address/application/usecases/update-country.usecase';
+import { Address } from '../schemas/address.schema';
+import { City } from '../schemas/city.schema';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Country])],
+  imports: [TypeOrmModule.forFeature([Country, Address, City])],
   controllers: [CountryController],
   providers: [
     CreateCountryUsecase,
