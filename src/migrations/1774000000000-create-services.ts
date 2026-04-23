@@ -3,7 +3,7 @@ import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm
 export class CreateServices1774000000000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-      CREATE TYPE service_category AS ENUM ('hair', 'beard', 'nails', 'skincare', 'other')
+      CREATE TYPE service_category AS ENUM ('hair', 'beard', 'nails', 'skincare', 'hair_removal', 'brows_lashes', 'makeup', 'other')
     `);
 
     await queryRunner.createTable(
