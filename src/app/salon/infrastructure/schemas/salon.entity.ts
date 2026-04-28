@@ -5,6 +5,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -43,4 +44,11 @@ export class Salon {
     nullable: true,
   })
   deletedAt?: Date;
+
+  /** Collection of services offered by this salon, including pricing. */
+  @OneToMany(
+    'SalonServiceEntity',
+    (salonService: import('./salon-service.entity').SalonServiceEntity) => salonService.salon,
+  )
+  salonServices: import('./salon-service.entity').SalonServiceEntity[];
 }

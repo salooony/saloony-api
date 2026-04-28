@@ -2,10 +2,8 @@ import { Salon as SalonSchema } from '@salon/infrastructure/schemas/salon.entity
 import { Salon } from '@salon/domain/entities/salon';
 
 export class SalonMapper {
-  /**
-   * Maps an infrastructure schema to a domain entity.
-   */
-  public static map(schema: SalonSchema): Salon {
+  /** Maps a persistence schema to its domain entity. */
+  public static toDomain(schema: SalonSchema): Salon {
     const domain = new Salon();
     domain.id = schema.id;
     domain.name = schema.name;
@@ -19,10 +17,8 @@ export class SalonMapper {
     return domain;
   }
 
-  /**
-   * Maps a domain entity to an infrastructure schema.
-   */
-  public static toSchema(domain: Salon): SalonSchema {
+  /** Maps a domain entity to its persistence schema. */
+  public static toPersistence(domain: Salon): SalonSchema {
     const schema = new SalonSchema();
     schema.id = domain.id;
     schema.name = domain.name;

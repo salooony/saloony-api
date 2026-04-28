@@ -5,39 +5,36 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Salon } from '@salon/infrastructure/schemas/salon.entity';
+import { ServiceCategoryEntity } from './service-category.entity';
 
-import { ServiceCategory } from '../../domain/enums/service-category.enum';
-
+/** Persistence schema for an independent, bookable service offered across multiple salons. */
 @Entity({ name: 'services' })
-export class ServiceEntity {
+export class Service {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'uuid', name: 'salon_id' })
-  salonId: string;
-
-  @ManyToOne(() => Salon)
-  @JoinColumn({ name: 'salon_id' })
-  salon: Salon;
-
-  @Column({ type: 'varchar', length: 150 })
+  @Column({ type: 'varchar', length: 150, unique: true })
   name: string;
 
   @Column({ type: 'varchar', length: 1000, nullable: true })
   description: string | null;
 
-  @Column({ type: 'enum', enum: ServiceCategory, nullable: true })
-  category: ServiceCategory | null;
+  @Column({ type: 'uuid', name: 'category_id' })
+  categoryId: string;
 
-  @Column({ type: 'boolean', default: false })
+  @ManyToOne(() => ServiceCategoryEntity)
+  @JoinColumn({ name: 'category_id' })
+  category: ServiceCategoryEntity;
+
+  @Column({ type: 'boolean', default: true })
   active: boolean;
 
-  @Column({ type: 'timestamp', name: 'activated_at', nullable: true })
-  activatedAt: Date | null;
+  @Column({ type: 'timestamp', name: 'activated_at', default: () => 'now()' })
+  activatedAt: Date;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
@@ -45,10 +42,13 @@ export class ServiceEntity {
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
 
-  @DeleteDateColumn({
-    name: 'deleted_at',
-    type: 'timestamp',
-    nullable: true,
-  })
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
   deletedAt: Date | null;
+
+  /** Inverse side of the Salon↔Service relationship. */
+  @OneToMany(
+    'SalonServiceEntity',
+    (salonService: import('./salon-service.entity').SalonServiceEntity) => salonService.service,
+  )
+  salonServices: import('./salon-service.entity').SalonServiceEntity[];
 }

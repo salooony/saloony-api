@@ -1,8 +1,12 @@
 import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
 import { User } from '@user/infrastructure/schemas/user.schema';
-import { Salon } from '@salon/infrastructure/schemas/salon.entity';
-import { ServiceEntity as Service } from '@salon/infrastructure/schemas/service.entity';
+import {
+  SalonSchema as Salon,
+  ServiceSchema as Service,
+  ServiceCategorySchema as ServiceCategory,
+  SalonServiceSchema as SalonService,
+} from '@salon';
 import { SalonMembership } from '@user/infrastructure/schemas/salon-membership.schema';
 import { Address } from '@address/infrastructure/schemas/address.schema';
 import { City } from '@address/infrastructure/schemas/city.schema';
@@ -25,6 +29,8 @@ export const connectionSource = new DataSource({
     User,
     Salon,
     Service,
+    ServiceCategory,
+    SalonService,
     SalonMembership,
     Address,
     City,
