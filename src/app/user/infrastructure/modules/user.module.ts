@@ -24,6 +24,8 @@ import { UpdateAvatarUsecase } from '@user/application/usecases/update-avatar.us
 import { TokensModule } from '@token/infrastructure/modules/token.module';
 import { TemplateModule } from '@notification/infrastructure/modules/template.module';
 import { FileModule } from '@shared/uploads/infrastructure/modules/file.module';
+import { NotificationModule } from '@notification/infrastructure/modules/notification.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -40,6 +42,25 @@ import { FileModule } from '@shared/uploads/infrastructure/modules/file.module';
         };
       },
     }),
+
+    MailerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        transport: {
+          host: configService.get<string>('EMAIL_HOST'),
+          port: Number(configService.get<number>('EMAIL_PORT')) || 587,
+          secure: false,
+          auth: {
+            user: configService.get<string>('EMAIL_USER'),
+            pass: configService.get<string>('EMAIL_PASSWORD'),
+          },
+        },
+        defaults: {
+          from: configService.get<string>('EMAIL_USER'),
+        },
+      }),
+    }),
+    NotificationModule,
     forwardRef(() => TokensModule),
     TemplateModule,
     FileModule,
