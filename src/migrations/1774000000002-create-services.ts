@@ -69,7 +69,7 @@ export class CreateServices1774000000002 implements MigrationInterface {
       }),
     );
 
-    // Salon and Service M2M relationship with extra data (Price)
+    // Salon and Service M2M relationship
     await queryRunner.createTable(
       new Table({
         name: 'salon_services',
@@ -85,17 +85,14 @@ export class CreateServices1774000000002 implements MigrationInterface {
             isPrimary: true,
           },
           {
-            name: 'price',
-            type: 'decimal',
-            precision: 10,
-            scale: 2,
-            isNullable: true, // Nullable initially to allow linking without price
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'now()',
           },
           {
-            name: 'currency',
-            type: 'varchar',
-            length: '3',
-            default: "'USD'",
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'now()',
           },
         ],
       }),

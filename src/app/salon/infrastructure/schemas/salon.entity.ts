@@ -45,7 +45,7 @@ export class Salon {
   })
   deletedAt?: Date;
 
-  /** Collection of services offered by this salon, including pricing. */
+  /** Collection of services offered by this salon. */
   @OneToMany(
     'SalonServiceEntity',
     (salonService: import('./salon-service.entity').SalonServiceEntity) => salonService.salon,
