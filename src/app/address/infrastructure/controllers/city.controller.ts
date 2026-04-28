@@ -37,16 +37,12 @@ export class CityController {
   })
   @ApiResponse({
     status: HttpStatus.CONFLICT,
-    description: 'City already exists',
+    description: 'City already exists in this country.',
   })
   @Roles(UserRole.ADMIN)
   @Post()
   @Header('Content-Type', 'application/json')
-  async create(
-    @Body(new ValidationPipe())
-    request: CreateCityRequestDto,
-  ): Promise<CityResponseDto> {
-    const city = await this.createCityUsecase.execute(request);
-    return CityResponseDto.createFromEntity(city);
+  async create(@Body(new ValidationPipe()) cityRequestDto: CreateCityRequestDto): Promise<CityResponseDto> {
+    return this.createCityUsecase.execute(cityRequestDto);
   }
 }
