@@ -53,10 +53,11 @@ export class AddressResponseDto {
     dto.address = entity.address;
     dto.complement = entity.complement;
 
-    dto.location = {
-      latitude: entity.location.latitude,
-      longitude: entity.location.longitude,
-    };
+    const location = new LocationResponseDto();
+    location.latitude = entity.location.latitude;
+    location.longitude = entity.location.longitude;
+
+    dto.location = location;
 
     return dto;
   }

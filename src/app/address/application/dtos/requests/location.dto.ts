@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, Max, Min, IsNotEmpty } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class LocationDto {
+export class LocationRequestDto {
   @ApiProperty({
     description: 'Latitude coordinate (-90 to 90).',
     example: 32.2211,

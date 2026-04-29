@@ -1,10 +1,9 @@
+import { Location } from './location.entity';
+
 export class Address {
   constructor(
     public readonly id: string,
-    public readonly location: {
-      latitude: number;
-      longitude: number;
-    },
+    public readonly location: Location,
     public readonly postcode: string,
     public readonly cityId: string,
     public readonly address: string,
