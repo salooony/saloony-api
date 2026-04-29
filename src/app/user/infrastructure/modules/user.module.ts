@@ -24,6 +24,8 @@ import { UpdateAvatarUsecase } from '@user/application/usecases/update-avatar.us
 import { TokensModule } from '@token/infrastructure/modules/token.module';
 import { TemplateModule } from '@notification/infrastructure/modules/template.module';
 import { FileModule } from '@shared/uploads/infrastructure/modules/file.module';
+import { UpsertAddressUsecase } from '@user/application/usecases/upsert-address.usecase';
+import { AddressModule } from '@address/infrastructure/modules/address.module';
 
 @Module({
   imports: [
@@ -43,6 +45,7 @@ import { FileModule } from '@shared/uploads/infrastructure/modules/file.module';
     forwardRef(() => TokensModule),
     TemplateModule,
     FileModule,
+    AddressModule,
   ],
 
   controllers: [UserController, AuthController],
@@ -56,6 +59,7 @@ import { FileModule } from '@shared/uploads/infrastructure/modules/file.module';
     ForgotPasswordUseCase,
     ResetPasswordUseCase,
     UpdateAvatarUsecase,
+    UpsertAddressUsecase,
 
     //  helpers
     UserTransformer,
@@ -68,6 +72,9 @@ import { FileModule } from '@shared/uploads/infrastructure/modules/file.module';
     { provide: 'IUserRepository', useClass: UsersRepository },
   ],
 
-  exports: [{ provide: 'UsersRepository', useClass: UsersRepository }],
+  exports: [
+    { provide: 'IUserRepository', useClass: UsersRepository },
+    { provide: 'UsersRepository', useClass: UsersRepository },
+  ],
 })
 export class UserModule {}

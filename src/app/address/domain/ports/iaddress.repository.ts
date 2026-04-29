@@ -1,4 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+import { Address } from '../entities/address.entity';
+
+export const ADDRESS_REPOSITORY = 'ADDRESS_REPOSITORY';
+
 export interface IAddressRepository {
-  // to be implemented later
+  create(address: Address): Promise<Address>;
+  update(address: Address): Promise<Address>;
+  findById(id: string): Promise<Address | null>;
 }

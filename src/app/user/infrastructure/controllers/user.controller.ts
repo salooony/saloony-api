@@ -7,7 +7,11 @@ import { UserResponseDto } from '@user/application/dtos/responses/user.response.
 import { CreateUserUsecase } from '@user/application/usecases/create.usecase';
 import { DeleteUserAccountUseCase } from '@user/application/usecases/delete-user-account.usecase';
 import { GetUserInfoUsecase } from '@user/application/usecases/get-user-info.usecase';
+import { AddressResponseDto } from '@address/application/dtos/responses/address.response.dto';
+import { AddressRequestDto } from '@address/application/dtos/requests/address.request.dto';
 import { User } from '@user/domain/entities/user';
+import { UpsertAddressUsecase } from '@user/application/usecases/upsert-address.usecase';
+
 import {
   BadRequestException,
   Body,
@@ -37,6 +41,7 @@ export class UserController {
     private readonly createUsecase: CreateUserUsecase,
     private readonly getUserInfoUsecase: GetUserInfoUsecase,
     private readonly deleteUserUseCase: DeleteUserAccountUseCase,
+    private readonly upsertAddressUsecase: UpsertAddressUsecase,
     @Inject(UpdateAvatarUsecase) private readonly updateAvatar: UpdateAvatarUsecase,
   ) {}
 
@@ -161,5 +166,20 @@ export class UserController {
     }
 
     await this.updateAvatar.execute(filePart, user);
+  }
+
+  @Put('me/address')
+  @ApiOperation({ summary: 'Attach address to user.' })
+  @ApiBearerAuth()
+  @ApiResponse({ status: HttpStatus.CREATED, type: AddressResponseDto })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid request data.' })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User should be logged in.' })
+  async upsertAddress(
+    @CurrentUser() user: User,
+    @Body(new ValidationPipe()) dto: AddressRequestDto,
+  ): Promise<AddressResponseDto | void> {
+    const result = await this.upsertAddressUsecase.execute(user, dto);
+    if (result.status === 201) return result.data;
   }
 }

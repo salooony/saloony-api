@@ -14,6 +14,7 @@ export class User {
   public createdAt: Date;
   public updatedAt: Date;
   public language: string;
+  public addressId?: string;
   public acl: string[] = [];
   public deletedAt?: Date;
 
