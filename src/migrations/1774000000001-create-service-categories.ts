@@ -7,17 +7,10 @@ export class CreateServiceCategories1774000000001 implements MigrationInterface 
         name: 'service_categories',
         columns: [
           {
-            name: 'id',
-            type: 'uuid',
-            isPrimary: true,
-            isGenerated: true,
-            generationStrategy: 'uuid',
-          },
-          {
             name: 'name',
             type: 'varchar',
             length: '100',
-            isUnique: true,
+            isPrimary: true,
           },
           {
             name: 'created_at',
@@ -41,8 +34,6 @@ export class CreateServiceCategories1774000000001 implements MigrationInterface 
         ('beard'),
         ('nails'),
         ('skincare'),
-        ('hair_removal'),
-        ('brows_lashes'),
         ('makeup'),
         ('other')
     `);

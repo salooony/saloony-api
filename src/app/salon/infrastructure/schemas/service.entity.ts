@@ -5,30 +5,26 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ServiceCategoryEntity } from './service-category.entity';
+import { ServiceCategory } from './service-category.entity';
 
 /** Persistence schema for an independent, bookable service offered across multiple salons. */
 @Entity({ name: 'services' })
 export class Service {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @Column({ type: 'varchar', length: 150, unique: true })
+  @PrimaryColumn({ type: 'varchar', length: 150 })
   name: string;
 
   @Column({ type: 'varchar', length: 1000, nullable: true })
   description: string | null;
 
-  @Column({ type: 'uuid', name: 'category_id' })
+  @Column({ type: 'varchar', length: 100, name: 'category_id' })
   categoryId: string;
 
-  @ManyToOne(() => ServiceCategoryEntity)
-  @JoinColumn({ name: 'category_id' })
-  category: ServiceCategoryEntity;
+  @ManyToOne(() => ServiceCategory, { nullable: false })
+  @JoinColumn({ name: 'category_id', referencedColumnName: 'name' })
+  category: ServiceCategory;
 
   @Column({ type: 'boolean', default: true })
   active: boolean;
@@ -44,11 +40,4 @@ export class Service {
 
   @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
   deletedAt: Date | null;
-
-  /** Inverse side of the Salon↔Service relationship. */
-  @OneToMany(
-    'SalonServiceEntity',
-    (salonService: import('./salon-service.entity').SalonServiceEntity) => salonService.service,
-  )
-  salonServices: import('./salon-service.entity').SalonServiceEntity[];
 }

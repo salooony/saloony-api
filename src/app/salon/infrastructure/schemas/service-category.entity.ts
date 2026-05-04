@@ -1,12 +1,9 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
 /** Persistence schema for the dynamic service_categories lookup table. */
 @Entity({ name: 'service_categories' })
-export class ServiceCategoryEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @Column({ type: 'varchar', length: 100, unique: true })
+export class ServiceCategory {
+  @PrimaryColumn({ type: 'varchar', length: 100 })
   name: string;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })

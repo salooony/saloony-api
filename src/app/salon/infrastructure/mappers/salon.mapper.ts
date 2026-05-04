@@ -18,7 +18,7 @@ export class SalonMapper {
   }
 
   /** Maps a domain entity to its persistence schema. */
-  public static toPersistence(domain: Salon): SalonSchema {
+  public static toSchema(domain: Salon): SalonSchema {
     const schema = new SalonSchema();
     schema.id = domain.id;
     schema.name = domain.name;

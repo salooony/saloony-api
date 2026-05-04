@@ -7,17 +7,10 @@ export class CreateServices1774000000002 implements MigrationInterface {
         name: 'services',
         columns: [
           {
-            name: 'id',
-            type: 'uuid',
-            isPrimary: true,
-            isGenerated: true,
-            generationStrategy: 'uuid',
-          },
-          {
             name: 'name',
             type: 'varchar',
             length: '150',
-            isUnique: true,
+            isPrimary: true,
           },
           {
             name: 'description',
@@ -27,7 +20,8 @@ export class CreateServices1774000000002 implements MigrationInterface {
           },
           {
             name: 'category_id',
-            type: 'uuid',
+            type: 'varchar',
+            length: '100',
           },
           {
             name: 'active',
@@ -63,65 +57,14 @@ export class CreateServices1774000000002 implements MigrationInterface {
       'services',
       new TableForeignKey({
         columnNames: ['category_id'],
-        referencedColumnNames: ['id'],
+        referencedColumnNames: ['name'],
         referencedTableName: 'service_categories',
         onDelete: 'RESTRICT',
-      }),
-    );
-
-    // Salon and Service M2M relationship
-    await queryRunner.createTable(
-      new Table({
-        name: 'salon_services',
-        columns: [
-          {
-            name: 'salon_id',
-            type: 'uuid',
-            isPrimary: true,
-          },
-          {
-            name: 'service_id',
-            type: 'uuid',
-            isPrimary: true,
-          },
-          {
-            name: 'created_at',
-            type: 'timestamp',
-            default: 'now()',
-          },
-          {
-            name: 'updated_at',
-            type: 'timestamp',
-            default: 'now()',
-          },
-        ],
-      }),
-      true,
-    );
-
-    await queryRunner.createForeignKey(
-      'salon_services',
-      new TableForeignKey({
-        columnNames: ['service_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'services',
-        onDelete: 'CASCADE',
-      }),
-    );
-
-    await queryRunner.createForeignKey(
-      'salon_services',
-      new TableForeignKey({
-        columnNames: ['salon_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'salons',
-        onDelete: 'CASCADE',
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('salon_services');
     await queryRunner.dropTable('services');
   }
 }
