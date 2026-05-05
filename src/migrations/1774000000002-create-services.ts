@@ -17,9 +17,10 @@ export class CreateServices1774000000002 implements MigrationInterface {
             type: 'varchar',
             length: '1000',
             isNullable: true,
+            default: null,
           },
           {
-            name: 'category_id',
+            name: 'category',
             type: 'varchar',
             length: '100',
           },
@@ -56,7 +57,7 @@ export class CreateServices1774000000002 implements MigrationInterface {
     await queryRunner.createForeignKey(
       'services',
       new TableForeignKey({
-        columnNames: ['category_id'],
+        columnNames: ['category'],
         referencedColumnNames: ['name'],
         referencedTableName: 'service_categories',
         onDelete: 'RESTRICT',

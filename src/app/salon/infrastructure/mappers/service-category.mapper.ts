@@ -6,8 +6,10 @@ export class ServiceCategoryMapper {
   /** Maps a persistence schema to its domain entity. */
   public static toDomain(entity: ServiceCategorySchema): ServiceCategory {
     const domain = new ServiceCategory();
-    domain.id = entity.name;
     domain.name = entity.name;
+    domain.isActive = entity.isActive;
+    domain.activatedAt = entity.activatedAt;
+    domain.deactivatedAt = entity.deactivatedAt;
     domain.createdAt = entity.createdAt;
     domain.updatedAt = entity.updatedAt;
     return domain;
@@ -17,6 +19,9 @@ export class ServiceCategoryMapper {
   public static toSchema(domain: ServiceCategory): ServiceCategorySchema {
     const entity = new ServiceCategorySchema();
     entity.name = domain.name;
+    entity.isActive = domain.isActive;
+    entity.activatedAt = domain.activatedAt;
+    entity.deactivatedAt = domain.deactivatedAt;
     return entity;
   }
 }

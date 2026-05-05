@@ -13,6 +13,23 @@ export class CreateServiceCategories1774000000001 implements MigrationInterface 
             isPrimary: true,
           },
           {
+            name: 'is_active',
+            type: 'boolean',
+            default: true,
+          },
+          {
+            name: 'activated_at',
+            type: 'timestamp',
+            default: 'now()',
+            isNullable: true,
+          },
+          {
+            name: 'deactivated_at',
+            type: 'timestamp',
+            isNullable: true,
+            default: null,
+          },
+          {
             name: 'created_at',
             type: 'timestamp',
             default: 'now()',
@@ -27,15 +44,15 @@ export class CreateServiceCategories1774000000001 implements MigrationInterface 
       true,
     );
 
-    // Seed the initial categories that were previously hardcoded in the enum
+    // Seed the initial categories
     await queryRunner.query(`
-      INSERT INTO service_categories (name) VALUES
-        ('hair'),
-        ('beard'),
-        ('nails'),
-        ('skincare'),
-        ('makeup'),
-        ('other')
+      INSERT INTO service_categories (name, is_active, activated_at) VALUES
+        ('hair', true, now()),
+        ('beard', true, now()),
+        ('nails', true, now()),
+        ('skincare', true, now()),
+        ('makeup', true, now()),
+        ('other', true, now())
     `);
   }
 
