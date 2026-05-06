@@ -16,8 +16,8 @@ export class Service {
   @PrimaryColumn({ type: 'varchar', length: 150 })
   name: string;
 
-  @Column({ type: 'varchar', length: 1000, nullable: true, default: null })
-  description: string | null;
+  @Column({ type: 'varchar', length: 1000, nullable: false })
+  description: string;
 
   /** Stores only the category name; load the full relation only when explicitly needed. */
   @Column({ type: 'varchar', length: 100, name: 'category' })

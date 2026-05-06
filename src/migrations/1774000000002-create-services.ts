@@ -16,8 +16,7 @@ export class CreateServices1774000000002 implements MigrationInterface {
             name: 'description',
             type: 'varchar',
             length: '1000',
-            isNullable: true,
-            default: null,
+            isNullable: false,
           },
           {
             name: 'category',
