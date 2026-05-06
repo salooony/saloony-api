@@ -18,6 +18,9 @@ export class TokenGenerator implements ITokenGenerator {
     const [accessToken, refreshToken] = await Promise.all([
       await this.generateToken(user.id, this.jwtConfiguration.accessTokenTtl, {
         email: user.email,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        mobileNumber: user.mobileNumber,
       }),
       await this.generateToken(user.id, this.jwtConfiguration.refreshTokenTtl),
     ]);
