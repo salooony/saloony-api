@@ -5,19 +5,16 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { LoginRequestDto } from '../dtos/requests/login.request.dto';
-import { LoginResponseDto } from '../dtos/responses/login.response.dto';
-import { HashingProviderInterface } from '../providers/hashing.provider.interface';
-import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
-import { ITokenGenerator } from '@app/user/domain/ports/itoken-generator.provider';
-import { UserStatus } from '@app/user/domain/enums/user-status.enum';
+
+import { LoginRequestDto, LoginResponseDto, HASHING_PROVIDER, IHashingProvider } from '..';
+import { UserStatus, USERS_REPOSITORY, IUserRepository, TOKEN_GENERATOR, ITokenGenerator } from '../../domain';
 
 @Injectable()
 export class LoginUsecase {
   constructor(
-    @Inject('HashingProvider') private hashingProvider: HashingProviderInterface,
-    @Inject('UsersRepository') private readonly userRepository: IUserRepository,
-    @Inject('TokenGenerator') private tokenGenerator: ITokenGenerator,
+    @Inject(HASHING_PROVIDER) private hashingProvider: IHashingProvider,
+    @Inject(USERS_REPOSITORY) private userRepository: IUserRepository,
+    @Inject(TOKEN_GENERATOR) private tokenGenerator: ITokenGenerator,
   ) {}
 
   async execute(loginRequest: LoginRequestDto): Promise<LoginResponseDto> {

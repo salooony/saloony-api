@@ -1,22 +1,26 @@
-import { Public } from '@user/application/decorators/public.decorator';
-import { LoginRequestDto } from '@user/application/dtos/requests/login.request.dto';
-import { LoginResponseDto } from '@user/application/dtos/responses/login.response.dto';
-import { LoginUsecase } from '@user/application/usecases/login.usecase';
 import { Body, Controller, HttpStatus, Post, Query } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ForgotPasswordRequestDto } from '@user/application/dtos/requests/forgot-password.request.dto';
-import { ForgotPasswordUseCase } from '@user/application/usecases/forgot-password.usecase';
-import { ResetPasswordRequestDTO } from '@user/application/dtos/requests/reset-password.request.dto';
-import { ResetPasswordUseCase } from '@user/application/usecases/reset-password.usecase';
+
+import {
+  Public,
+  LoginRequestDto,
+  LoginResponseDto,
+  ForgotPasswordRequestDto,
+  ResetPasswordRequestDTO,
+  LoginUsecase,
+  ForgotPasswordUsecase,
+  ResetPasswordUsecase,
+} from '../../application';
 
 @ApiTags('Users')
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly loginUsecase: LoginUsecase,
-    private readonly forgotPasswordUseCase: ForgotPasswordUseCase,
-    private readonly resetPasswordUseCase: ResetPasswordUseCase,
+    private readonly forgotPasswordUseCase: ForgotPasswordUsecase,
+    private readonly resetPasswordUseCase: ResetPasswordUsecase,
   ) {}
+
   //Login Endpoint
   @ApiOperation({ summary: 'Login the user and recieve access & refresh tokens.' })
   @ApiBody({ type: LoginRequestDto })

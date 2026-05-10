@@ -3,9 +3,8 @@ import { Reflector } from '@nestjs/core';
 import { DataSource } from 'typeorm';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { SALON_ROLES_KEY } from '../decorators/salon-roles.decorator';
-import { UserRole } from '@user/domain/enums/user-role.enum';
-import { SalonRole } from '@salon/domain/enums/salon-role.enum';
-import { SalonMembership } from '@user/infrastructure/schemas/salon-membership.schema';
+import { UserRole, SalonMembershipSchema } from '@user';
+import { SalonRole } from '@user';
 import { AppRequest } from '@app/shared/application/requests/app.request';
 
 @Injectable()
@@ -64,7 +63,7 @@ export class AuthorizationGuard implements CanActivate {
 
       // Check Membership directly from DB.
       // TODO: Add caching layer for performance.
-      const membership = await this.dataSource.getRepository(SalonMembership).findOne({
+      const membership = await this.dataSource.getRepository(SalonMembershipSchema).findOne({
         where: {
           userId: user.id,
           salonId: salonId,

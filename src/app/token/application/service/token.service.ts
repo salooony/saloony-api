@@ -4,16 +4,16 @@ import { TokenGeneratorService } from '@token/application/service/token-generato
 import { TokenGeneratorType } from '@token/domain/enums/token-generator-type.enum';
 import { Token } from '@token/domain/entities/token.entity';
 import { ITokenRepository, TOKEN_REPOSITORY } from '@token/domain/ports/itoken.repository';
-import { IUserRepository } from '@user/domain/ports/iuser.repository';
+import { IUserRepository, UserStatus } from '@user';
 import { TokenValidationReason } from '@token/domain/enums/tokenValidationreason-enum';
-import { UserStatus } from '@user/domain/enums/user-status.enum';
+import { USERS_REPOSITORY } from '@app/user/domain';
 
 @Injectable()
 export class TokenService {
   constructor(
     private readonly generator: TokenGeneratorService,
     @Inject(TOKEN_REPOSITORY) private readonly tokenRepository: ITokenRepository,
-    @Inject('UsersRepository') private readonly userRepository: IUserRepository,
+    @Inject(USERS_REPOSITORY) private readonly userRepository: IUserRepository,
   ) {}
 
   async issue(

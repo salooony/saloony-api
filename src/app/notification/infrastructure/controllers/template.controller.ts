@@ -1,7 +1,7 @@
 import { Controller, Post, Body, Get, Put, Delete, HttpCode, HttpStatus, Query, Param } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { Roles } from '@shared/decorators/roles.decorator';
-import { UserRole } from '@user/domain/enums/user-role.enum';
+import { UserRole } from '@app/user/domain/enums/user-role.enum';
 import { CreateTemplateUseCase } from '@notification/application/usecases/create-template.usecase';
 import { GetAllTemplatesUseCase } from '@notification/application/usecases/get-all-templates.usecase';
 import { GetTemplateByKeyUseCase } from '@notification/application/usecases/get-template-by-key.usecase';

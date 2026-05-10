@@ -1,8 +1,8 @@
-import { User } from '@app/user/domain/entities/user';
-import { User as UserEntity } from '../schemas/user.schema';
+import { User as UserSchema } from '..';
+import { User } from '../../domain';
 
 export class UserMapper {
-  static map(createdUser: UserEntity): User {
+  static map(createdUser: UserSchema): User {
     const user = new User();
 
     user.id = createdUser.id;
@@ -20,11 +20,12 @@ export class UserMapper {
     user.acl = createdUser.acl;
     user.status = createdUser.status;
     user.deletedAt = createdUser.deletedAt;
+
     return user;
   }
 
-  static toEntity(user: User): UserEntity {
-    const entity = new UserEntity();
+  static toEntity(user: User): UserSchema {
+    const entity = new UserSchema();
 
     entity.firstname = user.firstname;
     entity.lastname = user.lastname;
@@ -38,6 +39,7 @@ export class UserMapper {
     entity.acl = user.acl;
     entity.deletedAt = user.deletedAt;
     entity.status = user.status;
+
     return entity;
   }
 }

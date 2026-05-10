@@ -1,16 +1,15 @@
-import { Token } from '@app/user/domain/entities/token';
-import { User } from '@app/user/domain/entities/user';
-import { ITokenGenerator } from '@app/user/domain/ports/itoken-generator.provider';
-import jwtConfig from '@config/jwt.config';
 import { Inject, Injectable } from '@nestjs/common';
-import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigType } from '@nestjs/config';
+import jwtConfig from '@config/jwt.config';
+
+import { User, Token, ITokenGenerator } from '../../domain';
 
 @Injectable()
 export class TokenGenerator implements ITokenGenerator {
   constructor(
-    private jwtService: JwtService,
     @Inject(jwtConfig.KEY) private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
+    private jwtService: JwtService,
   ) {}
 
   // generates access token and refresh token

@@ -1,6 +1,7 @@
 import { LoginRequestDto } from '@app/user/application/dtos/requests/login.request.dto';
 import { UserRequestDto } from '@app/user/application/dtos/requests/user.request.dto';
 import { UserResponseDto } from '@app/user/application/dtos/responses/user.response.dto';
+import { HASHING_PROVIDER } from '@app/user/application/providers/ihashing.provider';
 import { UserTransformer } from '@app/user/application/transformers/user.transformer';
 import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase';
 import { DeleteUserAccountUseCase } from '@app/user/application/usecases/delete-user-account.usecase';
@@ -11,6 +12,8 @@ import { ResetPasswordUseCase } from '@app/user/application/usecases/reset-passw
 import { User } from '@app/user/domain/entities/user';
 import { UserRole } from '@app/user/domain/enums/user-role.enum';
 import { UserStatus } from '@app/user/domain/enums/user-status.enum';
+import { TOKEN_GENERATOR } from '@app/user/domain/ports/itoken-generator.provider';
+import { USERS_REPOSITORY } from '@app/user/domain/ports/iuser.repository';
 import { AuthController } from '@app/user/infrastructure/controllers/auth.controller';
 import { UserController } from '@app/user/infrastructure/controllers/user.controller';
 import { MockUsersReporitory } from '@app/user/infrastructure/mock-repositories/user.mock.repository';
@@ -53,9 +56,9 @@ describe('UserController', () => {
         LoginUsecase,
         ResetPasswordUseCase,
         UserTransformer,
-        { provide: 'UsersRepository', useClass: MockUsersReporitory },
-        { provide: 'HashingProvider', useClass: BcryptHashingProvider },
-        { provide: 'TokenGenerator', useClass: TokenGenerator },
+        { provide: USERS_REPOSITORY, useClass: MockUsersReporitory },
+        { provide: HASHING_PROVIDER, useClass: BcryptHashingProvider },
+        { provide: TOKEN_GENERATOR, useClass: TokenGenerator },
         {
           provide: 'PasswordResetTokenRepository',
           useValue: {

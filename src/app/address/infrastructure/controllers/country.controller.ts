@@ -1,4 +1,4 @@
-import { Public } from '@user/application/decorators/public.decorator';
+import { Public } from '@user';
 import { Body, Controller, Get, Header, HttpStatus, Param, Post, Put, Query, ValidationPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from '@app/shared/decorators/roles.decorator';

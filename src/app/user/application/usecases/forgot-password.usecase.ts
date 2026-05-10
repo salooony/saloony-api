@@ -1,20 +1,17 @@
 import { Injectable, Inject } from '@nestjs/common';
-import * as crypto from 'crypto';
-import { ForgotPasswordRequestDto } from '../dtos/requests/forgot-password.request.dto';
-import { PasswordResetToken } from '../../domain/entities/password-reset-token';
-import { IUserRepository } from '../../domain/ports/iuser.repository';
-import { IPasswordResetTokenRepository } from '../../domain/ports/ipassword-reset-token.repository';
 import { ConfigService } from '@nestjs/config';
+import * as crypto from 'crypto';
+
+import { ForgotPasswordRequestDto } from '..';
+import { IUserRepository, USERS_REPOSITORY } from '../../domain';
 
 @Injectable()
-export class ForgotPasswordUseCase {
+export class ForgotPasswordUsecase {
   constructor(
-    @Inject('UsersRepository')
-    private readonly userRepository: IUserRepository,
+    @Inject(USERS_REPOSITORY) private readonly userRepository: IUserRepository,
+    // @Inject('PasswordResetTokensRepository')
+    // private readonly passwordResetTokenRepository: IPasswordResetTokensRepository,
     private readonly configService: ConfigService,
-
-    @Inject('PasswordResetTokenRepository')
-    private readonly passwordResetTokenRepository: IPasswordResetTokenRepository,
   ) {}
 
   async execute(forgotPasswordRequest: ForgotPasswordRequestDto): Promise<void> {
@@ -28,13 +25,15 @@ export class ForgotPasswordUseCase {
     const token = crypto.randomBytes(32).toString('hex');
     const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
 
-    const tokenEntity = new PasswordResetToken({
-      userId: user.id,
-      tokenHash,
-      expiresAt: new Date(Date.now() + ttlMs),
-    });
+    console.log(ttlMs, tokenHash);
 
-    await this.passwordResetTokenRepository.create(tokenEntity);
+    // const tokenEntity = new PasswordResetToken({
+    //   userId: user.id,
+    //   tokenHash,
+    //   expiresAt: new Date(Date.now() + ttlMs),
+    // });
+
+    // await this.passwordResetTokenRepository.create(tokenEntity);
     // TODO: [TICKET] Re-enable email delivery once the mailer integration is implemented.
   }
 }

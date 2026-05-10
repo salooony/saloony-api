@@ -1,18 +1,19 @@
 import { CanActivate, ExecutionContext, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
-import { IS_PUBLIC_KEY } from '@app/user/application/decorators/public.decorator';
 import { Reflector } from '@nestjs/core';
-import { AppRequest } from '@app/shared/application/requests/app.request';
-import { JwtPayload } from '@app/shared/application/auth/jwt-payload.type';
-import { UserStatus } from '@app/user/domain/enums/user-status.enum';
+
+import { AppRequest } from '@shared/application/requests/app.request';
+import { JwtPayload } from '@shared/application/auth/jwt-payload.type';
+
+import { USERS_REPOSITORY, IUserRepository, UserStatus } from '../../domain';
+import { IS_PUBLIC_KEY } from '../../application';
 
 @Injectable()
 export class TokenGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private readonly reflector: Reflector,
-    @Inject('UsersRepository') private readonly userRepository: IUserRepository,
+    @Inject(USERS_REPOSITORY) private readonly userRepository: IUserRepository,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

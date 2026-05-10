@@ -1,12 +1,9 @@
-import { UserResponseDto } from '../dtos/responses/user.response.dto';
 import { Inject, NotFoundException } from '@nestjs/common';
-import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
+import { UserResponseDto } from '..';
+import { IUserRepository, USERS_REPOSITORY } from '../../domain';
 
 export class GetUserInfoUsecase {
-  constructor(
-    @Inject('UsersRepository')
-    private readonly userRepository: IUserRepository,
-  ) {}
+  constructor(@Inject(USERS_REPOSITORY) private readonly userRepository: IUserRepository) {}
 
   async execute(userId: string): Promise<UserResponseDto> {
     const userEntity = await this.userRepository.findOneById(userId);

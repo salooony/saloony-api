@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { User } from './user.schema';
 import { Salon } from '../../../salon/infrastructure/schemas/salon.entity';
-import { SalonRole } from '@salon/domain/enums/salon-role.enum';
+import { SalonRole } from '../../domain';
 
 @Entity({ name: 'salons_users' })
 @Unique(['userId', 'salonId'])

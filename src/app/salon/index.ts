@@ -2,7 +2,6 @@
 export * from './domain/entities/salon';
 export * from './domain/entities/service';
 export * from './domain/entities/service-category';
-export * from './domain/enums/salon-role.enum';
 export { ISalonRepository, SALON_REPOSITORY } from './domain/ports/isalon.repository';
 
 // Infrastructure exports
