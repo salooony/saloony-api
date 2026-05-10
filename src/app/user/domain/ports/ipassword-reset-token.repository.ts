@@ -1,4 +1,4 @@
-import { PasswordResetToken } from '..';
+import { PasswordResetToken } from '../entities/password-reset-token';
 
 export interface IPasswordResetTokensRepository {
   create(token: PasswordResetToken): Promise<PasswordResetToken>;

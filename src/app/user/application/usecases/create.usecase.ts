@@ -1,7 +1,10 @@
 import { ConflictException, Inject, InternalServerErrorException } from '@nestjs/common';
 
-import { UserRequestDto, UserResponseDto, HASHING_PROVIDER, IHashingProvider, UserTransformer } from '..';
-import { IUserRepository, USERS_REPOSITORY } from '../../domain';
+import { UserRequestDto } from '../dtos/requests/user.request.dto';
+import { UserResponseDto } from '../dtos/responses/user.response.dto';
+import { HASHING_PROVIDER, IHashingProvider } from '../providers/ihashing.provider';
+import { UserTransformer } from '../transformers/user.transformer';
+import { IUserRepository, USERS_REPOSITORY } from '../../domain/ports/iuser.repository';
 
 export class CreateUserUsecase {
   constructor(

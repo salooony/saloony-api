@@ -1,5 +1,5 @@
-import { UserRequestDto } from '..';
-import { User } from '../../domain';
+import { UserRequestDto } from '../dtos/requests/user.request.dto';
+import { User } from '../../domain/entities/user';
 
 export class UserTransformer {
   toEntity(userRequest: UserRequestDto): User {

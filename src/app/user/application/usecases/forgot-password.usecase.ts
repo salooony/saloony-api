@@ -2,8 +2,8 @@ import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
 
-import { ForgotPasswordRequestDto } from '..';
-import { IUserRepository, USERS_REPOSITORY } from '../../domain';
+import { ForgotPasswordRequestDto } from '../dtos/requests/forgot-password.request.dto';
+import { USERS_REPOSITORY, IUserRepository } from '../../domain/ports/iuser.repository';
 
 @Injectable()
 export class ForgotPasswordUsecase {

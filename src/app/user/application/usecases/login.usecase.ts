@@ -6,8 +6,12 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-import { LoginRequestDto, LoginResponseDto, HASHING_PROVIDER, IHashingProvider } from '..';
-import { UserStatus, USERS_REPOSITORY, IUserRepository, TOKEN_GENERATOR, ITokenGenerator } from '../../domain';
+import { LoginRequestDto } from '../dtos/requests/login.request.dto';
+import { LoginResponseDto } from '../dtos/responses/login.response.dto';
+import { HASHING_PROVIDER, IHashingProvider } from '../providers/ihashing.provider';
+import { UserStatus } from '../../domain/enums/user-status.enum';
+import { USERS_REPOSITORY, IUserRepository } from '../../domain/ports/iuser.repository';
+import { TOKEN_GENERATOR, ITokenGenerator } from '../../domain/ports/itoken-generator.provider';
 
 @Injectable()
 export class LoginUsecase {

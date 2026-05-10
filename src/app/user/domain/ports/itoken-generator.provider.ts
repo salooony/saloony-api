@@ -1,4 +1,5 @@
-import { User, Token } from '..';
+import { User } from '../entities/user';
+import { Token } from '../entities/token';
 
 export const TOKEN_GENERATOR = 'TokenGenerator';
 

@@ -1,4 +1,4 @@
-import { User } from '..';
+import { User } from '../entities/user';
 
 export const USERS_REPOSITORY = 'UsersRepository';
 
