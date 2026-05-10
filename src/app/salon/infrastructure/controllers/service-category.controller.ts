@@ -1,25 +1,21 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from '@shared/decorators/roles.decorator';
-import { UserRole } from '@user/domain/enums/user-role.enum';
-import { AuthorizationGuard } from '@shared/guards/authorization.guard';
+import { UserRole } from '@user';
 import { CreateServiceCategoryUseCase } from '@salon/application/create-service-category.usecase';
 import { CreateServiceCategoryDto } from '@salon/infrastructure/dtos/create-service-category.dto';
 import { ServiceCategoryResponseDto } from '@salon/infrastructure/dtos/service-category.response.dto';
 
 /** Admin-only endpoints for managing service categories. */
 @ApiTags('Service Categories')
-@ApiBearerAuth()
 @Controller('service-category')
-@UseGuards(AuthorizationGuard)
-@Roles(UserRole.ADMIN)
 export class ServiceCategoryController {
   constructor(private readonly createCategory: CreateServiceCategoryUseCase) {}
 
   @Post()
-  @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Create a new service category (Admin only).' })
-  @ApiBody({ type: CreateServiceCategoryDto })
+  @Roles(UserRole.ADMIN)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create a new service category.' })
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'Category created successfully.',
