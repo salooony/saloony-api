@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { User } from '@user/infrastructure/schemas/user.schema';
+import { UserSchema as User } from '@user';
 
 @Entity('tokens')
 export class Token {

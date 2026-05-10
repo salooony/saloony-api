@@ -5,7 +5,6 @@ import { CreateUserUsecase } from '@app/user/application/usecases/create.usecase
 import { DeleteUserAccountUseCase } from '@app/user/application/usecases/delete-user-account.usecase';
 import { GetUserInfoUsecase } from '@app/user/application/usecases/get-user-info.usecase';
 import { UpdateAvatarUsecase } from '@app/user/application/usecases/update-avatar.usecase';
-import { NotifierService } from '@app/notification/application/services/notifier.service';
 import { FilePathService } from '@app/shared/uploads/application/services/file-path.service';
 import { User } from '@app/user/domain/entities/user';
 import { UserRole } from '@app/user/domain/enums/user-role.enum';
@@ -19,6 +18,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
+import { HASHING_PROVIDER } from '@app/user/application/providers/ihashing.provider';
+import { USERS_REPOSITORY } from '@app/user/domain/ports/iuser.repository';
 
 describe('User Registration', () => {
   let userController: UserController, request: UserRequestDto;
@@ -48,8 +49,8 @@ describe('User Registration', () => {
         UpdateAvatarUsecase,
         UserTransformer,
         FilePathService,
-        { provide: 'UsersRepository', useClass: MockUsersReporitory },
-        { provide: 'HashingProvider', useClass: BcryptHashingProvider },
+        { provide: USERS_REPOSITORY, useClass: MockUsersReporitory },
+        { provide: HASHING_PROVIDER, useClass: BcryptHashingProvider },
         {
           provide: 'IUploadFile',
           useValue: {

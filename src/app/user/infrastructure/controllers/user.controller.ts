@@ -1,13 +1,3 @@
-import { CurrentUser } from '@user/application/decorators/current-user.decorator';
-import { Roles } from '@shared/decorators/roles.decorator';
-import { UserRole } from '@user/domain/enums/user-role.enum';
-import { Public } from '@user/application/decorators/public.decorator';
-import { UserRequestDto } from '@user/application/dtos/requests/user.request.dto';
-import { UserResponseDto } from '@user/application/dtos/responses/user.response.dto';
-import { CreateUserUsecase } from '@user/application/usecases/create.usecase';
-import { DeleteUserAccountUseCase } from '@user/application/usecases/delete-user-account.usecase';
-import { GetUserInfoUsecase } from '@user/application/usecases/get-user-info.usecase';
-import { User } from '@user/domain/entities/user';
 import {
   BadRequestException,
   Body,
@@ -25,10 +15,23 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UpdateAvatarUsecase } from '@user/application/usecases/update-avatar.usecase';
-import { UpdateAvatarDto } from '@user/application/dtos/requests/update-avatar.dto';
 import { FastifyRequest } from 'fastify';
 import type { MultipartFile as FastifyMultipartFile } from '@fastify/multipart';
+
+import {
+  CurrentUser,
+  Public,
+  UserRequestDto,
+  UserResponseDto,
+  UpdateAvatarDto,
+  CreateUserUsecase,
+  UpdateAvatarUsecase,
+  DeleteUserAccountUsecase,
+  GetUserInfoUsecase,
+} from '../../application';
+import { User, UserRole } from '../../domain';
+
+import { Roles } from '@shared/decorators/roles.decorator';
 
 @ApiTags('Users')
 @Controller('users')
@@ -36,7 +39,7 @@ export class UserController {
   constructor(
     private readonly createUsecase: CreateUserUsecase,
     private readonly getUserInfoUsecase: GetUserInfoUsecase,
-    private readonly deleteUserUseCase: DeleteUserAccountUseCase,
+    private readonly deleteUserUseCase: DeleteUserAccountUsecase,
     @Inject(UpdateAvatarUsecase) private readonly updateAvatar: UpdateAvatarUsecase,
   ) {}
 

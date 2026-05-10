@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { IUserRepository, USERS_REPOSITORY } from '@user/domain/ports/iuser.repository';
-import { User } from '@user/domain/entities/user';
+
+import { User } from '../../domain/entities/user';
+import { USERS_REPOSITORY, IUserRepository } from '../../domain/ports/iuser.repository';
 import { IUploadFile, UPLOAD_FILE } from '@shared/uploads/domain/ports/iupload-file.service';
 import { FilePathService } from '@shared/uploads/application/services/file-path.service';
 import { FileType } from '@shared/uploads/domain/enums/file-type.enum';
@@ -21,6 +22,6 @@ export class UpdateAvatarUsecase {
     user.avatar = avatarUrl;
     user.updatedAt = new Date();
 
-    await this.userRepository.update(user);
+    await this.userRepository.updateOne(user);
   }
 }

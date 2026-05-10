@@ -8,7 +8,7 @@ import { TOKEN_REPOSITORY } from '@token/domain/ports/itoken.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Token } from '@token/infrastructure/schemas/token.schema';
 import { TokenService } from '@token/application/service/token.service';
-import { UserModule } from '@user/infrastructure/modules/user.module';
+import { UserModule } from '@user';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Token]), forwardRef(() => UserModule)],

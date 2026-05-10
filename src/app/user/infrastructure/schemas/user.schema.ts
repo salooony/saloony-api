@@ -7,10 +7,10 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
 } from 'typeorm';
-import { UserStatus } from '@user/domain/enums/user-status.enum';
-import { UserRole } from '@user/domain/enums/user-role.enum';
-import { SalonMembership } from './salon-membership.schema';
 import { OneToMany } from 'typeorm';
+
+import { UserRole, UserStatus } from '../../domain';
+import { SalonMembership } from './salon-membership.schema';
 
 @Entity({ name: 'users' })
 export class User {

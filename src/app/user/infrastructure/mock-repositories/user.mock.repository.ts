@@ -1,6 +1,5 @@
-import { User } from '@app/user/domain/entities/user';
-import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
 import { Injectable } from '@nestjs/common';
+import { User, IUserRepository } from '../../domain';
 
 @Injectable()
 export class MockUsersReporitory implements IUserRepository {
@@ -41,7 +40,15 @@ export class MockUsersReporitory implements IUserRepository {
     return Promise.resolve(user);
   }
 
-  async update(user: User): Promise<User> {
+  deleteOneById(userId: string): Promise<void> {
+    const user = MockUsersReporitory.users.find((user) => user.id === userId);
+    if (user) {
+      user.deletedAt = new Date();
+    }
+    return Promise.resolve();
+  }
+
+  async updateOne(user: User): Promise<void> {
     const index = MockUsersReporitory.users.findIndex((u) => u.id === user.id);
     if (index === -1) {
       throw new Error('User not found');
@@ -51,14 +58,6 @@ export class MockUsersReporitory implements IUserRepository {
 
     Object.assign(current, user, { updatedAt: new Date() });
 
-    return Promise.resolve(current);
-  }
-
-  delete(userId: string): Promise<void> {
-    const user = MockUsersReporitory.users.find((user) => user.id === userId);
-    if (user) {
-      user.deletedAt = new Date();
-    }
     return Promise.resolve();
   }
 }

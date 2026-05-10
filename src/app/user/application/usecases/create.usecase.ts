@@ -1,15 +1,17 @@
 import { ConflictException, Inject, InternalServerErrorException } from '@nestjs/common';
-import { UserTransformer } from '../transformers/user.transformer';
-import { IUserRepository } from '@app/user/domain/ports/iuser.repository';
-import { UserResponseDto } from '../dtos/responses/user.response.dto';
-import { HashingProviderInterface } from '../providers/hashing.provider.interface';
+
 import { UserRequestDto } from '../dtos/requests/user.request.dto';
+import { UserResponseDto } from '../dtos/responses/user.response.dto';
+import { HASHING_PROVIDER, IHashingProvider } from '../providers/ihashing.provider';
+import { UserTransformer } from '../transformers/user.transformer';
+import { IUserRepository, USERS_REPOSITORY } from '../../domain/ports/iuser.repository';
 
 export class CreateUserUsecase {
   constructor(
+    // TOOD: readonly or no readonly?
+    @Inject(HASHING_PROVIDER) private hashingProvider: IHashingProvider,
+    @Inject(USERS_REPOSITORY) private readonly userRepository: IUserRepository,
     private readonly transformer: UserTransformer,
-    @Inject('HashingProvider') private hashingProvider: HashingProviderInterface,
-    @Inject('UsersRepository') private readonly userRepository: IUserRepository,
   ) {}
 
   async execute(userRequestDto: UserRequestDto): Promise<UserResponseDto> {

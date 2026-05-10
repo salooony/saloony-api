@@ -1,6 +1,6 @@
 import { Token } from '@token/domain/entities/token.entity';
 import { Token as TokenSchema } from '../schemas/token.schema';
-import { UserMapper } from '@user/infrastructure/mappers/user.mapper';
+import { UserMapper } from '@app/user/infrastructure/mappers/user.mapper';
 
 export class TokenMapper {
   static toDomain(entity: TokenSchema): Token {
